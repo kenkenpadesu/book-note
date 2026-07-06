@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>あやかの こどもの本ノート</title>
+<meta name="description" content="子供に読ませたい本を記録・管理するノート。あやかの評価とレビュー付き。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+    --bg:#fdf6ec;
+    --bg-2:#fffaf2;
+    --card:#ffffff;
+    --card-2:#fbf1e2;
+    --border:#efe1cd;
+    --border-2:#e4d0b4;
+    --gold:#e0a233;
+    --gold-2:#f2c25a;
+    --gold-deep:#b57814;
+    --text:#4a3b2c;
+    --text-2:#5c4c3a;
+    --muted:#96856f;
+    --muted-2:#bcaa92;
+    --danger:#e0605e;
+    --good:#4faf6d;
+    --shadow:0 10px 26px rgba(190,150,90,.16);
+    --shadow-sm:0 4px 12px rgba(190,150,90,.12);
+    --radius:20px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    font-family:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN",
+      "Hiragino Sans","Noto Sans JP",system-ui,sans-serif;
+    background:
+      radial-gradient(900px 500px at 50% -180px, rgba(242,194,90,.22), transparent 62%),
+      radial-gradient(700px 400px at 90% 10%, rgba(255,183,197,.18), transparent 60%),
+      var(--bg);
+    color:var(--text);
+    line-height:1.7;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+    font-weight:500;
+  }
+  a{color:inherit}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  input,select,textarea{font-family:inherit;font-size:16px;color:var(--text)}
+  ::placeholder{color:var(--muted-2)}
+
+  .wrap{max-width:1100px;margin:0 auto;padding:0 16px}
+
+  /* ---------- Header ---------- */
+  header.site{padding:36px 0 18px;text-align:center;position:relative}
+  .eyebrow{
+    font-size:11px;letter-spacing:.3em;text-transform:uppercase;
+    color:var(--gold-deep);opacity:.85;margin-bottom:12px;font-weight:700;
+  }
+  h1.logo{
+    font-family:"Zen Maru Gothic","M PLUS Rounded 1c",sans-serif;
+    font-size:clamp(28px,7.5vw,46px);font-weight:900;letter-spacing:.03em;line-height:1.2;
+  }
+  h1.logo em{
+    font-style:normal;
+    background:linear-gradient(120deg,#d98e1e,#f2c25a,#e0a233);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .tagline{color:var(--muted);font-size:14px;margin-top:10px;font-weight:500}
+
+  .stats{display:flex;justify-content:center;gap:12px;margin-top:20px;flex-wrap:wrap}
+  .stat{
+    background:var(--card);border:1.5px solid var(--border);
+    border-radius:18px;padding:10px 18px;min-width:98px;box-shadow:var(--shadow-sm);
+  }
+  .stat b{
+    font-family:"Zen Maru Gothic",sans-serif;
+    display:block;font-size:22px;color:var(--gold-deep);line-height:1.2;
+  }
+  .stat span{font-size:11px;color:var(--muted);font-weight:700}
+
+  /* ---------- Toolbar ---------- */
+  .toolbar{
+    position:sticky;top:0;z-index:40;
+    background:linear-gradient(rgba(253,246,236,.98),rgba(253,246,236,.86));
+    backdrop-filter:blur(8px);
+    padding:14px 0 12px;margin-top:8px;border-bottom:1.5px solid var(--border);
+  }
+  .searchbar{position:relative;margin-bottom:10px}
+  .searchbar input{
+    width:100%;padding:13px 14px 13px 44px;border-radius:14px;
+    background:var(--card);border:1.5px solid var(--border);box-shadow:var(--shadow-sm);
+  }
+  .searchbar input:focus{outline:none;border-color:var(--gold)}
+  .searchbar .ico{position:absolute;left:15px;top:50%;transform:translateY(-50%);opacity:.7}
+
+  .filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .filters select{
+    padding:10px 12px;border-radius:12px;background:var(--card);
+    border:1.5px solid var(--border);flex:1 1 auto;min-width:120px;font-weight:500;
+  }
+  .filters select:focus{outline:none;border-color:var(--gold)}
+  .btn-add{
+    flex:0 0 auto;padding:10px 18px;border-radius:12px;font-weight:800;
+    background:linear-gradient(120deg,#e8a838,#f2c25a);color:#5a3d09;
+    box-shadow:0 5px 14px rgba(224,162,51,.35);white-space:nowrap;
+  }
+  .btn-add:active{transform:translateY(1px)}
+
+  /* ---------- Grid ---------- */
+  .grid{display:grid;gap:16px;padding:22px 0 60px;grid-template-columns:1fr}
+  @media(min-width:560px){.grid{grid-template-columns:1fr 1fr}}
+  @media(min-width:900px){.grid{grid-template-columns:1fr 1fr 1fr}}
+
+  .card{
+    background:var(--card);
+    border:1.5px solid var(--border);border-radius:var(--radius);
+    overflow:hidden;box-shadow:var(--shadow);
+    display:flex;flex-direction:column;transition:border-color .2s,transform .15s,box-shadow .2s;
+  }
+  .card:hover{border-color:var(--gold-2);box-shadow:0 14px 30px rgba(190,150,90,.22)}
+  .card-top{display:flex;gap:14px;padding:16px}
+  .cover{
+    flex:0 0 86px;width:86px;height:122px;border-radius:12px;overflow:hidden;
+    background:var(--card-2);border:1.5px solid var(--border);position:relative;cursor:zoom-in;
+  }
+  .cover img{width:100%;height:100%;object-fit:cover;display:block}
+  .cover .noimg{display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted-2);font-size:28px}
+  .badge-read{
+    position:absolute;top:6px;left:6px;background:#5fbf7a;
+    color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,.15);
+  }
+  .card-info{flex:1 1 auto;min-width:0}
+  .card-title{
+    font-family:"Zen Maru Gothic",sans-serif;
+    font-size:16.5px;font-weight:700;line-height:1.35;margin-bottom:4px;color:var(--text);
+  }
+  .card-author{font-size:12.5px;color:var(--muted);margin-bottom:8px;font-weight:500}
+  .metarow{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px}
+  .chip{
+    font-size:11px;padding:3px 10px;border-radius:999px;font-weight:700;
+    background:var(--card-2);border:1.5px solid var(--border);color:var(--text-2);
+  }
+  .chip.gold{background:#fbeecd;border-color:var(--gold-2);color:var(--gold-deep)}
+  .chip.react-好き{background:#ffe6ef;border-color:#f4a9c4;color:#c85a86}
+  .chip.react-普通{background:#e5efff;border-color:#a9c4f4;color:#5271b8}
+  .chip.react-微妙{background:#eeeae4;border-color:#cbbfae;color:#8a7a66}
+
+  .stars{display:inline-flex;gap:1px;font-size:16px;line-height:1;color:var(--gold)}
+  .stars .empty{color:#e6d7c1}
+  .rating-num{font-size:11.5px;color:var(--muted);margin-left:6px;font-weight:700}
+
+  .card-body{padding:0 16px 16px;display:none;border-top:1.5px solid var(--border);margin-top:2px}
+  .card.open .card-body{display:block;padding-top:14px}
+  .sec{margin-top:13px}
+  .sec h4{
+    font-size:11px;letter-spacing:.08em;color:var(--gold-deep);text-transform:uppercase;
+    margin-bottom:5px;font-weight:800;
+  }
+  .sec p{font-size:14px;color:var(--text-2);white-space:pre-wrap;line-height:1.75}
+  .card-actions{display:flex;gap:8px;margin-top:15px;flex-wrap:wrap}
+  .lnk-buy{
+    flex:1 1 auto;text-align:center;padding:10px;border-radius:12px;font-weight:800;font-size:13px;
+    background:linear-gradient(120deg,#e8a838,#f2c25a);color:#5a3d09;text-decoration:none;
+  }
+  .admin-btns{display:flex;gap:8px}
+  .admin-btns button{
+    padding:10px 13px;border-radius:12px;font-size:12.5px;font-weight:800;
+    border:1.5px solid var(--border-2);background:var(--card-2);color:var(--text-2);
+  }
+  .admin-btns .del{border-color:#f0c2c1;color:var(--danger);background:#fdeeee}
+
+  .card-foot{
+    padding:11px 16px;display:flex;justify-content:space-between;align-items:center;
+    border-top:1.5px solid var(--border);cursor:pointer;font-size:12px;color:var(--muted);font-weight:600;
+  }
+  .card-foot .toggle{color:var(--gold-deep);font-weight:800}
+
+  .empty-state{text-align:center;color:var(--muted);padding:60px 20px;font-weight:600}
+  .empty-state .big{font-size:46px;margin-bottom:10px}
+
+  /* ---------- Modal ---------- */
+  .overlay{
+    position:fixed;inset:0;background:rgba(74,59,44,.42);backdrop-filter:blur(3px);
+    display:none;align-items:flex-start;justify-content:center;z-index:100;
+    padding:24px 12px;overflow-y:auto;
+  }
+  .overlay.show{display:flex}
+  .modal{
+    width:100%;max-width:560px;background:var(--bg-2);
+    border:1.5px solid var(--border-2);border-radius:24px;box-shadow:0 24px 60px rgba(120,90,50,.28);margin:auto;
+  }
+  .modal-head{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:18px 20px;border-bottom:1.5px solid var(--border);position:sticky;top:0;
+    background:var(--bg-2);border-radius:24px 24px 0 0;
+  }
+  .modal-head h3{font-family:"Zen Maru Gothic",sans-serif;font-size:17px;font-weight:700}
+  .modal-head .x{font-size:22px;color:var(--muted);line-height:1}
+  .modal-body{padding:18px}
+  .field{margin-bottom:15px}
+  .field label{display:block;font-size:12.5px;color:var(--text-2);margin-bottom:6px;font-weight:800}
+  .field label .req{color:var(--danger)}
+  .field input,.field select,.field textarea{
+    width:100%;padding:12px;border-radius:12px;background:var(--card);
+    border:1.5px solid var(--border);
+  }
+  .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--gold)}
+  .field textarea{resize:vertical;min-height:80px;line-height:1.7}
+  .row2{display:flex;gap:10px}
+  .row2>.field{flex:1}
+
+  .isbn-fetch{display:flex;gap:8px}
+  .isbn-fetch input{flex:1}
+  .isbn-fetch button{
+    flex:0 0 auto;padding:0 16px;border-radius:12px;font-weight:800;font-size:12.5px;
+    background:linear-gradient(120deg,#e8a838,#f2c25a);color:#5a3d09;white-space:nowrap;
+  }
+  .fetch-hint{font-size:11.5px;color:var(--muted);margin-top:6px;font-weight:500}
+
+  .checks{display:flex;flex-wrap:wrap;gap:8px}
+  .checks label{
+    font-size:13px;padding:8px 14px;border-radius:999px;border:1.5px solid var(--border);
+    background:var(--card);color:var(--text-2);cursor:pointer;user-select:none;font-weight:700;
+  }
+  .checks input{display:none}
+  .checks label:has(input:checked){
+    background:linear-gradient(120deg,#e8a838,#f2c25a);border-color:var(--gold);color:#5a3d09;
+  }
+
+  .star-input{display:flex;align-items:center;gap:2px}
+  .star-input .s{position:relative;width:32px;height:32px;font-size:30px;line-height:32px;color:#e6d7c1}
+  .star-input .s .fill{position:absolute;left:0;top:0;overflow:hidden;color:var(--gold);white-space:nowrap;width:0}
+  .star-input .s .half,.star-input .s .full{position:absolute;top:0;height:100%;cursor:pointer;z-index:2}
+  .star-input .s .half{left:0;width:50%}
+  .star-input .s .full{right:0;width:50%}
+  .star-input .val{margin-left:10px;font-size:15px;color:var(--gold-deep);font-weight:800;font-family:"Zen Maru Gothic",sans-serif}
+  .star-clear{margin-left:8px;font-size:11.5px;color:var(--muted);text-decoration:underline;font-weight:600}
+
+  .reaction-pick{display:flex;gap:8px}
+  .reaction-pick label{
+    flex:1;text-align:center;padding:11px 6px;border-radius:14px;border:1.5px solid var(--border);
+    background:var(--card);cursor:pointer;font-size:13px;color:var(--muted);font-weight:700;
+  }
+  .reaction-pick input{display:none}
+  .reaction-pick label:has(input:checked){border-color:var(--gold);color:var(--gold-deep);background:#fbeecd}
+  .reaction-pick .emo{display:block;font-size:24px;margin-bottom:2px}
+
+  .switch{display:flex;align-items:center;gap:10px;cursor:pointer;font-weight:700;color:var(--text-2)}
+  .switch input{display:none}
+  .switch .track{
+    width:48px;height:28px;border-radius:999px;background:#eadfce;
+    border:1.5px solid var(--border);position:relative;transition:.2s;flex:0 0 auto;
+  }
+  .switch .track::after{
+    content:"";position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;
+    background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:.2s;
+  }
+  .switch input:checked + .track{background:#9ad9ac;border-color:var(--good)}
+  .switch input:checked + .track::after{left:24px}
+
+  .modal-foot{
+    display:flex;gap:10px;padding:16px 18px;border-top:1.5px solid var(--border);
+    position:sticky;bottom:0;background:var(--bg-2);border-radius:0 0 24px 24px;
+  }
+  .btn-primary{
+    flex:1;padding:14px;border-radius:14px;font-weight:800;font-size:15px;
+    background:linear-gradient(120deg,#e8a838,#f2c25a);color:#5a3d09;
+  }
+  .btn-ghost{padding:14px 18px;border-radius:14px;border:1.5px solid var(--border-2);color:var(--muted);font-weight:700}
+
+  .cover-preview{
+    width:72px;height:104px;border-radius:10px;object-fit:cover;border:1.5px solid var(--border);
+    background:var(--card);margin-top:8px;display:none;
+  }
+  .cover-preview.show{display:block}
+
+  .lightbox{
+    position:fixed;inset:0;background:rgba(74,59,44,.85);display:none;
+    align-items:center;justify-content:center;z-index:200;padding:24px;cursor:zoom-out;
+  }
+  .lightbox.show{display:flex}
+  .lightbox img{max-width:100%;max-height:90vh;border-radius:14px;box-shadow:0 20px 50px rgba(0,0,0,.4)}
+
+  .toast{
+    position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(30px);
+    background:var(--text);border:none;color:#fff;
+    padding:13px 22px;border-radius:14px;box-shadow:0 10px 26px rgba(74,59,44,.35);z-index:300;
+    opacity:0;transition:.25s;font-size:13.5px;max-width:90vw;text-align:center;font-weight:700;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .toast.err{background:#c9544f}
+  .toast.ok{background:#4faf6d}
+
+  .admin-banner{
+    background:linear-gradient(120deg,#fbeecd,#fff6e4);
+    border:1.5px solid var(--gold-2);border-radius:14px;
+    padding:11px 16px;margin:16px auto 0;max-width:420px;font-size:13px;color:var(--gold-deep);
+    display:none;align-items:center;justify-content:space-between;gap:10px;font-weight:700;
+  }
+  .admin-banner.show{display:flex}
+  .admin-banner button{color:var(--muted);text-decoration:underline;font-size:12px;font-weight:700}
+
+  .loading{text-align:center;padding:60px;color:var(--muted);font-weight:600}
+  .spin{
+    width:34px;height:34px;border:3px solid var(--border);border-top-color:var(--gold);
+    border-radius:50%;animation:sp 1s linear infinite;margin:0 auto 14px;
+  }
+  @keyframes sp{to{transform:rotate(360deg)}}
+
+  footer.site{
+    text-align:center;padding:30px 16px 50px;color:var(--muted);font-size:12px;
+    border-top:1.5px solid var(--border);font-weight:500;
+  }
+  footer.site .heart{color:#e88aa0}
+
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap">
+    <div class="eyebrow">Kids Book Note</div>
+    <h1 class="logo">あやかの<br><em>こどもの本ノート</em></h1>
+    <p class="tagline">子供に読ませたい本を記録する、私だけのノート</p>
+    <div class="stats">
+      <div class="stat"><b id="stat-count">–</b><span>登録数</span></div>
+      <div class="stat"><b id="stat-avg">–</b><span>平均評価</span></div>
+      <div class="stat"><b id="stat-read">–</b><span>読み聞かせ済</span></div>
+    </div>
+    <div class="admin-banner" id="admin-banner">
+      <span>🔓 管理者モードで表示中</span>
+      <button onclick="exitAdmin()">解除する</button>
+    </div>
+  </div>
+</header>
+
+<div class="toolbar">
+  <div class="wrap">
+    <div class="searchbar">
+      <span class="ico">🔍</span>
+      <input type="search" id="search" placeholder="タイトル・著者名で検索…">
+    </div>
+    <div class="filters">
+      <select id="f-genre"><option value="">ジャンル：すべて</option></select>
+      <select id="f-age"><option value="">対象年齢：すべて</option></select>
+      <select id="f-react">
+        <option value="">子供の反応：すべて</option>
+        <option value="好き">好き</option>
+        <option value="普通">普通</option>
+        <option value="微妙">微妙</option>
+      </select>
+      <select id="f-read">
+        <option value="">読み聞かせ：すべて</option>
+        <option value="done">済み</option>
+        <option value="yet">まだ</option>
+      </select>
+      <select id="sort">
+        <option value="new">新しい順</option>
+        <option value="old">古い順</option>
+        <option value="rating">評価が高い順</option>
+        <option value="title">タイトル順</option>
+      </select>
+      <button class="btn-add" id="btn-add" style="display:none" onclick="openForm()">＋ 追加</button>
+    </div>
+  </div>
+</div>
+
+<main class="wrap">
+  <div id="loading" class="loading"><div class="spin"></div>読み込み中…</div>
+  <div class="grid" id="grid"></div>
+</main>
+
+<footer class="site">
+  <div>© 2026 あやかの こどもの本ノート</div>
+  <div style="margin-top:6px">Made with <span class="heart">♥</span> ・ 表紙画像: openBD</div>
+</footer>
+
+<!-- ============ 追加 / 編集モーダル ============ -->
+<div class="overlay" id="form-overlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="form-title">本を追加</h3>
+      <button class="x" onclick="closeForm()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="in-id">
+
+      <div class="field">
+        <label>ISBNから自動入力（OpenBD）</label>
+        <div class="isbn-fetch">
+          <input type="text" id="in-isbn" placeholder="9784…（ハイフン可）" inputmode="numeric">
+          <button type="button" onclick="fetchFromOpenBD()">✨ 取得</button>
+        </div>
+        <div class="fetch-hint">ISBNを入れて「取得」でタイトル・著者・表紙画像を自動入力します</div>
+        <img id="cover-preview" class="cover-preview" alt="表紙プレビュー">
+      </div>
+
+      <div class="field">
+        <label>タイトル <span class="req">*</span></label>
+        <input type="text" id="in-title" placeholder="ぐりとぐら">
+      </div>
+
+      <div class="row2">
+        <div class="field">
+          <label>著者名</label>
+          <input type="text" id="in-author" placeholder="なかがわ りえこ">
+        </div>
+        <div class="field">
+          <label>対象年齢</label>
+          <select id="in-age">
+            <option value="">選択</option>
+            <option>0〜2歳</option>
+            <option>3〜4歳</option>
+            <option>5〜6歳</option>
+            <option>小学校低学年</option>
+            <option>小学校中学年</option>
+            <option>小学校高学年</option>
+            <option>全年齢</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>ジャンル（複数選択可）</label>
+        <div class="checks" id="in-genre">
+          <label><input type="checkbox" value="絵本"><span>絵本</span></label>
+          <label><input type="checkbox" value="図鑑"><span>図鑑</span></label>
+          <label><input type="checkbox" value="読み物"><span>読み物</span></label>
+          <label><input type="checkbox" value="知育"><span>知育</span></label>
+          <label><input type="checkbox" value="しかけ絵本"><span>しかけ絵本</span></label>
+          <label><input type="checkbox" value="物語"><span>物語</span></label>
+          <label><input type="checkbox" value="学習まんが"><span>学習まんが</span></label>
+          <label><input type="checkbox" value="児童書"><span>児童書</span></label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>あらすじ・内容紹介</label>
+        <textarea id="in-synopsis" placeholder="どんな内容の本か…"></textarea>
+      </div>
+
+      <div class="field">
+        <label>あやかの評価（半星対応）</label>
+        <div class="star-input" id="in-rating">
+          <span class="s" data-i="1"><span class="fill">★</span><span class="half"></span><span class="full"></span></span>
+          <span class="s" data-i="2"><span class="fill">★</span><span class="half"></span><span class="full"></span></span>
+          <span class="s" data-i="3"><span class="fill">★</span><span class="half"></span><span class="full"></span></span>
+          <span class="s" data-i="4"><span class="fill">★</span><span class="half"></span><span class="full"></span></span>
+          <span class="s" data-i="5"><span class="fill">★</span><span class="half"></span><span class="full"></span></span>
+          <span class="val" id="rating-val">0.0</span>
+          <span class="star-clear" onclick="setRating(0)">クリア</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>感想・コメント</label>
+        <textarea id="in-comment" placeholder="読んでみての感想…"></textarea>
+      </div>
+
+      <div class="field">
+        <label>子供の反応</label>
+        <div class="reaction-pick" id="in-react">
+          <label><input type="radio" name="react" value="好き"><span class="emo">😍</span>好き</label>
+          <label><input type="radio" name="react" value="普通"><span class="emo">🙂</span>普通</label>
+          <label><input type="radio" name="react" value="微妙"><span class="emo">😕</span>微妙</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>表紙画像URL</label>
+        <input type="text" id="in-cover" placeholder="https://…" oninput="updateCoverPreview()">
+      </div>
+
+      <div class="field">
+        <label>購入先リンク（Amazon等）</label>
+        <input type="text" id="in-buy" placeholder="https://www.amazon.co.jp/…">
+      </div>
+
+      <div class="field">
+        <label class="switch">
+          <input type="checkbox" id="in-read">
+          <span class="track"></span>
+          <span>読み聞かせ済みにする</span>
+        </label>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-ghost" onclick="closeForm()">キャンセル</button>
+      <button class="btn-primary" id="save-btn" onclick="saveBook()">保存する</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 削除確認 ============ -->
+<div class="overlay" id="del-overlay">
+  <div class="modal" style="max-width:380px">
+    <div class="modal-head"><h3>削除しますか？</h3><button class="x" onclick="closeDelete()">✕</button></div>
+    <div class="modal-body">
+      <p style="color:var(--muted);font-size:14px">「<b id="del-title" style="color:var(--text)"></b>」を削除します。この操作は元に戻せません。</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-ghost" onclick="closeDelete()">やめる</button>
+      <button class="btn-primary" style="background:var(--danger);color:#fff" id="del-btn" onclick="confirmDelete()">削除する</button>
+    </div>
+  </div>
+</div>
+
+<div class="lightbox" id="lightbox" onclick="this.classList.remove('show')"><img id="lightbox-img" alt=""></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   設定 — デプロイ後の GAS ウェブアプリURLをここに貼り付け
+   ============================================================ */
+const GAS_URL = "https://script.google.com/macros/s/AKfycbx-C7zTJQz8XuadOwls0E07ycZifdf14lHWzIgMyq2ybZUgahospbzqJGTK7X0Zs8cv/exec";
+
+/* ---------- 状態 ---------- */
+let BOOKS = [];
+let adminPassword = null;
+let editingId = null;
+let deletingId = null;
+
+/* ---------- 起動 ---------- */
+window.addEventListener('DOMContentLoaded', () => {
+  // ?admin=xxx でパスワードを取得（書き込み時にサーバー側で照合）
+  const p = new URLSearchParams(location.search).get('admin');
+  if (p) {
+    adminPassword = p;
+    document.getElementById('btn-add').style.display = '';
+    document.getElementById('admin-banner').classList.add('show');
+  }
+  bindStarInput();
+  ['search','f-genre','f-age','f-react','f-read','sort'].forEach(id=>{
+    document.getElementById(id).addEventListener('input', render);
+  });
+  loadBooks();
+});
+
+function exitAdmin(){ location.href = location.pathname; }
+
+/* ---------- API ---------- */
+function jsonp(url){
+  return new Promise((resolve,reject)=>{
+    const cb = 'cb_'+Math.random().toString(36).slice(2);
+    const sep = url.includes('?') ? '&' : '?';
+    const s = document.createElement('script');
+    const timer = setTimeout(()=>{cleanup();reject(new Error('timeout'))}, 15000);
+    window[cb] = (data)=>{ cleanup(); resolve(data); };
+    function cleanup(){ clearTimeout(timer); delete window[cb]; s.remove(); }
+    s.onerror = ()=>{ cleanup(); reject(new Error('network')); };
+    s.src = url + sep + 'callback=' + cb;
+    document.body.appendChild(s);
+  });
+}
+
+async function loadBooks(){
+  if (!checkConfigured()) return;
+  const loading = document.getElementById('loading');
+  try{
+    const res = await jsonp(GAS_URL);
+    if (res.status !== 'ok') throw new Error(res.message || 'error');
+    BOOKS = res.data || [];
+    buildFilterOptions();
+    render();
+    loading.style.display = 'none';
+  }catch(e){
+    loading.style.display = 'block';
+    loading.innerHTML =
+      '読み込みに失敗しました。<br><small style="color:var(--muted-2)">GAS_URL の設定 / デプロイ設定（アクセス:全員）をご確認ください。</small>';
+  }
+}
+
+// 書き込みは text/plain POST（プリフライト回避）→ 成否に関わらず再読込
+async function apiWrite(payload){
+  payload.password = adminPassword;
+  let result = { status:'unknown' };
+  try{
+    const res = await fetch(GAS_URL, {
+      method:'POST',
+      headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify(payload)
+    });
+    result = await res.json();
+  }catch(e){
+    // CORSでレスポンスが読めない場合でも書き込み自体は成功していることが多い
+    result = { status:'unknown' };
+  }
+  return result;
+}
+
+function checkConfigured(){
+  if (!GAS_URL || GAS_URL.indexOf('http') !== 0){
+    document.getElementById('loading').innerHTML =
+      '⚙️ セットアップが必要です<br><small style="color:var(--muted-2)">index.html 内の GAS_URL に、デプロイしたウェブアプリのURLを設定してください。</small>';
+    return false;
+  }
+  return true;
+}
+
+/* ---------- フィルタ選択肢 ---------- */
+function buildFilterOptions(){
+  const genres = new Set(), ages = new Set();
+  BOOKS.forEach(b=>{
+    (b.genre||'').split(',').map(s=>s.trim()).filter(Boolean).forEach(g=>genres.add(g));
+    if (b.targetAge) ages.add(b.targetAge);
+  });
+  fillSelect('f-genre','ジャンル：すべて',[...genres]);
+  fillSelect('f-age','対象年齢：すべて',[...ages]);
+}
+function fillSelect(id, allLabel, items){
+  const sel = document.getElementById(id);
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">'+allLabel+'</option>' +
+    items.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');
+  sel.value = cur;
+}
+
+/* ---------- 描画 ---------- */
+function render(){
+  const q = document.getElementById('search').value.trim().toLowerCase();
+  const fg = document.getElementById('f-genre').value;
+  const fa = document.getElementById('f-age').value;
+  const fr = document.getElementById('f-react').value;
+  const frd = document.getElementById('f-read').value;
+  const sort = document.getElementById('sort').value;
+
+  let list = BOOKS.filter(b=>{
+    if (q && !((b.title||'').toLowerCase().includes(q) || (b.author||'').toLowerCase().includes(q))) return false;
+    if (fg && !(b.genre||'').split(',').map(s=>s.trim()).includes(fg)) return false;
+    if (fa && b.targetAge !== fa) return false;
+    if (fr && b.childReaction !== fr) return false;
+    if (frd === 'done' && !b.readAloud) return false;
+    if (frd === 'yet' && b.readAloud) return false;
+    return true;
+  });
+
+  list.sort((a,b)=>{
+    if (sort==='rating') return (b.rating||0)-(a.rating||0);
+    if (sort==='title') return (a.title||'').localeCompare(b.title||'','ja');
+    const ta=new Date(a.createdAt||0).getTime(), tb=new Date(b.createdAt||0).getTime();
+    return sort==='old' ? ta-tb : tb-ta;
+  });
+
+  updateStats();
+
+  const grid = document.getElementById('grid');
+  if (!list.length){
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1">
+      <div class="big">📚</div>${BOOKS.length ? '条件に合う本がありません' : 'まだ本が登録されていません'}</div>`;
+    return;
+  }
+  grid.innerHTML = list.map(cardHTML).join('');
+}
+
+function cardHTML(b){
+  const genres = (b.genre||'').split(',').map(s=>s.trim()).filter(Boolean);
+  const admin = !!adminPassword;
+  return `
+  <div class="card" id="card-${esc(b.id)}">
+    <div class="card-top">
+      <div class="cover" ${b.coverImage?`onclick="lightbox('${escAttr(b.coverImage)}')"`:''}>
+        ${b.readAloud?'<span class="badge-read">読み聞かせ済</span>':''}
+        ${b.coverImage
+          ? `<img src="${escAttr(b.coverImage)}" alt="" loading="lazy" onerror="this.parentNode.innerHTML='<div class=&quot;noimg&quot;>📖</div>'">`
+          : '<div class="noimg">📖</div>'}
+      </div>
+      <div class="card-info">
+        <div class="card-title">${esc(b.title||'（無題）')}</div>
+        <div class="card-author">${esc(b.author||'著者不明')}</div>
+        <div class="metarow">
+          ${b.targetAge?`<span class="chip gold">${esc(b.targetAge)}</span>`:''}
+          ${genres.slice(0,2).map(g=>`<span class="chip">${esc(g)}</span>`).join('')}
+          ${b.childReaction?`<span class="chip react-${esc(b.childReaction)}">${reactEmoji(b.childReaction)} ${esc(b.childReaction)}</span>`:''}
+        </div>
+        <div>${starsHTML(b.rating)}${b.rating?`<span class="rating-num">${Number(b.rating).toFixed(1)}</span>`:''}</div>
+      </div>
+    </div>
+
+    <div class="card-body">
+      ${b.synopsis?`<div class="sec"><h4>あらすじ・内容</h4><p>${esc(b.synopsis)}</p></div>`:''}
+      ${b.comment?`<div class="sec"><h4>あやかの感想</h4><p>${esc(b.comment)}</p></div>`:''}
+      ${genres.length>2?`<div class="sec"><h4>ジャンル</h4><p>${genres.map(esc).join(' / ')}</p></div>`:''}
+      <div class="card-actions">
+        ${b.purchaseLink?`<a class="lnk-buy" href="${escAttr(b.purchaseLink)}" target="_blank" rel="noopener">🛒 購入先を見る</a>`:''}
+        ${admin?`<div class="admin-btns">
+          <button onclick="openForm('${esc(b.id)}')">✏️ 編集</button>
+          <button class="del" onclick="openDelete('${esc(b.id)}')">🗑 削除</button>
+        </div>`:''}
+      </div>
+    </div>
+
+    <div class="card-foot" onclick="toggleCard('${esc(b.id)}')">
+      <span>${fmtDate(b.createdAt)}</span>
+      <span class="toggle" data-open="開く ▾" data-close="閉じる ▴">開く ▾</span>
+    </div>
+  </div>`;
+}
+
+function toggleCard(id){
+  const card = document.getElementById('card-'+id);
+  const t = card.querySelector('.toggle');
+  card.classList.toggle('open');
+  t.textContent = card.classList.contains('open') ? t.dataset.close : t.dataset.open;
+}
+
+function starsHTML(r){
+  r = Number(r)||0;
+  let out='<span class="stars">';
+  for (let i=1;i<=5;i++){
+    if (r>=i) out+='★';
+    else if (r>=i-0.5) out+='<span style="position:relative"><span class="empty">★</span><span style="position:absolute;left:0;top:0;width:50%;overflow:hidden;color:var(--gold)">★</span></span>';
+    else out+='<span class="empty">★</span>';
+  }
+  return out+'</span>';
+}
+
+function reactEmoji(r){ return r==='好き'?'😍':r==='普通'?'🙂':r==='微妙'?'😕':''; }
+
+function updateStats(){
+  document.getElementById('stat-count').textContent = BOOKS.length;
+  const rated = BOOKS.filter(b=>b.rating>0);
+  const avg = rated.length ? (rated.reduce((s,b)=>s+Number(b.rating),0)/rated.length) : 0;
+  document.getElementById('stat-avg').textContent = avg ? avg.toFixed(1) : '–';
+  document.getElementById('stat-read').textContent = BOOKS.filter(b=>b.readAloud).length;
+}
+
+/* ---------- 星入力 ---------- */
+let currentRating = 0;
+function bindStarInput(){
+  document.querySelectorAll('#in-rating .s').forEach(s=>{
+    const i = Number(s.dataset.i);
+    s.querySelector('.half').addEventListener('click',()=>setRating(i-0.5));
+    s.querySelector('.full').addEventListener('click',()=>setRating(i));
+  });
+}
+function setRating(v){
+  currentRating = v;
+  document.getElementById('rating-val').textContent = Number(v).toFixed(1);
+  document.querySelectorAll('#in-rating .s').forEach(s=>{
+    const i = Number(s.dataset.i);
+    const fill = s.querySelector('.fill');
+    if (v>=i) fill.style.width='100%';
+    else if (v>=i-0.5) fill.style.width='50%';
+    else fill.style.width='0';
+  });
+}
+
+/* ---------- フォーム ---------- */
+function openForm(id){
+  editingId = id || null;
+  document.getElementById('form-title').textContent = id ? '本を編集' : '本を追加';
+  const b = id ? BOOKS.find(x=>x.id===id) : {};
+  document.getElementById('in-id').value = b.id||'';
+  document.getElementById('in-isbn').value = b.isbn||'';
+  document.getElementById('in-title').value = b.title||'';
+  document.getElementById('in-author').value = b.author||'';
+  document.getElementById('in-age').value = b.targetAge||'';
+  document.getElementById('in-synopsis').value = b.synopsis||'';
+  document.getElementById('in-comment').value = b.comment||'';
+  document.getElementById('in-cover').value = b.coverImage||'';
+  document.getElementById('in-buy').value = b.purchaseLink||'';
+  document.getElementById('in-read').checked = !!b.readAloud;
+
+  const genres = (b.genre||'').split(',').map(s=>s.trim());
+  document.querySelectorAll('#in-genre input').forEach(c=> c.checked = genres.includes(c.value));
+  document.querySelectorAll('#in-react input').forEach(c=> c.checked = (c.value === b.childReaction));
+  setRating(Number(b.rating)||0);
+  updateCoverPreview();
+
+  document.getElementById('form-overlay').classList.add('show');
+  document.body.style.overflow='hidden';
+}
+function closeForm(){
+  document.getElementById('form-overlay').classList.remove('show');
+  document.body.style.overflow='';
+}
+
+async function saveBook(){
+  const title = document.getElementById('in-title').value.trim();
+  if (!title){ toast('タイトルを入力してください','err'); return; }
+
+  const genres = [...document.querySelectorAll('#in-genre input:checked')].map(c=>c.value);
+  const react = (document.querySelector('#in-react input:checked')||{}).value || '';
+
+  const book = {
+    id: document.getElementById('in-id').value || undefined,
+    title,
+    author: document.getElementById('in-author').value.trim(),
+    targetAge: document.getElementById('in-age').value,
+    genre: genres.join(','),
+    synopsis: document.getElementById('in-synopsis').value.trim(),
+    rating: currentRating,
+    comment: document.getElementById('in-comment').value.trim(),
+    coverImage: document.getElementById('in-cover').value.trim(),
+    purchaseLink: document.getElementById('in-buy').value.trim(),
+    readAloud: document.getElementById('in-read').checked,
+    childReaction: react,
+    isbn: document.getElementById('in-isbn').value.trim()
+  };
+
+  const btn = document.getElementById('save-btn');
+  btn.disabled = true; btn.textContent = '保存中…';
+  const res = await apiWrite({ action: editingId ? 'update' : 'add', book });
+  btn.disabled = false; btn.textContent = '保存する';
+
+  if (res.status === 'error'){ toast(res.message || '保存に失敗しました','err'); return; }
+  closeForm();
+  toast(editingId ? '更新しました' : '追加しました','ok');
+  await loadBooks();
+}
+
+/* ---------- 削除 ---------- */
+function openDelete(id){
+  deletingId = id;
+  const b = BOOKS.find(x=>x.id===id);
+  document.getElementById('del-title').textContent = b ? b.title : '';
+  document.getElementById('del-overlay').classList.add('show');
+  document.body.style.overflow='hidden';
+}
+function closeDelete(){
+  document.getElementById('del-overlay').classList.remove('show');
+  document.body.style.overflow='';
+}
+async function confirmDelete(){
+  const btn = document.getElementById('del-btn');
+  btn.disabled=true; btn.textContent='削除中…';
+  const res = await apiWrite({ action:'delete', id: deletingId });
+  btn.disabled=false; btn.textContent='削除する';
+  if (res.status==='error'){ toast(res.message||'削除に失敗しました','err'); return; }
+  closeDelete();
+  toast('削除しました','ok');
+  await loadBooks();
+}
+
+/* ---------- OpenBD 自動入力 ---------- */
+async function fetchFromOpenBD(){
+  const raw = document.getElementById('in-isbn').value.trim();
+  const isbn = raw.replace(/[^0-9Xx]/g,'');
+  if (isbn.length < 10){ toast('ISBNを正しく入力してください','err'); return; }
+  toast('OpenBDから取得中…');
+  try{
+    const res = await fetch('https://api.openbd.jp/v1/get?isbn='+isbn);
+    const data = await res.json();
+    if (!data || !data[0]){ toast('この本は見つかりませんでした','err'); return; }
+    const s = data[0].summary || {};
+    if (s.title && !document.getElementById('in-title').value) document.getElementById('in-title').value = s.title;
+    if (s.author && !document.getElementById('in-author').value) document.getElementById('in-author').value = s.author;
+    if (s.cover){ document.getElementById('in-cover').value = s.cover; updateCoverPreview(); }
+    toast('自動入力しました','ok');
+  }catch(e){
+    toast('取得に失敗しました','err');
+  }
+}
+function updateCoverPreview(){
+  const url = document.getElementById('in-cover').value.trim();
+  const img = document.getElementById('cover-preview');
+  if (url){ img.src=url; img.classList.add('show'); img.onerror=()=>img.classList.remove('show'); }
+  else img.classList.remove('show');
+}
+
+/* ---------- 汎用 ---------- */
+function lightbox(src){
+  document.getElementById('lightbox-img').src = src;
+  document.getElementById('lightbox').classList.add('show');
+}
+let toastTimer;
+function toast(msg,type){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (type?(' '+type):'');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove('show'), 2600);
+}
+function fmtDate(d){
+  if (!d) return '';
+  const dt = new Date(d);
+  if (isNaN(dt)) return '';
+  return `${dt.getFullYear()}.${String(dt.getMonth()+1).padStart(2,'0')}.${String(dt.getDate()).padStart(2,'0')}`;
+}
+function esc(s){ return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+function escAttr(s){ return esc(s); }
+
+// モーダル外側クリックで閉じる
+document.getElementById('form-overlay').addEventListener('click',e=>{ if(e.target.id==='form-overlay') closeForm(); });
+document.getElementById('del-overlay').addEventListener('click',e=>{ if(e.target.id==='del-overlay') closeDelete(); });
+</script>
+</body>
+</html>
