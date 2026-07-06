@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>あやかの こどもの本ノート</title>
-<meta name="description" content="子供に読ませたい本を記録・管理するノート。あやかの評価とレビュー付き。">
+<title>ふうかの こどもの本ノート</title>
+<meta name="description" content="子供に読ませたい本を記録・管理するノート。ふうかの評価とレビュー付き。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet">
@@ -321,7 +321,7 @@
 <header class="site">
   <div class="wrap">
     <div class="eyebrow">Kids Book Note</div>
-    <h1 class="logo">あやかの<br><em>こどもの本ノート</em></h1>
+    <h1 class="logo">ふうかの<br><em>こどもの本ノート</em></h1>
     <p class="tagline">子供に読ませたい本を記録する、私だけのノート</p>
     <div class="stats">
       <div class="stat"><b id="stat-count">–</b><span>登録数</span></div>
@@ -372,7 +372,7 @@
 </main>
 
 <footer class="site">
-  <div>© 2026 あやかの こどもの本ノート</div>
+  <div>© 2026 ふうかの こどもの本ノート</div>
   <div style="margin-top:6px">Made with <span class="heart">♥</span> ・ 表紙・書誌: openBD & Google Books</div>
 </footer>
 
@@ -441,7 +441,7 @@
       </div>
 
       <div class="field">
-        <label>あやかの評価（半星対応）</label>
+        <label>ふうかの評価（半星対応）</label>
         <div class="star-input" id="in-rating">
           <span class="s" data-i="1"><span class="fill">★</span><span class="half"></span><span class="full"></span></span>
           <span class="s" data-i="2"><span class="fill">★</span><span class="half"></span><span class="full"></span></span>
@@ -473,8 +473,8 @@
       </div>
 
       <div class="field">
-        <label>購入先リンク（Amazon等）</label>
-        <input type="text" id="in-buy" placeholder="https://www.amazon.co.jp/…">
+        <label>購入先リンク</label>
+        <input type="text" id="in-buy" placeholder="Amazon・楽天など、購入ページのURL">
       </div>
 
       <div class="field">
@@ -517,7 +517,7 @@ const GAS_URL = "https://script.google.com/macros/s/AKfycbx-C7zTJQz8XuadOwls0E07
 
 /* Google Books APIキー（"" のままでも動作。キーを入れると429が起きにくくなります）
    下の "" の中に、自分のAPIキー（AIza… で始まる文字列）を貼り付けてください */
-const GOOGLE_BOOKS_KEY = "AIzaSyBFSp9KqJt9WcHoGTnpd80ES4mq5p8yqgo";
+const GOOGLE_BOOKS_KEY = "";
 
 /* ---------- 状態 ---------- */
 let BOOKS = [];
@@ -683,7 +683,7 @@ function cardHTML(b){
 
     <div class="card-body">
       ${b.synopsis?`<div class="sec"><h4>あらすじ・内容</h4><p>${esc(b.synopsis)}</p></div>`:''}
-      ${b.comment?`<div class="sec"><h4>あやかの感想</h4><p>${esc(b.comment)}</p></div>`:''}
+      ${b.comment?`<div class="sec"><h4>ふうかの感想</h4><p>${esc(b.comment)}</p></div>`:''}
       ${genres.length>2?`<div class="sec"><h4>ジャンル</h4><p>${genres.map(esc).join(' / ')}</p></div>`:''}
       <div class="card-actions">
         ${b.purchaseLink?`<a class="lnk-buy" href="${escAttr(b.purchaseLink)}" target="_blank" rel="noopener">🛒 購入先を見る</a>`:''}
@@ -935,5 +935,3 @@ document.getElementById('del-overlay').addEventListener('click',e=>{ if(e.target
 </script>
 </body>
 </html>
-
-
