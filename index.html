@@ -373,7 +373,7 @@
 
 <footer class="site">
   <div>© 2026 あやかの こどもの本ノート</div>
-  <div style="margin-top:6px">Made with <span class="heart">♥</span> ・ 表紙画像: openBD</div>
+  <div style="margin-top:6px">Made with <span class="heart">♥</span> ・ 表紙・書誌: openBD & Google Books</div>
 </footer>
 
 <!-- ============ 追加 / 編集モーダル ============ -->
@@ -392,7 +392,7 @@
           <input type="text" id="in-isbn" placeholder="9784…（ハイフン可）" inputmode="numeric">
           <button type="button" onclick="fetchFromOpenBD()">✨ 取得</button>
         </div>
-        <div class="fetch-hint">ISBNを入れて「取得」でタイトル・著者・表紙画像を自動入力します</div>
+        <div class="fetch-hint">ISBNを入れて「取得」で、タイトル・著者・表紙・あらすじを自動入力します</div>
         <img id="cover-preview" class="cover-preview" alt="表紙プレビュー">
       </div>
 
@@ -833,24 +833,67 @@ async function confirmDelete(){
   await loadBooks();
 }
 
-/* ---------- OpenBD 自動入力 ---------- */
+/* ---------- ISBN 自動入力（OpenBD → Google Books で補完） ---------- */
+function stripTags(s){ return String(s||'').replace(/<[^>]*>/g,'').replace(/\s+\n/g,'\n').trim(); }
+
 async function fetchFromOpenBD(){
   const raw = document.getElementById('in-isbn').value.trim();
   const isbn = raw.replace(/[^0-9Xx]/g,'');
   if (isbn.length < 10){ toast('ISBNを正しく入力してください','err'); return; }
-  toast('OpenBDから取得中…');
+  toast('書誌情報を取得中…');
+
+  const titleEl  = document.getElementById('in-title');
+  const authorEl = document.getElementById('in-author');
+  const coverEl  = document.getElementById('in-cover');
+  const synEl    = document.getElementById('in-synopsis');
+
+  const got = { title:'', author:'', cover:'', desc:'' };
+
+  // 1) OpenBD（日本の書誌に強い）
   try{
     const res = await fetch('https://api.openbd.jp/v1/get?isbn='+isbn);
     const data = await res.json();
-    if (!data || !data[0]){ toast('この本は見つかりませんでした','err'); return; }
-    const s = data[0].summary || {};
-    if (s.title && !document.getElementById('in-title').value) document.getElementById('in-title').value = s.title;
-    if (s.author && !document.getElementById('in-author').value) document.getElementById('in-author').value = s.author;
-    if (s.cover){ document.getElementById('in-cover').value = s.cover; updateCoverPreview(); }
-    toast('自動入力しました','ok');
-  }catch(e){
-    toast('取得に失敗しました','err');
+    if (data && data[0]){
+      const s = data[0].summary || {};
+      got.title  = s.title || '';
+      got.author = s.author || '';
+      got.cover  = s.cover || '';
+      try{
+        const tc = ((data[0].onix||{}).CollateralDetail||{}).TextContent || [];
+        const pick = tc.find(t=>t.TextType==='03' && t.Text) || tc.find(t=>t.Text);
+        if (pick) got.desc = stripTags(pick.Text);
+      }catch(_){}
+    }
+  }catch(_){}
+
+  // 2) 足りない項目を Google Books で補完（登録・キー不要）
+  if (!got.cover || !got.desc || !got.title){
+    try{
+      const gres = await fetch('https://www.googleapis.com/books/v1/volumes?country=JP&q=isbn:'+isbn);
+      const gdata = await gres.json();
+      const v = gdata && gdata.items && gdata.items[0] ? (gdata.items[0].volumeInfo||{}) : null;
+      if (v){
+        if (!got.title && v.title) got.title = v.title;
+        if (!got.author && v.authors) got.author = v.authors.join('、');
+        if (!got.cover && v.imageLinks){
+          got.cover = (v.imageLinks.thumbnail || v.imageLinks.smallThumbnail || '')
+            .replace('http://','https://');
+        }
+        if (!got.desc && v.description) got.desc = stripTags(v.description);
+      }
+    }catch(_){}
   }
+
+  // フォームへ反映（既に入力済みの欄は上書きしない）
+  const filled = [];
+  if (got.title  && !titleEl.value){  titleEl.value  = got.title;  filled.push('タイトル'); }
+  if (got.author && !authorEl.value){ authorEl.value = got.author; filled.push('著者'); }
+  if (got.cover  && !coverEl.value){  coverEl.value  = got.cover; updateCoverPreview(); filled.push('表紙'); }
+  if (got.desc   && !synEl.value){    synEl.value    = got.desc;   filled.push('あらすじ'); }
+
+  if (filled.length) toast(filled.join('・')+'を入力しました','ok');
+  else if (got.title || got.cover || got.desc) toast('入力済みのため変更なし（欄を空にして再取得できます）','ok');
+  else toast('この本の情報は見つかりませんでした','err');
 }
 function updateCoverPreview(){
   const url = document.getElementById('in-cover').value.trim();
