@@ -3,791 +3,2685 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>おうち えほん館</title>
-<meta name="description" content="子供に読ませたい本と知育おもちゃのライブラリ。読んでよかった、をぜんぶ記録する。">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --bg:#fdf6ec; --bg-2:#fffaf2; --card:#ffffff; --card-2:#fbf1e2;
-    --border:#efe1cd; --border-2:#e4d0b4;
-    --gold:#e0a233; --gold-2:#f2c25a; --gold-deep:#b57814;
-    --text:#4a3b2c; --text-2:#5c4c3a; --muted:#96856f; --muted-2:#bcaa92;
-    --danger:#e0605e; --good:#4faf6d;
-    --shadow:0 10px 26px rgba(190,150,90,.16); --shadow-sm:0 4px 12px rgba(190,150,90,.12);
-    --radius:20px;
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  html{-webkit-text-size-adjust:100%}
-  body{
-    font-family:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN","Hiragino Sans","Noto Sans JP",system-ui,sans-serif;
-    background:
-      radial-gradient(900px 500px at 50% -180px, rgba(242,194,90,.22), transparent 62%),
-      radial-gradient(700px 400px at 90% 10%, rgba(255,183,197,.18), transparent 60%),
-      var(--bg);
-    color:var(--text); line-height:1.7; min-height:100vh; font-weight:500; -webkit-font-smoothing:antialiased;
-  }
-  a{color:inherit} button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
-  input,select,textarea{font-family:inherit;font-size:16px;color:var(--text)}
-  ::placeholder{color:var(--muted-2)}
-  .wrap{max-width:1100px;margin:0 auto;padding:0 16px}
+<title>けんけんぱのドラマレビュー</title>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-NK4MCM9C');</script>
+<!-- End Google Tag Manager -->
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="favicon.png">
+<!-- 主要な外部ドメインへ先に接続（表示高速化） -->
+<link rel="preconnect" href="https://image.tmdb.org" crossorigin>
+<link rel="preconnect" href="https://script.google.com">
+<link rel="preconnect" href="https://script.googleusercontent.com">
 
-  /* avatar colors */
-  .a-pink{background:#ffe1ec} .a-gold{background:#fbeaca} .a-mint{background:#dff3e6}
-  .a-blue{background:#e2edff} .a-lilac{background:#ece2ff} .a-peach{background:#ffe6da}
+<!-- ===== SEO / SNS共有 / 構造化データ（表示・挙動には影響しない追記） ===== -->
+<meta name="description" content="けんけんぱが観たドラマの個人レビュー・評価サイト。日本・韓国・アメリカのドラマを、ストーリー・キャスト・映像美・音楽・満足度の5項目で採点。みんなの投票やジャンル・気分での絞り込みもできます。">
+<meta name="robots" content="index,follow">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="theme-color" content="#0a0a0a">
+<link rel="canonical" href="https://kenkenpa-drama.com/">
 
-  /* ===== Profile overlay (Netflix風) ===== */
-  .profile-screen{
-    position:fixed;inset:0;z-index:200;display:none;flex-direction:column;align-items:center;justify-content:center;
-    padding:40px 16px;overflow-y:auto;
-    background:
-      radial-gradient(900px 500px at 50% -150px, rgba(242,194,90,.25), transparent 60%),
-      radial-gradient(700px 400px at 85% 15%, rgba(255,183,197,.20), transparent 60%),
-      var(--bg);
-  }
-  .profile-screen.show{display:flex}
-  .ps-eyebrow{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold-deep);opacity:.85;margin-bottom:10px;font-weight:700;text-align:center}
-  .ps-title{font-family:"Zen Maru Gothic",sans-serif;font-size:clamp(24px,6vw,36px);font-weight:900;text-align:center;line-height:1.3}
-  .ps-title em{font-style:normal;background:linear-gradient(120deg,#d98e1e,#f2c25a,#e0a233);-webkit-background-clip:text;background-clip:text;color:transparent}
-  .ps-sub{color:var(--muted);font-size:14px;margin-top:10px;text-align:center;font-weight:700}
-  .profiles{display:flex;flex-wrap:wrap;gap:20px 26px;justify-content:center;margin-top:40px;max-width:760px}
-  .profile{display:flex;flex-direction:column;align-items:center;gap:12px;cursor:pointer;width:112px}
-  .avatar{width:112px;height:112px;border-radius:26px;display:flex;align-items:center;justify-content:center;font-size:56px;border:3px solid transparent;box-shadow:var(--shadow);transition:.15s}
-  .profile:hover .avatar{transform:translateY(-4px);border-color:var(--gold)}
-  .pname{font-family:"Zen Maru Gothic",sans-serif;font-weight:700;font-size:16px;color:var(--text)}
-  .profile.add .avatar{background:transparent;border:3px dashed var(--border-2);font-size:44px;color:var(--muted-2);box-shadow:none}
-  .profile.add .pname{color:var(--muted)}
-  .ps-hint{margin-top:36px;color:var(--muted);font-size:12.5px;text-align:center;font-weight:600;max-width:440px}
-  .ps-manage{margin-top:16px;font-size:12.5px;color:var(--gold-deep);text-decoration:underline;font-weight:700}
-  .profile .del-mini{margin-top:4px;font-size:11px;color:var(--danger);text-decoration:underline;display:none}
-  .profile-screen.managing .profile:not(.add) .del-mini{display:block}
+<!-- Open Graph（Facebook / LINE などの共有カード） -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="けんけんぱのドラマレビュー">
+<meta property="og:title" content="けんけんぱのドラマレビュー">
+<meta property="og:description" content="観たドラマを5項目で採点する個人レビューサイト。日本・韓国・アメリカのドラマをジャンルや気分で探せます。">
+<meta property="og:url" content="https://kenkenpa-drama.com/">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:image" content="https://kenkenpa-drama.com/ogp.png">
 
-  /* ===== Header ===== */
-  header.site{padding:34px 0 16px;text-align:center;position:relative}
-  .eyebrow{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold-deep);opacity:.85;margin-bottom:12px;font-weight:700}
-  h1.logo{font-family:"Zen Maru Gothic",sans-serif;font-size:clamp(28px,7.5vw,46px);font-weight:900;letter-spacing:.03em;line-height:1.2}
-  h1.logo em{font-style:normal;background:linear-gradient(120deg,#d98e1e,#f2c25a,#e0a233);-webkit-background-clip:text;background-clip:text;color:transparent}
-  .tagline{color:var(--text-2);font-size:14.5px;margin-top:10px;font-weight:700}
-  .tagline2{color:var(--muted);font-size:12.5px;margin-top:6px;font-weight:500;max-width:560px;margin-left:auto;margin-right:auto}
-  .stats{display:flex;justify-content:center;gap:12px;margin-top:20px;flex-wrap:wrap}
-  .stat{background:var(--card);border:1.5px solid var(--border);border-radius:18px;padding:10px 16px;min-width:88px;box-shadow:var(--shadow-sm)}
-  .stat b{font-family:"Zen Maru Gothic",sans-serif;display:block;font-size:21px;color:var(--gold-deep);line-height:1.2}
-  .stat span{font-size:11px;color:var(--muted);font-weight:700}
-  .who-bar{display:none;justify-content:center;align-items:center;gap:8px;margin-top:16px}
-  .who-bar.show{display:flex}
-  .who-chip{display:inline-flex;align-items:center;gap:8px;background:var(--card);border:1.5px solid var(--gold-2);border-radius:999px;padding:5px 8px 5px 6px;font-weight:700;font-size:13px;color:var(--gold-deep)}
-  .who-chip .av{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px}
-  .who-bar button{font-size:12px;color:var(--muted);text-decoration:underline;font-weight:700}
+<!-- Twitter（X）カード -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="けんけんぱのドラマレビュー">
+<meta name="twitter:description" content="観たドラマを5項目で採点する個人レビューサイト。日本・韓国・アメリカのドラマをジャンルや気分で探せます。">
+<meta name="twitter:image" content="https://kenkenpa-drama.com/ogp.png">
 
-  /* ===== Toolbar ===== */
-  .toolbar{position:sticky;top:0;z-index:40;background:linear-gradient(rgba(253,246,236,.98),rgba(253,246,236,.86));backdrop-filter:blur(8px);padding:14px 0 12px;margin-top:8px;border-bottom:1.5px solid var(--border)}
-  .searchbar{position:relative;margin-bottom:10px}
-  .searchbar input{width:100%;padding:13px 14px 13px 44px;border-radius:14px;background:var(--card);border:1.5px solid var(--border);box-shadow:var(--shadow-sm)}
-  .searchbar input:focus{outline:none;border-color:var(--gold)}
-  .searchbar .ico{position:absolute;left:15px;top:50%;transform:translateY(-50%);opacity:.7}
-  .filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-  .filters select{padding:10px 12px;border-radius:12px;background:var(--card);border:1.5px solid var(--border);flex:1 1 auto;min-width:118px;font-weight:500}
-  .filters select:focus{outline:none;border-color:var(--gold)}
-  .btn-add{flex:0 0 auto;padding:10px 18px;border-radius:12px;font-weight:800;background:linear-gradient(120deg,#e8a838,#f2c25a);color:#5a3d09;box-shadow:0 5px 14px rgba(224,162,51,.35);white-space:nowrap}
-  .btn-add:active{transform:translateY(1px)}
+<!-- 構造化データ（検索エンジン向け・JSON-LD） -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": "https://kenkenpa-drama.com/#kenkenpa",
+      "name": "けんけんぱ",
+      "url": "https://kenkenpa-drama.com/",
+      "description": "「けんけんぱのドラマレビュー」の運営者・レビュアー。観たドラマを5項目で採点している。"
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://kenkenpa-drama.com/#website",
+      "name": "けんけんぱのドラマレビュー",
+      "alternateName": "けんけんぱのドラマレビュー",
+      "url": "https://kenkenpa-drama.com/",
+      "description": "観たドラマを、ストーリー・キャスト・映像美・音楽・満足度の5項目で採点する個人レビュー・評価サイト。日本・韓国・アメリカのドラマを収録。",
+      "inLanguage": "ja",
+      "about": "テレビドラマのレビューと5項目評価",
+      "creator": { "@id": "https://kenkenpa-drama.com/#kenkenpa" },
+      "author": { "@id": "https://kenkenpa-drama.com/#kenkenpa" }
+    }
+  ]
+}
+</script>
+<!-- ===== ここまで追記 ===== -->
 
-  /* ===== Grid & Card ===== */
-  .grid{display:grid;gap:16px;padding:22px 0 60px;grid-template-columns:1fr}
-  @media(min-width:560px){.grid{grid-template-columns:1fr 1fr}}
-  @media(min-width:900px){.grid{grid-template-columns:1fr 1fr 1fr}}
-  .card{background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;transition:border-color .2s,box-shadow .2s}
-  .card:hover{border-color:var(--gold-2);box-shadow:0 14px 30px rgba(190,150,90,.22)}
-  .card-top{display:flex;gap:14px;padding:16px}
-  .cover{flex:0 0 86px;width:86px;height:122px;border-radius:12px;overflow:hidden;background:var(--card-2);border:1.5px solid var(--border);position:relative;cursor:zoom-in;display:flex;align-items:center;justify-content:center;color:var(--muted-2);font-size:28px}
-  .cover img{width:100%;height:100%;object-fit:cover;display:block}
-  .fav-star{position:absolute;top:6px;right:6px;color:var(--gold-2);font-size:18px;text-shadow:0 1px 2px rgba(0,0,0,.15)}
-  .badge-read{position:absolute;top:6px;left:6px;background:#5fbf7a;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:8px}
-  .card-info{flex:1 1 auto;min-width:0}
-  .series{font-size:11px;color:var(--gold-deep);font-weight:800;margin-bottom:2px}
-  .card-title{font-family:"Zen Maru Gothic",sans-serif;font-size:16.5px;font-weight:700;line-height:1.35;margin-bottom:4px}
-  .card-author{font-size:12.5px;color:var(--muted);margin-bottom:8px;font-weight:500}
-  .metarow{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px}
-  .chip{font-size:11px;padding:3px 10px;border-radius:999px;font-weight:700;background:var(--card-2);border:1.5px solid var(--border);color:var(--text-2)}
-  .chip.gold{background:#fbeecd;border-color:var(--gold-2);color:var(--gold-deep)}
-  .chip.react-好き{background:#ffe6ef;border-color:#f4a9c4;color:#c85a86}
-  .chip.react-普通{background:#e5efff;border-color:#a9c4f4;color:#5271b8}
-  .chip.react-微妙{background:#eeeae4;border-color:#cbbfae;color:#8a7a66}
-  .chip.buy{background:#e9f6ec;border-color:#a9d9b8;color:#3f8a58}
-  .chip.rent{background:#eaf0fb;border-color:#aec4ec;color:#4a6bb0}
-  .chip.other{background:#f3ecfb;border-color:#cdb8ec;color:#7a5bb0}
-  .stars{display:inline-flex;gap:1px;font-size:16px;line-height:1;color:var(--gold)}
-  .stars .empty{color:#e6d7c1}
-  .rating-num{font-size:11.5px;color:var(--muted);margin-left:6px;font-weight:700}
-  .card-body{padding:0 16px 16px;display:none;border-top:1.5px solid var(--border);margin-top:2px}
-  .card.open .card-body{display:block;padding-top:14px}
-  .sec{margin-top:12px}
-  .sec h4{font-size:11px;letter-spacing:.08em;color:var(--gold-deep);text-transform:uppercase;margin-bottom:5px;font-weight:800}
-  .sec p{font-size:14px;color:var(--text-2);white-space:pre-wrap;line-height:1.75}
-  .detail-grid{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin-top:12px;font-size:13px}
-  .detail-grid dt{color:var(--muted);font-weight:700}
-  .detail-grid dd{color:var(--text-2);font-weight:500}
-  .tags-row{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
-  .tag{font-size:11px;padding:2px 9px;border-radius:999px;border:1.5px dashed var(--border-2);color:var(--muted);font-weight:700}
-  .card-actions{display:flex;gap:8px;margin-top:15px;flex-wrap:wrap}
-  .lnk-buy{flex:1 1 auto;text-align:center;padding:10px;border-radius:12px;font-weight:800;font-size:13px;background:linear-gradient(120deg,#e8a838,#f2c25a);color:#5a3d09;text-decoration:none}
-  .admin-btns{display:flex;gap:8px}
-  .admin-btns button{padding:10px 13px;border-radius:12px;font-size:12.5px;font-weight:800;border:1.5px solid var(--border-2);background:var(--card-2);color:var(--text-2)}
-  .admin-btns .del{border-color:#f0c2c1;color:var(--danger);background:#fdeeee}
-  .card-foot{padding:11px 16px;display:flex;justify-content:space-between;align-items:center;border-top:1.5px solid var(--border);cursor:pointer;font-size:12px;color:var(--muted);font-weight:600}
-  .card-foot .regby{display:inline-flex;align-items:center;gap:5px;color:var(--gold-deep);font-weight:800}
-  .card-foot .regby .av{width:20px;height:20px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;font-size:12px}
-  .card-foot .toggle{color:var(--gold-deep);font-weight:800}
-  .empty-state{text-align:center;color:var(--muted);padding:60px 20px;font-weight:600}
-  .empty-state .big{font-size:46px;margin-bottom:10px}
-
-  /* ===== Modal ===== */
-  .overlay{position:fixed;inset:0;background:rgba(74,59,44,.42);backdrop-filter:blur(3px);display:none;align-items:flex-start;justify-content:center;z-index:100;padding:24px 12px;overflow-y:auto}
-  .overlay.show{display:flex}
-  /* プロフィール追加フォームはプロフィール選択画面(z-index:200)より前面に */
-  #pf-overlay{z-index:260}
-  .modal{width:100%;max-width:560px;background:var(--bg-2);border:1.5px solid var(--border-2);border-radius:24px;box-shadow:0 24px 60px rgba(120,90,50,.28);margin:auto}
-  .modal-head{display:flex;justify-content:space-between;align-items:center;padding:18px 20px;border-bottom:1.5px solid var(--border);position:sticky;top:0;background:var(--bg-2);border-radius:24px 24px 0 0}
-  .modal-head h3{font-family:"Zen Maru Gothic",sans-serif;font-size:17px;font-weight:700}
-  .modal-head .x{font-size:22px;color:var(--muted);line-height:1}
-  .modal-body{padding:18px}
-  .field{margin-bottom:15px}
-  .field label{display:block;font-size:12.5px;color:var(--text-2);margin-bottom:6px;font-weight:800}
-  .field label .req{color:var(--danger)}
-  .field input,.field select,.field textarea{width:100%;padding:12px;border-radius:12px;background:var(--card);border:1.5px solid var(--border)}
-  .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--gold)}
-  .field textarea{resize:vertical;min-height:76px;line-height:1.7}
-  .row2{display:flex;gap:10px} .row2>.field{flex:1}
-  .isbn-fetch{display:flex;gap:8px} .isbn-fetch input{flex:1}
-  .isbn-fetch button{flex:0 0 auto;padding:0 16px;border-radius:12px;font-weight:800;font-size:12.5px;background:linear-gradient(120deg,#e8a838,#f2c25a);color:#5a3d09;white-space:nowrap}
-  .fetch-hint{font-size:11.5px;color:var(--muted);margin-top:6px;font-weight:500}
-  .checks{display:flex;flex-wrap:wrap;gap:8px}
-  .checks label{font-size:13px;padding:8px 14px;border-radius:999px;border:1.5px solid var(--border);background:var(--card);color:var(--text-2);cursor:pointer;user-select:none;font-weight:700}
-  .checks input{display:none}
-  .checks label:has(input:checked){background:linear-gradient(120deg,#e8a838,#f2c25a);border-color:var(--gold);color:#5a3d09}
-  .star-input{display:flex;align-items:center;gap:2px}
-  .star-input .s{position:relative;width:32px;height:32px;font-size:30px;line-height:32px;color:#e6d7c1}
-  .star-input .s .fill{position:absolute;left:0;top:0;overflow:hidden;color:var(--gold);white-space:nowrap;width:0}
-  .star-input .s .half,.star-input .s .full{position:absolute;top:0;height:100%;cursor:pointer;z-index:2}
-  .star-input .s .half{left:0;width:50%} .star-input .s .full{right:0;width:50%}
-  .star-input .val{margin-left:10px;font-size:15px;color:var(--gold-deep);font-weight:800;font-family:"Zen Maru Gothic",sans-serif}
-  .star-clear{margin-left:8px;font-size:11.5px;color:var(--muted);text-decoration:underline;font-weight:600}
-  .reaction-pick{display:flex;gap:8px}
-  .reaction-pick label{flex:1;text-align:center;padding:11px 6px;border-radius:14px;border:1.5px solid var(--border);background:var(--card);cursor:pointer;font-size:13px;color:var(--muted);font-weight:700}
-  .reaction-pick input{display:none}
-  .reaction-pick label:has(input:checked){border-color:var(--gold);color:var(--gold-deep);background:#fbeecd}
-  .reaction-pick .emo{display:block;font-size:24px;margin-bottom:2px}
-  .switch{display:flex;align-items:center;gap:10px;cursor:pointer;font-weight:700;color:var(--text-2)}
-  .switch input{display:none}
-  .switch .track{width:48px;height:28px;border-radius:999px;background:#eadfce;border:1.5px solid var(--border);position:relative;transition:.2s;flex:0 0 auto}
-  .switch .track::after{content:"";position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:.2s}
-  .switch input:checked + .track{background:#9ad9ac;border-color:var(--good)}
-  .switch input:checked + .track::after{left:24px}
-  .modal-foot{display:flex;gap:10px;padding:16px 18px;border-top:1.5px solid var(--border);position:sticky;bottom:0;background:var(--bg-2);border-radius:0 0 24px 24px}
-  .btn-primary{flex:1;padding:14px;border-radius:14px;font-weight:800;font-size:15px;background:linear-gradient(120deg,#e8a838,#f2c25a);color:#5a3d09}
-  .btn-ghost{padding:14px 18px;border-radius:14px;border:1.5px solid var(--border-2);color:var(--muted);font-weight:700}
-  .cover-preview{width:72px;height:104px;border-radius:10px;object-fit:cover;border:1.5px solid var(--border);background:var(--card);margin-top:8px;display:none}
-  .cover-preview.show{display:block}
-  .regby-note{background:#fbeecd;border:1.5px solid var(--gold-2);border-radius:12px;padding:10px 12px;font-size:12.5px;color:var(--gold-deep);font-weight:700;display:flex;align-items:center;gap:8px}
-  .regby-note .av{width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px}
-
-  /* profile add modal specifics */
-  .emoji-pick{display:flex;flex-wrap:wrap;gap:8px}
-  .emoji-pick span{width:44px;height:44px;border-radius:12px;background:var(--card);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer}
-  .emoji-pick span.on{border-color:var(--gold);background:#fbeecd}
-  .color-pick{display:flex;gap:10px;flex-wrap:wrap}
-  .color-pick span{width:34px;height:34px;border-radius:50%;border:3px solid transparent;cursor:pointer}
-  .color-pick span.on{border-color:var(--gold-deep)}
-
-  .lightbox{position:fixed;inset:0;background:rgba(74,59,44,.85);display:none;align-items:center;justify-content:center;z-index:300;padding:24px;cursor:zoom-out}
-  .lightbox.show{display:flex}
-  .lightbox img{max-width:100%;max-height:90vh;border-radius:14px}
-  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(30px);background:var(--text);color:#fff;padding:13px 22px;border-radius:14px;box-shadow:0 10px 26px rgba(74,59,44,.35);z-index:400;opacity:0;transition:.25s;font-size:13.5px;max-width:90vw;text-align:center;font-weight:700}
-  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-  .toast.err{background:#c9544f} .toast.ok{background:#4faf6d}
-  .loading{text-align:center;padding:60px;color:var(--muted);font-weight:600}
-  .spin{width:34px;height:34px;border:3px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:sp 1s linear infinite;margin:0 auto 14px}
-  @keyframes sp{to{transform:rotate(360deg)}}
-  footer.site{text-align:center;padding:30px 16px 50px;color:var(--muted);font-size:12px;border-top:1.5px solid var(--border);font-weight:500}
-  footer.site .heart{color:#e88aa0}
-</style>
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NK4MCM9C"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
 
-<!-- ===== プロフィール選択画面 ===== -->
-<div class="profile-screen" id="profile-screen">
-  <div class="ps-eyebrow">Kids Book Library</div>
-  <div class="ps-title">だれが つかう？<br><em>おうち えほん館</em></div>
-  <div class="ps-sub">プロフィールを選んでね</div>
-  <div class="profiles" id="profiles"></div>
-  <div class="ps-hint">選ぶと、その人として本を登録・編集できます。<br>本を追加すると「登録者」が自動でその人になります。</div>
-  <div class="ps-manage" id="ps-manage" onclick="toggleManage()">プロフィールを編集</div>
-</div>
-
-<!-- ===== メイン ===== -->
-<header class="site">
-  <div class="wrap">
-    <div class="eyebrow">Kids Book Library</div>
-    <h1 class="logo">おうち <em>えほん館</em></h1>
-    <p class="tagline">読んでよかった、をぜんぶ記録する。</p>
-    <p class="tagline2">子供に読ませたい本と知育おもちゃのライブラリ。あやかの評価と子供のリアルな反応をあわせて残しています。</p>
-    <div class="stats">
-      <div class="stat"><b id="stat-count">–</b><span>登録数</span></div>
-      <div class="stat"><b id="stat-avg">–</b><span>平均評価</span></div>
-      <div class="stat"><b id="stat-read">–</b><span>読み聞かせ済</span></div>
-      <div class="stat"><b id="stat-fav">–</b><span>お気に入り</span></div>
+<a href="#main-content" class="skip-link">メインコンテンツへスキップ</a>
+<header class="site-header">
+  <div class="site-header-top">
+    <div>
+      <div class="eyebrow">drama reviews</div>
+      <div class="site-title">けんけんぱの<br><em>ドラマレビュー</em></div>
+      <div class="site-desc">私の個人的な評価を記録する場所</div>
     </div>
-    <div class="who-bar" id="who-bar">
-      <span class="who-chip"><span class="av" id="who-av"></span><span id="who-name"></span></span>
-      <button onclick="switchProfile()">切り替え</button>
+    <div style="display:flex; align-items:center; gap:6px; align-self:flex-end; min-width:0; width:100%;">
+      <div class="search-bar-wrap" style="flex:1; min-width:0; width:auto;">
+        <span class="search-bar-icon">🔍</span>
+        <input type="text" class="search-bar" id="search-input" placeholder="検索...">
+        <button class="search-btn" id="search-btn" aria-label="検索">検索</button>
+        <button class="search-clear-btn" id="search-clear-btn" aria-label="クリア" style="display:none">✕</button>
+      </div>
+      <button id="usage-btn" class="usage-btn" aria-label="使い方" style="flex-shrink:0;">使い方</button>
+    </div>
+  </div>
+  <div class="site-header-bottom">
+    <div class="header-stats">
+      <div class="stat"><div class="stat-num" id="total-count">—</div><div class="stat-label">作品</div></div>
+      <div class="stat"><div class="stat-num" id="avg-rating">—</div><div class="stat-label">平均評価</div></div>
+    </div>
+    <div class="last-updated" style="margin-left:auto; display:flex; align-items:center; gap:8px;">
+      <span>最終更新：<span id="last-updated-html">読込中...</span>（サイト） / <span id="last-updated-data">読込中...</span>（データ）</span>
+      <button id="refresh-btn" title="データを再読み込み" style="background:transparent;border:1px solid rgba(255,255,255,.12);color:#555;width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;font-family:inherit;">↻</button>
     </div>
   </div>
 </header>
 
-<div class="toolbar">
-  <div class="wrap">
-    <div class="searchbar"><span class="ico">🔍</span><input type="search" id="search" placeholder="タイトル・著者名で検索…"></div>
-    <div class="filters">
-      <select id="f-genre"><option value="">ジャンル：すべて</option></select>
-      <select id="f-age"><option value="">対象年齢：すべて</option></select>
-      <select id="f-acq"><option value="">入手方法：すべて</option></select>
-      <select id="f-react"><option value="">子供の反応：すべて</option><option value="好き">好き</option><option value="普通">普通</option><option value="微妙">微妙</option></select>
-      <select id="sort">
-        <option value="new">新しい順</option><option value="old">古い順</option>
-        <option value="rating">評価が高い順</option><option value="fav">お気に入り優先</option><option value="title">タイトル順</option>
-      </select>
-      <button class="btn-add" id="btn-add" style="display:none" onclick="openForm()">＋ 追加</button>
+<!-- 編集モーダル -->
+<div id="edit-modal-overlay" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-title">
+      ドラマを編集
+      <button class="modal-close" id="edit-modal-close" aria-label="閉じる">✕</button>
+    </div>
+    <input type="hidden" id="e-original-title">
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">タイトル *</label>
+        <input type="text" class="form-input" id="e-title">
+      </div>
+      <div class="form-group">
+        <label class="form-label">国 *</label>
+        <select class="form-select" id="e-country">
+          <option value="日本">日本</option>
+          <option value="韓国">韓国</option>
+          <option value="アメリカ">アメリカ</option>
+          <option value="その他">その他</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">簡単な内容</label>
+      <textarea class="form-textarea" id="e-summary"></textarea>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">ジャンル（複数選択可）</label>
+      <div class="genre-grid" id="e-genre-grid">
+          <label class="genre-check-label"><input type="checkbox" value="ロマンス"> ロマンス</label>
+          <label class="genre-check-label"><input type="checkbox" value="ヒューマン"> ヒューマン</label>
+          <label class="genre-check-label"><input type="checkbox" value="サスペンス・ミステリー"> サスペンス・ミステリー</label>
+          <label class="genre-check-label"><input type="checkbox" value="刑事・警察・法廷"> 刑事・警察・法廷</label>
+          <label class="genre-check-label"><input type="checkbox" value="コメディ"> コメディ</label>
+          <label class="genre-check-label"><input type="checkbox" value="医療"> 医療</label>
+          <label class="genre-check-label"><input type="checkbox" value="青春・学園"> 青春・学園</label>
+          <label class="genre-check-label"><input type="checkbox" value="社会派"> 社会派</label>
+          <label class="genre-check-label"><input type="checkbox" value="アクション・復讐"> アクション・復讐</label>
+          <label class="genre-check-label"><input type="checkbox" value="ファンタジー・SF"> ファンタジー・SF</label>
+          <label class="genre-check-label"><input type="checkbox" value="スポーツ"> スポーツ</label>
+          <label class="genre-check-label"><input type="checkbox" value="グルメ・お仕事"> グルメ・お仕事</label>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">出演者</label>
+        <input type="text" class="form-input" id="e-cast">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">原作</label>
+        <input type="text" class="form-input" id="e-theme">
+      </div>
+      <div class="form-group">
+        <label class="form-label">放送局</label>
+        <input type="text" class="form-input" id="e-station">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">放送された年</label>
+        <input type="text" class="form-input" id="e-year">
+      </div>
+      <div class="form-group">
+        <label class="form-label">放送曜日・時間</label>
+        <input type="text" class="form-input" id="e-day">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">評価（各項目 1〜5）</label>
+      <div class="score-grid">
+        <div class="form-group"><label class="form-label">ストーリー</label><select class="form-select" id="e-score-story"><option value="5">5</option><option value="4">4</option><option value="3" selected>3</option><option value="2">2</option><option value="1">1</option></select></div>
+        <div class="form-group"><label class="form-label">キャスト</label><select class="form-select" id="e-score-cast"><option value="5">5</option><option value="4">4</option><option value="3" selected>3</option><option value="2">2</option><option value="1">1</option></select></div>
+        <div class="form-group"><label class="form-label">映像美</label><select class="form-select" id="e-score-visual"><option value="5">5</option><option value="4">4</option><option value="3" selected>3</option><option value="2">2</option><option value="1">1</option></select></div>
+        <div class="form-group"><label class="form-label">音楽</label><select class="form-select" id="e-score-music"><option value="5">5</option><option value="4">4</option><option value="3" selected>3</option><option value="2">2</option><option value="1">1</option></select></div>
+        <div class="form-group"><label class="form-label">満足度</label><select class="form-select" id="e-score-sat"><option value="5">5</option><option value="4">4</option><option value="3" selected>3</option><option value="2">2</option><option value="1">1</option></select></div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">1話平均時間（分）</label>
+        <input type="number" class="form-input" id="e-episode-time" placeholder="例：45" min="1" max="200">
+      </div>
+      <div class="form-group">
+        <label class="form-label">話数</label>
+        <input type="number" class="form-input" id="e-episodes" placeholder="例：10" min="1" max="999">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">再視聴</label>
+        <select class="form-select" id="e-rewatch">
+          <option value="">未設定</option>
+          <option value="またみたい">またみたい</option>
+          <option value="1回でいい">1回でいい</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">配信サービス（複数選択可）</label>
+      <div class="genre-grid" id="e-streaming-grid"></div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">画像URL</label>
+      <input type="text" class="form-input" id="e-image" placeholder="https://... （またはTMDBで検索）">
+      <div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap">
+        <button type="button" class="tmdb-search-btn" id="e-tmdb-autofill-btn">✨ TMDBからまとめて自動入力</button>
+        <button type="button" class="tmdb-search-btn" style="background:transparent;border-color:rgba(1,180,228,0.2);color:#555;" id="e-tmdb-btn">🔍 ポスターのみ検索</button>
+      </div>
+      <div class="tmdb-results" id="e-tmdb-results"></div>
+      <div class="tmdb-label" id="e-tmdb-label" style="display:none">
+        画像提供: <a href="https://www.themoviedb.org" target="_blank" rel="noopener" style="color:#01b4e4;text-decoration:none;">The Movie Database (TMDB)</a>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">予告編URL（YouTube）</label>
+      <input type="url" class="form-input" id="e-trailer" placeholder="https://www.youtube.com/watch?v=...">
+    </div>
+    <div class="form-group">
+      <label class="form-label">感想</label>
+      <textarea class="form-textarea" id="e-review"></textarea>
+    </div>
+    <button class="form-submit" id="edit-form-submit">保存する</button>
+    <div class="form-msg" id="edit-form-msg"></div>
+  </div>
+</div>
+
+<!-- 削除バー -->
+<div class="delete-bar" id="delete-bar">
+  <div class="delete-bar-info">
+    <strong id="delete-count">0</strong> 件選択中
+  </div>
+  <div class="delete-bar-btns">
+    <button class="delete-cancel-btn" id="delete-cancel-btn">キャンセル</button>
+    <button class="delete-exec-btn" id="delete-exec-btn">削除する</button>
+  </div>
+</div>
+
+<!-- 管理者モーダル -->
+<div id="modal-overlay" class="modal-overlay">
+  <div class="modal">
+    <!-- パスワード画面 -->
+    <div id="pw-screen" class="pw-screen">
+      <div class="modal-title">
+        管理者ログイン
+        <button class="modal-close" id="modal-close-pw" aria-label="閉じる">✕</button>
+      </div>
+      <p>管理者トークンを入力してください</p>
+      <div class="pw-input-wrap">
+        <input type="password" class="form-input" id="pw-input" placeholder="管理者トークン" autocomplete="off">
+        <button class="pw-enter" id="pw-enter">ログイン</button>
+      </div>
+      <div class="pw-error" id="pw-error"></div>
+    </div>
+    <!-- 追加フォーム -->
+    <div id="add-form-screen" style="display:none">
+      <div class="modal-title">
+        ドラマを追加
+        <button class="modal-close" id="modal-close-form" aria-label="閉じる">✕</button>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">タイトル *</label>
+          <input type="text" class="form-input" id="f-title" placeholder="例：舟を編む">
+        </div>
+        <div class="form-group">
+          <label class="form-label">国 *</label>
+          <select class="form-select" id="f-country">
+            <option value="日本">日本</option>
+            <option value="韓国">韓国</option>
+            <option value="アメリカ">アメリカ</option>
+            <option value="その他">その他</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">簡単な内容</label>
+        <textarea class="form-textarea" id="f-summary" placeholder="あらすじを入力"></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">ジャンル（複数選択可）</label>
+          <div class="genre-grid" id="f-genre-grid">
+          <label class="genre-check-label"><input type="checkbox" value="ロマンス"> ロマンス</label>
+          <label class="genre-check-label"><input type="checkbox" value="ヒューマン"> ヒューマン</label>
+          <label class="genre-check-label"><input type="checkbox" value="サスペンス・ミステリー"> サスペンス・ミステリー</label>
+          <label class="genre-check-label"><input type="checkbox" value="刑事・警察・法廷"> 刑事・警察・法廷</label>
+          <label class="genre-check-label"><input type="checkbox" value="コメディ"> コメディ</label>
+          <label class="genre-check-label"><input type="checkbox" value="医療"> 医療</label>
+          <label class="genre-check-label"><input type="checkbox" value="青春・学園"> 青春・学園</label>
+          <label class="genre-check-label"><input type="checkbox" value="社会派"> 社会派</label>
+          <label class="genre-check-label"><input type="checkbox" value="アクション・復讐"> アクション・復讐</label>
+          <label class="genre-check-label"><input type="checkbox" value="ファンタジー・SF"> ファンタジー・SF</label>
+          <label class="genre-check-label"><input type="checkbox" value="スポーツ"> スポーツ</label>
+          <label class="genre-check-label"><input type="checkbox" value="グルメ・お仕事"> グルメ・お仕事</label>
+        </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">出演者</label>
+          <input type="text" class="form-input" id="f-cast" placeholder="例：山田太郎、鈴木花子">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">原作</label>
+          <input type="text" class="form-input" id="f-theme" placeholder="原作小説名、漫画名など">
+        </div>
+        <div class="form-group">
+          <label class="form-label">放送局</label>
+          <input type="text" class="form-input" id="f-station" placeholder="例：TBS">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">放送された年</label>
+          <input type="text" class="form-input" id="f-year" placeholder="例：2024年">
+        </div>
+        <div class="form-group">
+          <label class="form-label">放送曜日・時間</label>
+          <input type="text" class="form-input" id="f-day" placeholder="例：月 22:00">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">評価（各項目 1〜5）</label>
+        <div class="score-grid">
+          <div class="form-group"><label class="form-label">ストーリー</label><select class="form-select" id="f-score-story" aria-label="ストーリー評価"><option value="5">5</option><option value="4">4</option><option value="3" selected>3</option><option value="2">2</option><option value="1">1</option></select></div>
+          <div class="form-group"><label class="form-label">キャスト</label><select class="form-select" id="f-score-cast" aria-label="キャスト評価"><option value="5">5</option><option value="4">4</option><option value="3" selected>3</option><option value="2">2</option><option value="1">1</option></select></div>
+          <div class="form-group"><label class="form-label">映像美</label><select class="form-select" id="f-score-visual" aria-label="映像美評価"><option value="5">5</option><option value="4">4</option><option value="3" selected>3</option><option value="2">2</option><option value="1">1</option></select></div>
+          <div class="form-group"><label class="form-label">音楽</label><select class="form-select" id="f-score-music" aria-label="音楽評価"><option value="5">5</option><option value="4">4</option><option value="3" selected>3</option><option value="2">2</option><option value="1">1</option></select></div>
+          <div class="form-group"><label class="form-label">満足度</label><select class="form-select" id="f-score-sat" aria-label="満足度評価"><option value="5">5</option><option value="4">4</option><option value="3" selected>3</option><option value="2">2</option><option value="1">1</option></select></div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">1話平均時間（分）</label>
+          <input type="number" class="form-input" id="f-episode-time" placeholder="例：45" min="1" max="200">
+        </div>
+        <div class="form-group">
+          <label class="form-label">話数</label>
+          <input type="number" class="form-input" id="f-episodes" placeholder="例：10" min="1" max="999">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">再視聴</label>
+          <select class="form-select" id="f-rewatch">
+            <option value="">未設定</option>
+            <option value="またみたい">またみたい</option>
+            <option value="1回でいい">1回でいい</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">配信サービス（複数選択可）</label>
+        <div class="genre-grid" id="f-streaming-grid"></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">画像URL</label>
+        <input type="text" class="form-input" id="f-image" placeholder="https://... （またはTMDBで検索）">
+        <div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap">
+          <button type="button" class="tmdb-search-btn" id="f-tmdb-autofill-btn">✨ TMDBからまとめて自動入力</button>
+          <button type="button" class="tmdb-search-btn" style="background:transparent;border-color:rgba(1,180,228,0.2);color:#555;" id="f-tmdb-btn">🔍 ポスターのみ検索</button>
+        </div>
+        <div class="tmdb-results" id="f-tmdb-results"></div>
+        <div class="tmdb-label" id="f-tmdb-label" style="display:none">
+          画像提供: <a href="https://www.themoviedb.org" target="_blank" rel="noopener" style="color:#01b4e4;text-decoration:none;">The Movie Database (TMDB)</a>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">予告編URL（YouTube）</label>
+        <input type="url" class="form-input" id="f-trailer" placeholder="https://www.youtube.com/watch?v=...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">感想</label>
+        <textarea class="form-textarea" id="f-review" placeholder="感想を入力"></textarea>
+      </div>
+      <button class="form-submit" id="form-submit">スプレッドシートに追加する</button>
+      <div class="form-msg" id="form-msg"></div>
     </div>
   </div>
 </div>
 
-<main class="wrap">
-  <div id="loading" class="loading"><div class="spin"></div>読み込み中…</div>
-  <div class="grid" id="grid"></div>
+<div id="filter-overlay" class="filter-overlay">
+  <button class="filter-close" id="filter-close">✕　閉じる</button>
+  <div class="filter-section">
+    <div class="filter-section-title">国で絞り込み</div>
+    <div class="filter-options" id="country-filter">
+      <label><input type="checkbox" value="all" checked> すべての国</label>
+      <label><input type="checkbox" value="日本"> 日本</label>
+      <label><input type="checkbox" value="韓国"> 韓国</label>
+      <label><input type="checkbox" value="アメリカ"> アメリカ</label>
+      <label><input type="checkbox" value="その他"> その他</label>
+    </div>
+  </div>
+  <div class="filter-section">
+    <div class="filter-section-title">点数で絞り込み</div>
+    <div class="filter-options" id="rating-filter">
+      <label><input type="checkbox" value="all" checked> すべての点数</label>
+      <label><input type="checkbox" value="5"> ★★★★★　5</label>
+      <label><input type="checkbox" value="4"> ★★★★☆　4</label>
+      <label><input type="checkbox" value="3"> ★★★☆☆　3</label>
+      <label><input type="checkbox" value="2"> ★★☆☆☆　2</label>
+      <label><input type="checkbox" value="1"> ★☆☆☆☆　1</label>
+    </div>
+  </div>
+  <div class="filter-section">
+    <div class="filter-section-title">ジャンルで絞り込み</div>
+    <div class="filter-options" id="genre-filter">
+      <label><input type="checkbox" value="all" checked> すべてのジャンル</label>
+    </div>
+  </div>
+  <div class="filter-section">
+    <div class="filter-section-title">年代で絞り込み</div>
+    <div class="filter-options" id="decade-filter">
+      <label><input type="checkbox" value="all" checked> すべての年代</label>
+      <label><input type="checkbox" value="2020"> 2020年代</label>
+      <label><input type="checkbox" value="2010"> 2010年代</label>
+      <label><input type="checkbox" value="2000"> 2000年代</label>
+      <label><input type="checkbox" value="その他"> その他</label>
+    </div>
+    </div>
+  <!-- ★【改善】配信サービスで絞り込みフィルターを追加 -->
+  <div class="filter-section">
+    <div class="filter-section-title">配信サービスで絞り込み</div>
+    <div class="filter-options" id="streaming-filter">
+      <label><input type="checkbox" value="all" checked> すべて</label>
+      <label><input type="checkbox" value="Netflix"> Netflix</label>
+      <label><input type="checkbox" value="Amazon Prime Video"> Amazon Prime Video</label>
+      <label><input type="checkbox" value="U-NEXT"> U-NEXT</label>
+      <label><input type="checkbox" value="Hulu"> Hulu</label>
+      <label><input type="checkbox" value="FOD"> FOD</label>
+      <label><input type="checkbox" value="NHKオンデマンド"> NHKオンデマンド</label>
+    </div>
+  </div>
+</div>
+
+<div class="rating-legend">
+  <span class="legend-item"><span class="legend-stars">★★★★★</span>絶対見てほしい</span>
+  <span class="legend-sep">／</span>
+  <span class="legend-item"><span class="legend-stars">★★★★</span>すごくいい</span>
+  <span class="legend-sep">／</span>
+  <span class="legend-item"><span class="legend-stars">★★★</span>良かった</span>
+  <span class="legend-sep">／</span>
+  <span class="legend-item"><span class="legend-stars">★★</span>まあまあ</span>
+  <span class="legend-sep">／</span>
+  <span class="legend-item"><span class="legend-stars">★</span>普通</span>
+</div>
+
+<main id="main-content" tabindex="-1">
+<!-- コントロールバー：3行構成 -->
+<div class="search-and-controls">
+  <!-- 1行目：機能ボタン＋件数 -->
+  <div class="controls" style="gap:6px; align-items:center; width:100%; flex-wrap:nowrap; overflow-x:auto; scrollbar-width:none;">
+    <button id="mood-toggle-btn" class="mood-toggle-btn" aria-expanded="false" aria-controls="mood-drawer" style="flex-shrink:0;">🎭 気分で選ぶ</button>
+    <button id="filter-button" class="filter-button" style="flex-shrink:0;">🔽 フィルター</button>
+    <button id="admin-login-button" class="admin-button" style="flex-shrink:0;">🔑 管理者</button>
+    <button id="admin-button" class="admin-button" style="flex-shrink:0;">＋ 追加</button>
+    <button id="delete-mode-button" class="admin-button" style="flex-shrink:0;">🗑 削除</button>
+    <button id="admin-logout-button" class="admin-button" style="flex-shrink:0;">🔓 ログアウト</button>
+    <span id="mood-active-tag" style="display:none; align-items:center; gap:4px; font-size:10px; padding:3px 10px; border-radius:20px; background:rgba(201,168,76,0.12); border:1px solid rgba(201,168,76,0.3); color:#c9a84c; flex-shrink:0;">
+      <span id="mood-active-label"></span>
+      <button id="mood-clear-tag-btn" style="background:none;border:none;color:#c9a84c;cursor:pointer;font-size:13px;line-height:1;padding:0 0 0 2px;" aria-label="気分をクリア">✕</button>
+    </span>
+    <div id="active-filter-tags" class="active-filter-tags" style="flex-shrink:0;"></div>
+    <span class="result-count" id="result-count" style="margin-left:auto; flex-shrink:0; white-space:nowrap;"></span>
+  </div>
+  <!-- 2行目：国チップ横スクロール -->
+  <div style="display:flex; gap:6px; align-items:center; flex-wrap:nowrap; overflow-x:auto; padding:5px 0 4px; margin-top:5px; scrollbar-width:none; -webkit-overflow-scrolling:touch;">
+    <button class="chip active" data-filter="all">すべて</button>
+    <span id="country-chips" style="display:contents;"></span>
+  </div>
+  <!-- 3行目：ソートボタン横スクロール -->
+  <div style="display:flex; gap:6px; align-items:center; flex-wrap:nowrap; overflow-x:auto; padding:4px 0 6px; scrollbar-width:none; -webkit-overflow-scrolling:touch;">
+    <span style="font-size:9px; color:#6b5d3f; letter-spacing:.1em; text-transform:uppercase; white-space:nowrap; flex-shrink:0;">並び順</span>
+    <button class="sort-inline-btn active" data-sort="rating-desc">⭐ 評価順</button>
+    <button class="sort-inline-btn" data-sort="year-desc">📅 新しい順</button>
+    <button class="sort-inline-btn" data-sort="likes-desc">🔖 気になる順</button>
+    <button class="sort-inline-btn" data-sort="vavg-desc">👥 みんな</button>
+    <button class="sort-inline-btn" data-sort="title-asc">🔤 あいうえお順</button>
+    <button class="sort-inline-btn" data-sort="year-asc">📅 古い順</button>
+    <button class="sort-inline-btn" data-sort="default">🔄 デフォルト</button>
+  </div>
+</div>
+
+<!-- 気分引き出しパネル -->
+<div id="mood-drawer" class="mood-drawer" aria-hidden="true">
+  <div class="mood-drawer-inner">
+    <div class="mood-drawer-label">今夜の気分は？</div>
+    <div class="mood-grid-inner">
+      <div class="mood-tile" data-mood="cry"     data-genres="ヒューマン,ロマンス"            data-rewatch="">
+        <div class="mood-tile-icon">😭</div><div class="mood-tile-name">泣きたい</div>
+      </div>
+      <div class="mood-tile" data-mood="laugh"   data-genres="コメディ"                      data-rewatch="">
+        <div class="mood-tile-icon">😂</div><div class="mood-tile-name">笑いたい</div>
+      </div>
+      <div class="mood-tile" data-mood="love"    data-genres="ロマンス"                      data-rewatch="">
+        <div class="mood-tile-icon">💓</div><div class="mood-tile-name">恋愛したい</div>
+      </div>
+      <div class="mood-tile" data-mood="thrill"  data-genres="サスペンス・ミステリー,刑事・警察・法廷" data-rewatch="">
+        <div class="mood-tile-icon">😱</div><div class="mood-tile-name">ハラハラしたい</div>
+      </div>
+      <div class="mood-tile" data-mood="revenge" data-genres="アクション・復讐"               data-rewatch="">
+        <div class="mood-tile-icon">⚡</div><div class="mood-tile-name">スカッとしたい</div>
+      </div>
+      <div class="mood-tile" data-mood="short"   data-genres=""                             data-maxepisodes="6" data-rewatch="">
+        <div class="mood-tile-icon">🌙</div><div class="mood-tile-name">サクッと見たい</div>
+      </div>
+      <div class="mood-tile" data-mood="mature"  data-genres="社会派,医療"                   data-rewatch="">
+        <div class="mood-tile-icon">🍷</div><div class="mood-tile-name">大人な気分</div>
+      </div>
+      <div class="mood-tile" data-mood="rewatch" data-genres=""                             data-rewatch="またみたい">
+        <div class="mood-tile-icon">✨</div><div class="mood-tile-name">また見たい</div>
+      </div>
+    </div>
+    <button class="mood-clear" id="mood-clear-btn" style="display:none">気分をクリア</button>
+  </div>
+</div>
+  <div id="drama-list" class="drama-list">
+    <!-- スケルトンカード（JS読み込み後に置き換わる） -->
+    <div class="skeleton-card" aria-hidden="true"><div class="skeleton-poster skeleton-line"></div><div class="skeleton-body"><div class="skeleton-line w80"></div><div class="skeleton-line w55"></div><div class="skeleton-line w35"></div></div></div>
+    <div class="skeleton-card" aria-hidden="true"><div class="skeleton-poster skeleton-line"></div><div class="skeleton-body"><div class="skeleton-line w55"></div><div class="skeleton-line w80"></div><div class="skeleton-line w35"></div></div></div>
+    <div class="skeleton-card" aria-hidden="true"><div class="skeleton-poster skeleton-line"></div><div class="skeleton-body"><div class="skeleton-line w80"></div><div class="skeleton-line w35"></div><div class="skeleton-line w55"></div></div></div>
+    <div class="skeleton-card" aria-hidden="true"><div class="skeleton-poster skeleton-line"></div><div class="skeleton-body"><div class="skeleton-line w35"></div><div class="skeleton-line w80"></div><div class="skeleton-line w55"></div></div></div>
+    <div class="skeleton-card" aria-hidden="true"><div class="skeleton-poster skeleton-line"></div><div class="skeleton-body"><div class="skeleton-line w80"></div><div class="skeleton-line w55"></div><div class="skeleton-line w35"></div></div></div>
+  </div>
 </main>
 
-<footer class="site">
-  <div>© 2026 おうち えほん館</div>
-  <div style="margin-top:6px">Made with <span class="heart">♥</span> ・ 表紙・書誌: openBD & Google Books</div>
+<!-- 使い方モーダル -->
+<div id="usage-overlay" class="usage-overlay" role="dialog" aria-modal="true" aria-label="使い方">
+  <div class="usage-modal">
+    <div class="usage-header">
+      <div class="usage-eyebrow">how to use</div>
+      <div class="usage-title">けんけんぱの<br><em>ドラマレビュー</em> の使い方</div>
+      <div class="usage-sub">このサイトでできることを簡単にご紹介します</div>
+    </div>
+    <div class="usage-steps">
+      <div class="usage-step">
+        <div class="usage-step-num">1</div>
+        <div>
+          <div class="usage-step-icon">🎬</div>
+          <div class="usage-step-label">ドラマをタップして詳細を見る</div>
+          <div class="usage-step-desc">カードをタップするとあらすじ・感想・スコアが展開します。ポスター画像をタップすると<em>大きく表示</em>できます。</div>
+        </div>
+      </div>
+      <div class="usage-step">
+        <div class="usage-step-num">2</div>
+        <div>
+          <div class="usage-step-icon">⭐</div>
+          <div class="usage-step-label">けんけんぱの評価を確認する</div>
+          <div class="usage-step-desc">ストーリー・キャスト・映像美・音楽・満足度の<em>5項目</em>で評価しています。半星（✩）まで細かく表示されます。</div>
+        </div>
+      </div>
+      <div class="usage-step">
+        <div class="usage-step-num">3</div>
+        <div>
+          <div class="usage-step-icon">👥</div>
+          <div class="usage-step-label">みんなで評価に参加する</div>
+          <div class="usage-step-desc">各ドラマに<em>1〜5の星で投票</em>できます。みんなの平均評価として集計されます。1作品につき1票のみ。</div>
+        </div>
+      </div>
+      <div class="usage-step">
+        <div class="usage-step-num">4</div>
+        <div>
+          <div class="usage-step-icon">🔖</div>
+          <div class="usage-step-label">「気になる」で気になる作品を記録</div>
+          <div class="usage-step-desc">「気になる」ボタンを押すと<em>気になる数がカウント</em>されます。みんなが注目している作品がひと目でわかります。</div>
+        </div>
+      </div>
+      <div class="usage-step">
+        <div class="usage-step-num">5</div>
+        <div>
+          <div class="usage-step-icon">🎭</div>
+          <div class="usage-step-label">気分で今夜見るドラマを選ぶ</div>
+          <div class="usage-step-desc">「<em>気分で選ぶ</em>」から今夜の気分を選ぶと、ぴったりの作品に絞り込めます。</div>
+          <div class="usage-step-tags">
+            <span class="usage-step-tag gold">😭 泣きたい</span>
+            <span class="usage-step-tag">😂 笑いたい</span>
+            <span class="usage-step-tag">💓 恋愛したい</span>
+            <span class="usage-step-tag">🌙 サクッと見たい</span>
+          </div>
+        </div>
+      </div>
+      <div class="usage-step">
+        <div class="usage-step-num">6</div>
+        <div>
+          <div class="usage-step-icon">🔽</div>
+          <div class="usage-step-label">フィルター・ソートで絞り込む</div>
+          <div class="usage-step-desc">国・ジャンル・評価・年代・配信サービスで絞り込めます。並び順も「<em>新しい順・評価順</em>」などに変更できます。</div>
+        </div>
+      </div>
+    </div>
+    <div class="usage-footer">
+      <div class="usage-footer-note">© 2026 けんけんぱのドラマレビュー</div>
+      <button class="usage-close-btn" id="usage-close-btn">さっそく見る →</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOPに戻るボタン -->
+<button id="back-to-top" aria-label="TOPに戻る">↑</button>
+
+<!-- スティッキーコントロールバー -->
+<div id="sticky-controls" aria-hidden="true">
+  <div class="sticky-inner">
+    <!-- タイトル行 -->
+    <div style="display:flex; align-items:center; justify-content:space-between; padding-bottom:4px; border-bottom:0.5px solid rgba(255,255,255,.05); margin-bottom:2px;">
+      <div style="font-size:12px; font-weight:700; color:#f0ebe0; letter-spacing:-.01em;">けんけんぱの<em style="color:#c9a84c;font-style:normal;">ドラマレビュー</em></div>
+      <span id="sticky-result-count" style="font-size:10px;color:#444;white-space:nowrap;"></span>
+    </div>
+    <div class="sticky-row1">
+      <button class="sticky-filter-btn" id="sticky-mood-btn">🎭 気分で選ぶ</button>
+      <button class="sticky-filter-btn" id="sticky-filter-btn">🔽 フィルター</button>
+      <div style="width:1px;height:14px;background:rgba(255,255,255,.1);flex-shrink:0;margin:0 2px;"></div>
+      <button class="sticky-chip active" data-filter="all" id="sticky-all-chip">すべて</button>
+      <span id="sticky-country-chips" style="display:contents;"></span>
+    </div>
+    <div class="sticky-row2">
+      <span class="sticky-sort-label">並び順</span>
+      <button class="sticky-sort-btn active" data-sort="rating-desc">⭐ 評価順</button>
+      <button class="sticky-sort-btn" data-sort="year-desc">📅 新しい順</button>
+      <button class="sticky-sort-btn" data-sort="likes-desc">🔖 気になる順</button>
+      <button class="sticky-sort-btn" data-sort="vavg-desc">👥 みんな</button>
+      <button class="sticky-sort-btn" data-sort="title-asc">🔤 あいうえお順</button>
+      <button class="sticky-sort-btn" data-sort="year-asc">📅 古い順</button>
+      <button class="sticky-sort-btn" data-sort="default">🔄 デフォルト</button>
+    </div>
+  </div>
+</div>
+
+<!-- 予告編モーダル -->
+<div id="trailer-overlay" class="trailer-overlay" role="dialog" aria-modal="true" aria-label="予告編">
+  <div class="trailer-modal">
+    <div class="trailer-modal-header">
+      <div>
+        <div class="trailer-modal-title" id="trailer-modal-title"></div>
+        <div class="trailer-modal-sub">予告編</div>
+      </div>
+      <button class="trailer-close" id="trailer-close" aria-label="閉じる">✕</button>
+    </div>
+    <div class="trailer-video-wrap" id="trailer-video-wrap"></div>
+    <div class="trailer-modal-footer">
+      <div class="trailer-yt-credit"><span class="trailer-yt-logo">▶</span><span>YouTube より</span></div>
+      <a id="trailer-yt-link" class="trailer-open-yt" target="_blank" rel="noopener">YouTubeで開く ↗</a>
+    </div>
+  </div>
+</div>
+
+<!-- ライトボックス -->
+<div id="lightbox" class="lightbox" role="dialog" aria-modal="true" aria-label="画像拡大表示">
+  <div class="lightbox-inner">
+    <button class="lightbox-close" id="lightbox-close" aria-label="閉じる">✕</button>
+    <img class="lightbox-img" id="lightbox-img" src="" alt="">
+    <div class="lightbox-title" id="lightbox-title"></div>
+  </div>
+</div>
+
+<!-- TMDB自動入力確認ダイアログ -->
+<div id="tmdb-confirm-overlay" class="tmdb-confirm-overlay" role="dialog" aria-modal="true">
+  <div class="tmdb-confirm-dialog">
+    <div class="tmdb-confirm-title" id="tmdb-dialog-title">🔍 作品を選択してください</div>
+    <div class="tmdb-confirm-sub" id="tmdb-dialog-sub">TMDBで見つかった候補です。正しい作品を選んでください。</div>
+    <!-- STEP1: 候補選択 -->
+    <div id="tmdb-step-candidates" class="tmdb-candidates"></div>
+    <!-- STEP2: 項目選択 -->
+    <div id="tmdb-step-items" style="display:none; flex-direction:column; flex:1; min-height:0;">
+      <div class="tmdb-confirm-items" id="tmdb-confirm-items"></div>
+    </div>
+    <div class="tmdb-confirm-btns">
+      <button class="tmdb-confirm-cancel" id="tmdb-confirm-cancel">キャンセル</button>
+      <button class="tmdb-confirm-apply" id="tmdb-confirm-apply" style="display:none">選択した項目を反映</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-links">
+    <button class="footer-link-btn" id="privacy-btn">プライバシーポリシー</button>
+    <span class="footer-link-sep">|</span>
+    <button class="footer-link-btn" id="usage-footer-btn">使い方</button>
+  </div>
+  <p>&copy; <span id="year"></span> けんけんぱのドラマレビュー. All rights reserved.</p>
+  <div style="margin-top:1.2rem; display:flex; align-items:center; justify-content:center; gap:10px;">
+    <a href="https://www.themoviedb.org" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; gap:10px; text-decoration:none; opacity:.45; transition:opacity .2s;" onmouseover="this.style.opacity='.75'" onmouseout="this.style.opacity='.45'">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 190.24 81.52" width="64" height="28" aria-label="The Movie Database">
+        <defs><linearGradient id="tmdb-lg" y1="40.76" x2="190.24" y2="40.76" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#90cea1"/><stop offset=".56" stop-color="#3cbec9"/><stop offset="1" stop-color="#00b3e5"/></linearGradient></defs>
+        <path fill="url(#tmdb-lg)" d="M105.67,36.06h66.9A17.67,17.67,0,0,0,190.24,18.4h0A17.67,17.67,0,0,0,172.57.73h-66.9A17.67,17.67,0,0,0,88,18.4h0A17.67,17.67,0,0,0,105.67,36.06Zm-88,45h76.9A17.67,17.67,0,0,0,112.24,63.4h0A17.67,17.67,0,0,0,94.57,45.73H17.67A17.67,17.67,0,0,0,0,63.4H0A17.67,17.67,0,0,0,17.67,81.06ZM10.41,35.42h7.8V6.92h10.1V0H.31v6.9h10.1Zm28.1,0h7.8V8.25h.1l9,27.15h6l9.3-27.15h.1V35.4h7.8V0H66.76l-8.2,23.1h-.1L50.31,0H38.51ZM152.43,55.67a15.07,15.07,0,0,0-4.52-5.52,18.57,18.57,0,0,0-6.68-3.08,33.54,33.54,0,0,0-8.07-1h-11.7v35.4h12.75a24.58,24.58,0,0,0,7.55-1.15A19.34,19.34,0,0,0,148.11,77a16.27,16.27,0,0,0,4.37-5.5,16.91,16.91,0,0,0,1.63-7.58A18.5,18.5,0,0,0,152.43,55.67ZM145,68.6A8.8,8.8,0,0,1,142.36,72a10.7,10.7,0,0,1-4,1.82,21.57,21.57,0,0,1-5,.55h-4.05v-21h4.6a17,17,0,0,1,4.67.63,11.66,11.66,0,0,1,3.88,1.87A9.14,9.14,0,0,1,145,59a9.87,9.87,0,0,1,1,4.52A11.89,11.89,0,0,1,145,68.6Zm44.63-.13a8,8,0,0,0-1.58-2.62A8.38,8.38,0,0,0,185.63,64a10.31,10.31,0,0,0-3.17-1v-.1a9.22,9.22,0,0,0,4.42-2.82,7.43,7.43,0,0,0,1.68-5,8.42,8.42,0,0,0-1.15-4.65,8.09,8.09,0,0,0-3-2.72,12.56,12.56,0,0,0-4.18-1.3,32.84,32.84,0,0,0-4.62-.33h-13.2v35.4h14.5a22.41,22.41,0,0,0,4.72-.5,13.53,13.53,0,0,0,4.28-1.65,9.42,9.42,0,0,0,3.1-3,8.52,8.52,0,0,0,1.2-4.68A9.39,9.39,0,0,0,189.66,68.47ZM170.21,52.72h5.3a10,10,0,0,1,1.85.18,6.18,6.18,0,0,1,1.7.57,3.39,3.39,0,0,1,1.22,1.13,3.22,3.22,0,0,1,.48,1.82,3.63,3.63,0,0,1-.43,1.8,3.4,3.4,0,0,1-1.12,1.2,4.92,4.92,0,0,1-1.58.65,7.51,7.51,0,0,1-1.77.2h-5.65Zm11.72,20a3.9,3.9,0,0,1-1.22,1.3,4.64,4.64,0,0,1-1.68.7,8.18,8.18,0,0,1-1.82.2h-7v-8h5.9a15.35,15.35,0,0,1,2,.15,8.47,8.47,0,0,1,2.05.55,4,4,0,0,1,1.57,1.18,3.11,3.11,0,0,1,.63,2A3.71,3.71,0,0,1,181.93,72.72Z"/>
+      </svg>
+      <span style="font-size:10px; color:#555; letter-spacing:.04em;">This product uses the TMDB API but is not endorsed or certified by TMDB.</span>
+    </a>
+  </div>
 </footer>
 
-<!-- ===== 本 追加/編集モーダル ===== -->
-<div class="overlay" id="form-overlay">
-  <div class="modal">
-    <div class="modal-head"><h3 id="form-title">本を追加</h3><button class="x" onclick="closeForm()">✕</button></div>
-    <div class="modal-body">
-      <input type="hidden" id="in-id">
-
-      <div class="field regby-note" id="regby-note"><span class="av" id="regby-av"></span><span>登録者：<b id="regby-name"></b>（自動で記録されます）</span></div>
-
-      <div class="field">
-        <label>ISBNから自動入力（OpenBD / Google Books）</label>
-        <div class="isbn-fetch"><input type="text" id="in-isbn" placeholder="9784…（ハイフン可）" inputmode="numeric"><button type="button" onclick="fetchFromOpenBD()">✨ 取得</button></div>
-        <div class="fetch-hint">ISBNを入れて「取得」で、タイトル・著者・表紙・あらすじを自動入力します</div>
-        <img id="cover-preview" class="cover-preview" alt="表紙プレビュー">
+<!-- プライバシーポリシーモーダル -->
+<div id="privacy-overlay" class="privacy-overlay" role="dialog" aria-modal="true">
+  <div class="privacy-modal">
+    <div class="privacy-modal-header">
+      <div>
+        <div class="privacy-eyebrow">privacy policy</div>
+        <div class="privacy-title">プライバシーポリシー</div>
       </div>
-
-      <div class="field"><label>タイトル <span class="req">*</span></label><input type="text" id="in-title" placeholder="ノンタン ぶらんこのせて"></div>
-      <div class="row2">
-        <div class="field"><label>著者名</label><input type="text" id="in-author" placeholder="キヨノ サチコ"></div>
-        <div class="field"><label>対象年齢</label>
-          <select id="in-age"><option value="">選択</option><option>0〜2歳</option><option>3〜4歳</option><option>5〜6歳</option><option>小学校低学年</option><option>小学校中学年</option><option>小学校高学年</option><option>全年齢</option></select>
-        </div>
-      </div>
-      <div class="field"><label>シリーズ名</label><input type="text" id="in-series" placeholder="ノンタン シリーズ"></div>
-
-      <div class="field"><label>ジャンル（複数選択可）</label>
-        <div class="checks" id="in-genre">
-          <label><input type="checkbox" value="絵本"><span>絵本</span></label>
-          <label><input type="checkbox" value="図鑑"><span>図鑑</span></label>
-          <label><input type="checkbox" value="読み物"><span>読み物</span></label>
-          <label><input type="checkbox" value="知育"><span>知育</span></label>
-          <label><input type="checkbox" value="しかけ絵本"><span>しかけ絵本</span></label>
-          <label><input type="checkbox" value="物語"><span>物語</span></label>
-          <label><input type="checkbox" value="学習まんが"><span>学習まんが</span></label>
-          <label><input type="checkbox" value="児童書"><span>児童書</span></label>
-        </div>
-      </div>
-
-      <div class="field"><label>入手方法</label>
-        <div class="checks" id="in-acq">
-          <label><input type="radio" name="acq" value="購入"><span>🛒 購入</span></label>
-          <label><input type="radio" name="acq" value="図書館"><span>📚 図書館</span></label>
-          <label><input type="radio" name="acq" value="借りた"><span>🤝 借りた</span></label>
-          <label><input type="radio" name="acq" value="電子書籍"><span>📱 電子書籍</span></label>
-          <label><input type="radio" name="acq" value="もらった"><span>🎁 もらった</span></label>
-        </div>
-      </div>
-      <div class="row2">
-        <div class="field"><label>価格（円）</label><input type="text" id="in-price" inputmode="numeric" placeholder="790"></div>
-        <div class="field"><label>入手・読んだ日</label><input type="date" id="in-date"></div>
-      </div>
-
-      <div class="field"><label>あらすじ・内容紹介</label><textarea id="in-synopsis" placeholder="どんな内容の本か…"></textarea></div>
-      <div class="field"><label>あやかの評価（半星対応）</label>
-        <div class="star-input" id="in-rating">
-          <span class="s" data-i="1"><span class="fill">★</span><span class="half"></span><span class="full"></span></span>
-          <span class="s" data-i="2"><span class="fill">★</span><span class="half"></span><span class="full"></span></span>
-          <span class="s" data-i="3"><span class="fill">★</span><span class="half"></span><span class="full"></span></span>
-          <span class="s" data-i="4"><span class="fill">★</span><span class="half"></span><span class="full"></span></span>
-          <span class="s" data-i="5"><span class="fill">★</span><span class="half"></span><span class="full"></span></span>
-          <span class="val" id="rating-val">0.0</span><span class="star-clear" onclick="setRating(0)">クリア</span>
-        </div>
-      </div>
-      <div class="field"><label>感想・コメント</label><textarea id="in-comment" placeholder="読んでみての感想…"></textarea></div>
-
-      <div class="field"><label>子供の反応</label>
-        <div class="reaction-pick" id="in-react">
-          <label><input type="radio" name="react" value="好き"><span class="emo">😍</span>好き</label>
-          <label><input type="radio" name="react" value="普通"><span class="emo">🙂</span>普通</label>
-          <label><input type="radio" name="react" value="微妙"><span class="emo">😕</span>微妙</label>
-        </div>
-      </div>
-
-      <div class="field"><label>タグ（自由キーワード・カンマ区切り）</label><input type="text" id="in-tags" placeholder="寝る前, 動物, 食べ物"></div>
-      <div class="field"><label>表紙画像URL</label><input type="text" id="in-cover" placeholder="https://…" oninput="updateCoverPreview()"></div>
-      <div class="field"><label>購入先リンク</label><input type="text" id="in-buy" placeholder="Amazon・楽天など、購入ページのURL"></div>
-
-      <div class="row2">
-        <div class="field"><label class="switch"><input type="checkbox" id="in-fav"><span class="track"></span><span>お気に入り★にする</span></label></div>
-      </div>
-      <div class="field"><label class="switch"><input type="checkbox" id="in-reread"><span class="track"></span><span>また読みたい／また借りたい</span></label></div>
-      <div class="field"><label class="switch"><input type="checkbox" id="in-read"><span class="track"></span><span>読み聞かせ済みにする</span></label></div>
+      <button class="privacy-close" id="privacy-close" aria-label="閉じる">✕</button>
     </div>
-    <div class="modal-foot"><button class="btn-ghost" onclick="closeForm()">キャンセル</button><button class="btn-primary" id="save-btn" onclick="saveBook()">保存する</button></div>
-  </div>
-</div>
-
-<!-- ===== プロフィール追加モーダル ===== -->
-<div class="overlay" id="pf-overlay">
-  <div class="modal" style="max-width:420px">
-    <div class="modal-head"><h3>プロフィールを追加</h3><button class="x" onclick="closePfForm()">✕</button></div>
-    <div class="modal-body">
-      <div class="field"><label>なまえ <span class="req">*</span></label><input type="text" id="pf-name" placeholder="ゆうと"></div>
-      <div class="field"><label>アイコンを選ぶ</label><div class="emoji-pick" id="pf-emoji"></div></div>
-      <div class="field"><label>背景の色</label><div class="color-pick" id="pf-color"></div></div>
+    <div class="privacy-body">
+      <div>
+        <div class="privacy-section-title">基本方針</div>
+        <div class="privacy-text">本サイト「けんけんぱのドラマレビュー」は、個人が運営するドラマの評価・記録サイトです。ユーザーの個人情報を収集・販売・第三者提供することはありません。</div>
+      </div>
+      <div class="privacy-divider"></div>
+      <div>
+        <div class="privacy-section-title">アクセス解析</div>
+        <div class="privacy-text">当サイトはアクセス状況を把握するため、Google LLC が提供する <strong>Google Analytics</strong> を使用しています。Cookieを使用してデータを収集しますが、個人を特定する情報は含まれません。<br><br><a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google プライバシーポリシー →</a></div>
+      </div>
+      <div class="privacy-divider"></div>
+      <div>
+        <div class="privacy-section-title">Cookie / localStorage</div>
+        <div class="privacy-text">「気になる」設定・投票済み情報・フィルター設定などをブラウザに保存するためCookieおよびlocalStorageを使用しています。これらが外部に送信されることはありません。</div>
+      </div>
+      <div class="privacy-divider"></div>
+      <div>
+        <div class="privacy-section-title">みんなの評価・気になる</div>
+        <div class="privacy-text">ドラマへの投票（みんなの評価）および「気になる」登録は匿名で行われます。IPアドレスなどの個人情報は記録しません。</div>
+      </div>
+      <div class="privacy-divider"></div>
+      <div>
+        <div class="privacy-section-title">画像・データの出典</div>
+        <div class="privacy-text">ドラマのポスター画像および一部情報は <strong style="color:#01b4e4">The Movie Database（TMDB）</strong> のAPIを使用して取得しています。当サイトはTMDBによって承認または認定されたものではありません。<br><br><a href="https://www.themoviedb.org" target="_blank" rel="noopener">The Movie Database →</a></div>
+      </div>
+      <div class="privacy-divider"></div>
+      <div>
+        <div class="privacy-section-title">免責事項</div>
+        <div class="privacy-text">掲載しているドラマの評価・感想はすべて個人の主観によるものです。情報の正確性を保証するものではありません。</div>
+      </div>
     </div>
-    <div class="modal-foot"><button class="btn-ghost" onclick="closePfForm()">キャンセル</button><button class="btn-primary" id="pf-save" onclick="savePfProfile()">このプロフィールを作る</button></div>
+    <div class="privacy-modal-footer">
+      <div class="privacy-date">制定：2026年7月</div>
+      <button class="privacy-close-btn" id="privacy-close-btn">閉じる</button>
+    </div>
   </div>
 </div>
-
-<!-- ===== 削除確認 ===== -->
-<div class="overlay" id="del-overlay">
-  <div class="modal" style="max-width:380px">
-    <div class="modal-head"><h3>削除しますか？</h3><button class="x" onclick="closeDelete()">✕</button></div>
-    <div class="modal-body"><p style="color:var(--muted);font-size:14px">「<b id="del-title" style="color:var(--text)"></b>」を削除します。元に戻せません。</p></div>
-    <div class="modal-foot"><button class="btn-ghost" onclick="closeDelete()">やめる</button><button class="btn-primary" style="background:var(--danger);color:#fff" id="del-btn" onclick="confirmDelete()">削除する</button></div>
-  </div>
-</div>
-
-<div class="lightbox" id="lightbox" onclick="this.classList.remove('show')"><img id="lightbox-img" alt=""></div>
-<div class="toast" id="toast"></div>
 
 <script>
-/* ================= 設定 ================= */
-const GAS_URL = "https://script.google.com/macros/s/AKfycbx-C7zTJQz8XuadOwls0E07ycZifdf14lHWzIgMyq2ybZUgahospbzqJGTK7X0Zs8cv/exec";
-const GOOGLE_BOOKS_KEY = "AIzaSyBFSp9KqJt9WcHoGTnpd80ES4mq5p8yqgo"; // ← 自分のGoogle Books APIキーを "" の中に貼り付け
+document.getElementById('year').textContent = new Date().getFullYear();
 
-const COLORS = ['pink','gold','mint','blue','lilac','peach'];
-const COLOR_CLASS = {pink:'a-pink',gold:'a-gold',mint:'a-mint',blue:'a-blue',lilac:'a-lilac',peach:'a-peach'};
-const EMOJIS = ['🐰','🦄','🐱','🐻','🐼','🐨','🦊','🐹','🐧','🐣','🌸','👧','🐶','🐷','🐸','⭐'];
-const ACQ_ICON = {'購入':'🛒','図書館':'📚','借りた':'🤝','電子書籍':'📱','もらった':'🎁'};
-const ACQ_CLASS = {'購入':'buy','図書館':'rent','借りた':'rent','電子書籍':'other','もらった':'other'};
+// サイトの最終更新日をHTMLのlast-modifiedから取得
+(async () => {
+  try {
+    const res = await fetch(location.href, { method: 'HEAD' });
+    const lastMod = res.headers.get('last-modified');
+    if (lastMod) {
+      const d = new Date(lastMod);
+      const y = d.getFullYear();
+      const mo = String(d.getMonth()+1).padStart(2,'0');
+      const day = String(d.getDate()).padStart(2,'0');
+      document.getElementById('last-updated-html').textContent = `${y}/${mo}/${day}`;
+    } else {
+      document.getElementById('last-updated-html').textContent = '—';
+    }
+  } catch(e) {
+    document.getElementById('last-updated-html').textContent = '—';
+  }
+})();
 
-/* ================= 状態 ================= */
-let BOOKS = [], USERS = [];
-let adminPassword = null, currentProfile = null;
-let editingId = null, deletingId = null;
-let pfEmoji = '🐰', pfColor = 'pink';
+// ============================================================
+// 管理者認証（金庫トークン方式）
+//   合鍵はページ内に一切持たない。管理者が入力したトークンを
+//   GAS（スクリプトプロパティ ADMIN_TOKEN）が毎回サーバー側で照合する。
+//   入力方式：A案（初回1回入力→sessionStorageに一時保存→操作ごと再送・再検証）
+// ============================================================
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbyCjd6I5xO7Vt14YK9F5tEyvKaZanLDItX0-tb_mdckdN3jogVEIK2lB7wECD_SkUeL/exec';
+const TOKEN_KEY = 'dr_admin_token';
+const urlParams = new URLSearchParams(window.location.search);
+let _adminUnlocked = false;
+let _adminToken = '';
 
-/* ================= 起動 ================= */
-window.addEventListener('DOMContentLoaded', () => {
-  const p = new URLSearchParams(location.search).get('admin');
-  if (p) adminPassword = p;
-  bindStarInput();
-  ['search','f-genre','f-age','f-acq','f-react','sort'].forEach(id=>{
-    document.getElementById(id).addEventListener('input', render);
-  });
-  buildPfPickers();
-  loadData();
+function setAdminToken(t) {
+  _adminToken = t;
+  try { sessionStorage.setItem(TOKEN_KEY, t); } catch (e) {}
+}
+function clearAdminToken() {
+  _adminToken = '';
+  try { sessionStorage.removeItem(TOKEN_KEY); } catch (e) {}
+}
+function _show(id, disp) { const el = document.getElementById(id); if (el) el.style.display = disp; }
+
+function unlockAdminUI() {
+  _adminUnlocked = true;
+  _show('admin-button', 'inline-block');
+  _show('delete-mode-button', 'inline-block');
+  _show('admin-logout-button', 'inline-block');
+  _show('admin-login-button', 'none');
+  document.getElementById('drama-list').classList.add('admin-mode');
+}
+function lockAdminUI() {
+  _adminUnlocked = false;
+  clearAdminToken();
+  _show('admin-button', 'none');
+  _show('delete-mode-button', 'none');
+  _show('admin-logout-button', 'none');
+  if (urlParams.has('admin')) _show('admin-login-button', 'inline-block');
+  const list = document.getElementById('drama-list');
+  list.classList.remove('admin-mode');
+  list.classList.remove('delete-mode');
+  const db = document.getElementById('delete-bar'); if (db) db.classList.remove('visible');
+}
+
+// GASにトークンの正否だけ問い合わせる（true=有効）
+async function verifyAdminToken(token) {
+  try {
+    const res = await fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ type: 'auth', token }) });
+    const data = await res.json();
+    return data && data.success === true;
+  } catch (e) { return false; }
+}
+
+// 起動時：?admin があればログインボタンを表示。sessionStorageに合鍵が残っていれば黙って再検証。
+(async () => {
+  let cached = '';
+  try { cached = sessionStorage.getItem(TOKEN_KEY) || ''; } catch (e) {}
+  if (cached && await verifyAdminToken(cached)) {
+    setAdminToken(cached);
+    unlockAdminUI();
+    return;
+  }
+  if (cached) clearAdminToken();          // 無効（ローテーション済み等）なら破棄
+  if (urlParams.has('admin')) _show('admin-login-button', 'inline-block');
+})();
+
+// 編集モーダル
+function openEditModal(btn) {
+  const card = btn.closest('.drama-card');
+  const d = card.dataset;
+  // 全フィールドをdatasetから直接読み込み
+  document.getElementById('e-original-title').value = d.titleJp    || '';
+  document.getElementById('e-title').value           = d.titleJp    || '';
+  document.getElementById('e-country').value         = d.country    || '';
+  document.getElementById('e-summary').value         = d.summary    || '';
+  // ジャンルグリッドを現在値で初期化
+  const currentGenres = (d.genre || '').split(/[、,，]/).map(g => g.trim()).filter(Boolean);
+  buildGenreGrid('e-genre-grid', currentGenres);
+  // 配信サービスを復元
+  const currentStreaming = (d.streaming || '').split(/[、,，]/).map(s => s.trim()).filter(Boolean);
+  buildStreamingGrid('e-streaming-grid', currentStreaming);
+  document.getElementById('e-cast').value            = d.cast       || '';
+  document.getElementById('e-theme').value           = d.theme      || '';
+  document.getElementById('e-station').value         = d.station    || '';
+  document.getElementById('e-year').value            = d.year       || '';
+  document.getElementById('e-day').value             = d.day        || '';
+  document.getElementById('e-image').value           = d.image        || '';
+  document.getElementById('e-episode-time').value   = d.episodeTime  || '';
+  document.getElementById('e-episodes').value        = d.episodes     || '';
+  document.getElementById('e-trailer').value         = d.trailer      || '';
+  document.getElementById('e-rewatch').value         = d.rewatch      || '';
+  document.getElementById('e-review').value          = d.review     || '';
+  // 5項目スコア
+  document.getElementById('e-score-story').value  = d.scoreStory  || '3';
+  document.getElementById('e-score-cast').value   = d.scoreCast   || '3';
+  document.getElementById('e-score-visual').value = d.scoreVisual || '3';
+  document.getElementById('e-score-music').value  = d.scoreMusic  || '3';
+  document.getElementById('e-score-sat').value    = d.scoreSat    || '3';
+  document.getElementById('edit-form-msg').textContent = '';
+  document.getElementById('edit-modal-overlay').classList.add('open');
+}
+
+document.getElementById('edit-modal-close').addEventListener('click', () => {
+  document.getElementById('edit-modal-overlay').classList.remove('open');
+});
+document.getElementById('edit-modal-overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('edit-modal-overlay'))
+    document.getElementById('edit-modal-overlay').classList.remove('open');
 });
 
-/* ================= API ================= */
-function jsonp(url){
-  return new Promise((resolve,reject)=>{
-    const cb='cb_'+Math.random().toString(36).slice(2);
-    const sep=url.includes('?')?'&':'?';
-    const s=document.createElement('script');
-    const t=setTimeout(()=>{cleanup();reject(new Error('timeout'))},15000);
-    window[cb]=d=>{cleanup();resolve(d)};
-    function cleanup(){clearTimeout(t);delete window[cb];s.remove()}
-    s.onerror=()=>{cleanup();reject(new Error('network'))};
-    s.src=url+sep+'callback='+cb; document.body.appendChild(s);
-  });
-}
-async function apiWrite(payload){
-  payload.password=adminPassword;
-  try{
-    const res=await fetch(GAS_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
-    return await res.json();
-  }catch(e){ return {status:'unknown'} }
-}
-
-async function loadData(){
-  const loading=document.getElementById('loading');
-  if(!GAS_URL||GAS_URL.indexOf('http')!==0){
-    loading.innerHTML='⚙️ セットアップが必要です<br><small>GAS_URL を設定してください。</small>'; return;
+document.getElementById('edit-form-submit').addEventListener('click', async () => {
+  const title = document.getElementById('e-title').value.trim();
+  if (!title) {
+    document.getElementById('edit-form-msg').textContent = 'タイトルは必須です';
+    document.getElementById('edit-form-msg').className = 'form-msg error';
+    return;
   }
-  try{
-    const res=await jsonp(GAS_URL);
-    if(res.status!=='ok') throw new Error(res.message||'error');
-    BOOKS=res.data||[]; USERS=res.users||[];
-    buildFilterOptions(); render(); loading.style.display='none';
-    // 編集権限（?admin=）があればプロフィール選択を表示
-    if(adminPassword) showProfileScreen();
-  }catch(e){
-    loading.style.display='block';
-    loading.innerHTML='読み込みに失敗しました。<br><small>GAS_URL / デプロイ設定（アクセス:全員）をご確認ください。</small>';
+  // ★【改善】クライアントサイドで画像URLを事前バリデーション
+  const imageValE = document.getElementById('e-image').value.trim();
+  if (imageValE && !/^https?:\/\//i.test(imageValE)) {
+    document.getElementById('edit-form-msg').textContent = '画像URLはhttps://から始めてください';
+    document.getElementById('edit-form-msg').className = 'form-msg error';
+    return;
   }
-}
+  const btn = document.getElementById('edit-form-submit');
+  btn.disabled = true; btn.textContent = '保存中...';
 
-/* ================= プロフィール選択 ================= */
-function showProfileScreen(){
-  renderProfiles();
-  document.getElementById('profile-screen').classList.add('show');
-  document.body.style.overflow='hidden';
-}
-function renderProfiles(){
-  const box=document.getElementById('profiles');
-  let html=USERS.map(u=>`
-    <div class="profile" onclick="selectProfile('${esc(u.id)}')">
-      <div class="avatar ${COLOR_CLASS[u.color]||'a-pink'}">${esc(u.emoji||'🐰')}</div>
-      <div class="pname">${esc(u.name)}</div>
-      <span class="del-mini" onclick="event.stopPropagation();deleteProfile('${esc(u.id)}','${esc(u.name)}')">削除</span>
-    </div>`).join('');
-  html+=`<div class="profile add" onclick="openPfForm()"><div class="avatar">＋</div><div class="pname">追加する</div></div>`;
-  box.innerHTML=html;
-}
-function selectProfile(id){
-  currentProfile=USERS.find(u=>u.id===id)||null;
-  document.getElementById('profile-screen').classList.remove('show','managing');
-  document.body.style.overflow='';
-  document.getElementById('btn-add').style.display='';
-  const wb=document.getElementById('who-bar'); wb.classList.add('show');
-  document.getElementById('who-av').className='av '+(COLOR_CLASS[currentProfile.color]||'a-pink');
-  document.getElementById('who-av').textContent=currentProfile.emoji||'🐰';
-  document.getElementById('who-name').textContent=currentProfile.name;
-  render();
-}
-function switchProfile(){ showProfileScreen(); }
-function toggleManage(){
-  const s=document.getElementById('profile-screen'); s.classList.toggle('managing');
-  document.getElementById('ps-manage').textContent=s.classList.contains('managing')?'編集を終わる':'プロフィールを編集';
-}
-async function deleteProfile(id,name){
-  if(!confirm('プロフィール「'+name+'」を削除しますか？')) return;
-  const res=await apiWrite({action:'deleteUser',id});
-  if(res.status==='error'){ toast(res.message||'削除に失敗しました','err'); return; }
-  toast('削除しました','ok');
-  const r=await jsonp(GAS_URL); USERS=r.users||[]; renderProfiles();
-}
-
-/* プロフィール追加モーダル */
-function buildPfPickers(){
-  document.getElementById('pf-emoji').innerHTML=EMOJIS.map(e=>`<span onclick="pickPfEmoji(this,'${e}')">${e}</span>`).join('');
-  document.getElementById('pf-color').innerHTML=COLORS.map(c=>`<span class="${COLOR_CLASS[c]}" onclick="pickPfColor(this,'${c}')"></span>`).join('');
-}
-function openPfForm(){
-  pfEmoji='🐰'; pfColor='pink';
-  document.getElementById('pf-name').value='';
-  document.querySelectorAll('#pf-emoji span').forEach((s,i)=>s.classList.toggle('on',i===0));
-  document.querySelectorAll('#pf-color span').forEach((s,i)=>s.classList.toggle('on',i===0));
-  document.getElementById('pf-overlay').classList.add('show');
-}
-function closePfForm(){ document.getElementById('pf-overlay').classList.remove('show'); }
-function pickPfEmoji(el,e){ pfEmoji=e; document.querySelectorAll('#pf-emoji span').forEach(s=>s.classList.remove('on')); el.classList.add('on'); }
-function pickPfColor(el,c){ pfColor=c; document.querySelectorAll('#pf-color span').forEach(s=>s.classList.remove('on')); el.classList.add('on'); }
-async function savePfProfile(){
-  const name=document.getElementById('pf-name').value.trim();
-  if(!name){ toast('なまえを入力してください','err'); return; }
-  const btn=document.getElementById('pf-save'); btn.disabled=true; btn.textContent='作成中…';
-  const res=await apiWrite({action:'addUser',user:{name,emoji:pfEmoji,color:pfColor}});
-  btn.disabled=false; btn.textContent='このプロフィールを作る';
-  if(res.status==='error'){ toast(res.message||'作成に失敗しました','err'); return; }
-  closePfForm(); toast('プロフィールを作りました','ok');
-  const r=await jsonp(GAS_URL); USERS=r.users||[]; renderProfiles();
-}
-
-/* ================= フィルタ選択肢 ================= */
-function buildFilterOptions(){
-  const genres=new Set(),ages=new Set(),acqs=new Set();
-  BOOKS.forEach(b=>{
-    (b.genre||'').split(',').map(s=>s.trim()).filter(Boolean).forEach(g=>genres.add(g));
-    if(b.targetAge) ages.add(b.targetAge);
-    if(b.acquisition) acqs.add(b.acquisition);
-  });
-  fillSelect('f-genre','ジャンル：すべて',[...genres]);
-  fillSelect('f-age','対象年齢：すべて',[...ages]);
-  fillSelect('f-acq','入手方法：すべて',[...acqs]);
-}
-function fillSelect(id,all,items){
-  const sel=document.getElementById(id),cur=sel.value;
-  sel.innerHTML='<option value="">'+all+'</option>'+items.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');
-  sel.value=cur;
-}
-
-/* ================= 描画 ================= */
-function render(){
-  const q=document.getElementById('search').value.trim().toLowerCase();
-  const fg=document.getElementById('f-genre').value,fa=document.getElementById('f-age').value;
-  const fac=document.getElementById('f-acq').value,fr=document.getElementById('f-react').value;
-  const sort=document.getElementById('sort').value;
-  let list=BOOKS.filter(b=>{
-    if(q&&!((b.title||'').toLowerCase().includes(q)||(b.author||'').toLowerCase().includes(q))) return false;
-    if(fg&&!(b.genre||'').split(',').map(s=>s.trim()).includes(fg)) return false;
-    if(fa&&b.targetAge!==fa) return false;
-    if(fac&&b.acquisition!==fac) return false;
-    if(fr&&b.childReaction!==fr) return false;
-    return true;
-  });
-  list.sort((a,b)=>{
-    if(sort==='rating') return (b.rating||0)-(a.rating||0);
-    if(sort==='fav') return (b.favorite?1:0)-(a.favorite?1:0);
-    if(sort==='title') return (a.title||'').localeCompare(b.title||'','ja');
-    const ta=new Date(a.createdAt||0).getTime(),tb=new Date(b.createdAt||0).getTime();
-    return sort==='old'?ta-tb:tb-ta;
-  });
-  updateStats();
-  const grid=document.getElementById('grid');
-  if(!list.length){ grid.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><div class="big">📚</div>${BOOKS.length?'条件に合う本がありません':'まだ本が登録されていません'}</div>`; return; }
-  grid.innerHTML=list.map(cardHTML).join('');
-}
-
-function cardHTML(b){
-  const genres=(b.genre||'').split(',').map(s=>s.trim()).filter(Boolean);
-  const tags=(b.tags||'').split(',').map(s=>s.trim()).filter(Boolean);
-  const admin=!!currentProfile;
-  const acqIcon=ACQ_ICON[b.acquisition]||'', acqClass=ACQ_CLASS[b.acquisition]||'other';
-  const reg=USERS.find(u=>u.name===b.registeredBy);
-  const price=b.price?(String(b.price).replace(/[^\d]/g,'')?Number(String(b.price).replace(/[^\d]/g,'')).toLocaleString()+'円':b.price):'';
-  return `
-  <div class="card" id="card-${esc(b.id)}">
-    <div class="card-top">
-      <div class="cover" ${b.coverImage?`onclick="lightbox('${escAttr(b.coverImage)}')"`:''}>
-        ${b.favorite?'<span class="fav-star">★</span>':''}
-        ${b.readAloud?'<span class="badge-read">読了</span>':''}
-        ${b.coverImage?`<img src="${escAttr(b.coverImage)}" alt="" loading="lazy" onerror="this.style.display='none';this.parentNode.insertAdjacentText('beforeend','📖')">`:'📖'}
-      </div>
-      <div class="card-info">
-        ${b.series?`<div class="series">${esc(b.series)}</div>`:''}
-        <div class="card-title">${esc(b.title||'（無題）')}</div>
-        <div class="card-author">${esc(b.author||'著者不明')}</div>
-        <div class="metarow">
-          ${b.targetAge?`<span class="chip gold">${esc(b.targetAge)}</span>`:''}
-          ${genres.slice(0,2).map(g=>`<span class="chip">${esc(g)}</span>`).join('')}
-          ${b.acquisition?`<span class="chip ${acqClass}">${acqIcon} ${esc(b.acquisition)}</span>`:''}
-          ${b.childReaction?`<span class="chip react-${esc(b.childReaction)}">${reactEmoji(b.childReaction)} ${esc(b.childReaction)}</span>`:''}
-        </div>
-        <div>${starsHTML(b.rating)}${b.rating?`<span class="rating-num">${Number(b.rating).toFixed(1)}</span>`:''}</div>
-      </div>
-    </div>
-    <div class="card-body">
-      ${b.synopsis?`<div class="sec"><h4>あらすじ・内容</h4><p>${esc(b.synopsis)}</p></div>`:''}
-      ${b.comment?`<div class="sec"><h4>あやかの感想</h4><p>${esc(b.comment)}</p></div>`:''}
-      <dl class="detail-grid">
-        ${b.acquisition?`<dt>入手方法</dt><dd>${esc(b.acquisition)}${price?`（${price}）`:''}</dd>`:''}
-        ${b.acquiredDate?`<dt>入手・読んだ日</dt><dd>${esc(fmtDate(b.acquiredDate))}</dd>`:''}
-        ${b.reread?`<dt>また読みたい</dt><dd>◎ もう一度</dd>`:''}
-        ${genres.length>2?`<dt>ジャンル</dt><dd>${genres.map(esc).join(' / ')}</dd>`:''}
-      </dl>
-      ${tags.length?`<div class="tags-row">${tags.map(t=>`<span class="tag">#${esc(t)}</span>`).join('')}</div>`:''}
-      <div class="card-actions">
-        ${b.purchaseLink?`<a class="lnk-buy" href="${escAttr(b.purchaseLink)}" target="_blank" rel="noopener">🛒 購入先を見る</a>`:''}
-        ${admin?`<div class="admin-btns"><button onclick="openForm('${esc(b.id)}')">✏️ 編集</button><button class="del" onclick="openDelete('${esc(b.id)}')">🗑 削除</button></div>`:''}
-      </div>
-    </div>
-    <div class="card-foot" onclick="toggleCard('${esc(b.id)}')">
-      <span>${b.registeredBy?`<span class="regby"><span class="av ${reg?COLOR_CLASS[reg.color]:''}">${reg?esc(reg.emoji):'👤'}</span>${esc(b.registeredBy)}</span>`:fmtDate(b.createdAt)}</span>
-      <span class="toggle" data-o="開く ▾" data-c="閉じる ▴">開く ▾</span>
-    </div>
-  </div>`;
-}
-function toggleCard(id){
-  const c=document.getElementById('card-'+id),t=c.querySelector('.toggle');
-  c.classList.toggle('open');
-  t.textContent=c.classList.contains('open')?t.dataset.c:t.dataset.o;
-}
-function starsHTML(r){
-  r=Number(r)||0; let o='<span class="stars">';
-  for(let i=1;i<=5;i++){
-    if(r>=i)o+='★';
-    else if(r>=i-0.5)o+='<span style="position:relative"><span class="empty">★</span><span style="position:absolute;left:0;top:0;width:50%;overflow:hidden;color:var(--gold)">★</span></span>';
-    else o+='<span class="empty">★</span>';
-  }
-  return o+'</span>';
-}
-function reactEmoji(r){return r==='好き'?'😍':r==='普通'?'🙂':r==='微妙'?'😕':''}
-function updateStats(){
-  document.getElementById('stat-count').textContent=BOOKS.length;
-  const rated=BOOKS.filter(b=>b.rating>0);
-  const avg=rated.length?(rated.reduce((s,b)=>s+Number(b.rating),0)/rated.length):0;
-  document.getElementById('stat-avg').textContent=avg?avg.toFixed(1):'–';
-  document.getElementById('stat-read').textContent=BOOKS.filter(b=>b.readAloud).length;
-  document.getElementById('stat-fav').textContent=BOOKS.filter(b=>b.favorite).length;
-}
-
-/* ================= 星入力 ================= */
-let currentRating=0;
-function bindStarInput(){
-  document.querySelectorAll('#in-rating .s').forEach(s=>{
-    const i=Number(s.dataset.i);
-    s.querySelector('.half').addEventListener('click',()=>setRating(i-0.5));
-    s.querySelector('.full').addEventListener('click',()=>setRating(i));
-  });
-}
-function setRating(v){
-  currentRating=v; document.getElementById('rating-val').textContent=Number(v).toFixed(1);
-  document.querySelectorAll('#in-rating .s').forEach(s=>{
-    const i=Number(s.dataset.i),f=s.querySelector('.fill');
-    f.style.width=v>=i?'100%':(v>=i-0.5?'50%':'0');
-  });
-}
-
-/* ================= 本フォーム ================= */
-function openForm(id){
-  editingId=id||null;
-  document.getElementById('form-title').textContent=id?'本を編集':'本を追加';
-  const b=id?BOOKS.find(x=>x.id===id):{};
-  document.getElementById('in-id').value=b.id||'';
-  document.getElementById('in-isbn').value=b.isbn||'';
-  document.getElementById('in-title').value=b.title||'';
-  document.getElementById('in-author').value=b.author||'';
-  document.getElementById('in-age').value=b.targetAge||'';
-  document.getElementById('in-series').value=b.series||'';
-  document.getElementById('in-price').value=b.price||'';
-  document.getElementById('in-date').value=toDateInput(b.acquiredDate);
-  document.getElementById('in-synopsis').value=b.synopsis||'';
-  document.getElementById('in-comment').value=b.comment||'';
-  document.getElementById('in-tags').value=b.tags||'';
-  document.getElementById('in-cover').value=b.coverImage||'';
-  document.getElementById('in-buy').value=b.purchaseLink||'';
-  document.getElementById('in-fav').checked=!!b.favorite;
-  document.getElementById('in-reread').checked=!!b.reread;
-  document.getElementById('in-read').checked=!!b.readAloud;
-  const genres=(b.genre||'').split(',').map(s=>s.trim());
-  document.querySelectorAll('#in-genre input').forEach(c=>c.checked=genres.includes(c.value));
-  document.querySelectorAll('#in-acq input').forEach(c=>c.checked=(c.value===b.acquisition));
-  document.querySelectorAll('#in-react input').forEach(c=>c.checked=(c.value===b.childReaction));
-  setRating(Number(b.rating)||0);
-  updateCoverPreview();
-  // 登録者表示（編集時は既存の登録者、新規は現在のプロフィール）
-  const regName=id?(b.registeredBy||(currentProfile?currentProfile.name:'')):(currentProfile?currentProfile.name:'');
-  const regUser=USERS.find(u=>u.name===regName);
-  document.getElementById('regby-name').textContent=regName||'（未設定）';
-  document.getElementById('regby-av').className='av '+(regUser?COLOR_CLASS[regUser.color]:'a-pink');
-  document.getElementById('regby-av').textContent=regUser?regUser.emoji:'👤';
-  formRegBy=regName;
-  document.getElementById('form-overlay').classList.add('show');
-  document.body.style.overflow='hidden';
-}
-let formRegBy='';
-function closeForm(){ document.getElementById('form-overlay').classList.remove('show'); document.body.style.overflow=''; }
-
-async function saveBook(){
-  const title=document.getElementById('in-title').value.trim();
-  if(!title){ toast('タイトルを入力してください','err'); return; }
-  const genres=[...document.querySelectorAll('#in-genre input:checked')].map(c=>c.value);
-  const react=(document.querySelector('#in-react input:checked')||{}).value||'';
-  const acq=(document.querySelector('#in-acq input:checked')||{}).value||'';
-  const book={
-    id:document.getElementById('in-id').value||undefined,
-    title, author:document.getElementById('in-author').value.trim(),
-    targetAge:document.getElementById('in-age').value, genre:genres.join(','),
-    synopsis:document.getElementById('in-synopsis').value.trim(),
-    rating:currentRating, comment:document.getElementById('in-comment').value.trim(),
-    coverImage:document.getElementById('in-cover').value.trim(),
-    purchaseLink:document.getElementById('in-buy').value.trim(),
-    readAloud:document.getElementById('in-read').checked, childReaction:react,
-    isbn:document.getElementById('in-isbn').value.trim(),
-    acquisition:acq, price:document.getElementById('in-price').value.trim(),
-    acquiredDate:document.getElementById('in-date').value,
-    series:document.getElementById('in-series').value.trim(),
-    tags:document.getElementById('in-tags').value.trim(),
-    favorite:document.getElementById('in-fav').checked,
-    reread:document.getElementById('in-reread').checked,
-    registeredBy:formRegBy||(currentProfile?currentProfile.name:'')
+  const payload = {
+    type: 'edit',
+    token: _adminToken,
+    originalTitle: document.getElementById('e-original-title').value,
+    title,
+    country:  document.getElementById('e-country').value,
+    summary:  document.getElementById('e-summary').value.trim(),
+    genre:      getGenreValues('e-genre-grid').join('、'),
+    streaming:  getGenreValues('e-streaming-grid').join('、'),
+    cast:     document.getElementById('e-cast').value.trim(),
+    theme:    document.getElementById('e-theme').value.trim(),
+    station:  document.getElementById('e-station').value.trim(),
+    year:     document.getElementById('e-year').value.trim(),
+    day:      document.getElementById('e-day').value.trim(),
+    episodeTime: document.getElementById('e-episode-time').value,
+    episodes:    document.getElementById('e-episodes').value,
+    trailer:     document.getElementById('e-trailer').value.trim(),
+    rewatch:     document.getElementById('e-rewatch').value,
+    scoreStory:  document.getElementById('e-score-story').value,
+    scoreCast:   document.getElementById('e-score-cast').value,
+    scoreVisual: document.getElementById('e-score-visual').value,
+    scoreMusic:  document.getElementById('e-score-music').value,
+    scoreSat:    document.getElementById('e-score-sat').value,
+    review:   document.getElementById('e-review').value.trim(),
+    image:    document.getElementById('e-image').value.trim(),
   };
-  const btn=document.getElementById('save-btn'); btn.disabled=true; btn.textContent='保存中…';
-  const res=await apiWrite({action:editingId?'update':'add',book});
-  btn.disabled=false; btn.textContent='保存する';
-  if(res.status==='error'){ toast(res.message||'保存に失敗しました','err'); return; }
-  closeForm(); toast(editingId?'更新しました':'追加しました','ok');
-  const r=await jsonp(GAS_URL); BOOKS=r.data||[]; USERS=r.users||USERS; buildFilterOptions(); render();
-}
 
-/* ================= 削除 ================= */
-function openDelete(id){ deletingId=id; const b=BOOKS.find(x=>x.id===id); document.getElementById('del-title').textContent=b?b.title:''; document.getElementById('del-overlay').classList.add('show'); document.body.style.overflow='hidden'; }
-function closeDelete(){ document.getElementById('del-overlay').classList.remove('show'); document.body.style.overflow=''; }
-async function confirmDelete(){
-  const btn=document.getElementById('del-btn'); btn.disabled=true; btn.textContent='削除中…';
-  const res=await apiWrite({action:'delete',id:deletingId});
-  btn.disabled=false; btn.textContent='削除する';
-  if(res.status==='error'){ toast(res.message||'削除に失敗しました','err'); return; }
-  closeDelete(); toast('削除しました','ok');
-  const r=await jsonp(GAS_URL); BOOKS=r.data||[]; buildFilterOptions(); render();
-}
-
-/* ================= ISBN 自動入力 ================= */
-function stripTags(s){ return String(s||'').replace(/<[^>]*>/g,'').replace(/\s+\n/g,'\n').trim(); }
-async function fetchFromOpenBD(){
-  const isbn=document.getElementById('in-isbn').value.trim().replace(/[^0-9Xx]/g,'');
-  if(isbn.length<10){ toast('ISBNを正しく入力してください','err'); return; }
-  toast('書誌情報を取得中…');
-  const T=document.getElementById('in-title'),A=document.getElementById('in-author'),C=document.getElementById('in-cover'),S=document.getElementById('in-synopsis');
-  const got={title:'',author:'',cover:'',desc:''};
-  try{
-    const d=await(await fetch('https://api.openbd.jp/v1/get?isbn='+isbn)).json();
-    if(d&&d[0]){ const s=d[0].summary||{}; got.title=s.title||''; got.author=s.author||''; got.cover=s.cover||'';
-      try{ const tc=((d[0].onix||{}).CollateralDetail||{}).TextContent||[]; const pk=tc.find(t=>t.TextType==='03'&&t.Text)||tc.find(t=>t.Text); if(pk)got.desc=stripTags(pk.Text); }catch(_){}
-    }
-  }catch(_){}
-  if(!got.cover||!got.desc||!got.title){
-    try{
-      const key=GOOGLE_BOOKS_KEY?('&key='+GOOGLE_BOOKS_KEY):'';
-      const g=await(await fetch('https://www.googleapis.com/books/v1/volumes?country=JP&q=isbn:'+isbn+key)).json();
-      const v=g&&g.items&&g.items[0]?(g.items[0].volumeInfo||{}):null;
-      if(v){ if(!got.title&&v.title)got.title=v.title; if(!got.author&&v.authors)got.author=v.authors.join('、');
-        if(!got.cover&&v.imageLinks)got.cover=(v.imageLinks.thumbnail||v.imageLinks.smallThumbnail||'').replace('http://','https://');
-        if(!got.desc&&v.description)got.desc=stripTags(v.description);
-      }
-    }catch(_){}
+  try {
+    const res = await fetch(GAS_URL, { method: 'POST', body: JSON.stringify(payload) });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    if (data.success) {
+      document.getElementById('edit-form-msg').textContent = '✅ 保存しました！ページを再読み込みすると反映されます。';
+      document.getElementById('edit-form-msg').className = 'form-msg success';
+    } else { throw new Error(data.error || '失敗'); }
+  } catch(err) {
+    document.getElementById('edit-form-msg').textContent = '❌ 保存に失敗しました。';
+    document.getElementById('edit-form-msg').className = 'form-msg error';
   }
-  const f=[];
-  if(got.title&&!T.value){T.value=got.title;f.push('タイトル')}
-  if(got.author&&!A.value){A.value=got.author;f.push('著者')}
-  if(got.cover&&!C.value){C.value=got.cover;updateCoverPreview();f.push('表紙')}
-  if(got.desc&&!S.value){S.value=got.desc;f.push('あらすじ')}
-  if(f.length)toast(f.join('・')+'を入力しました','ok');
-  else if(got.title||got.cover)toast('入力済みのため変更なし','ok');
-  else toast('この本の情報は見つかりませんでした','err');
-}
-function updateCoverPreview(){
-  const url=document.getElementById('in-cover').value.trim(),img=document.getElementById('cover-preview');
-  if(url){img.src=url;img.classList.add('show');img.onerror=()=>img.classList.remove('show')} else img.classList.remove('show');
+  btn.disabled = false; btn.textContent = '保存する';
+});
+
+// 削除モード
+let isDeleteMode = false;
+
+function toggleSelect(e, wrap) {
+  if (!isDeleteMode) return;
+  const card = wrap.closest('.drama-card');
+  const cb = wrap.querySelector('input[type="checkbox"]');
+  card.classList.toggle('selected', cb.checked);
+  updateDeleteCount();
 }
 
-/* ================= 汎用 ================= */
-function lightbox(src){ document.getElementById('lightbox-img').src=src; document.getElementById('lightbox').classList.add('show'); }
-let toastTimer;
-function toast(msg,type){ const t=document.getElementById('toast'); t.textContent=msg; t.className='toast show'+(type?' '+type:''); clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove('show'),2600); }
-function fmtDate(d){ if(!d)return''; const dt=new Date(d); if(isNaN(dt))return String(d); return `${dt.getFullYear()}.${String(dt.getMonth()+1).padStart(2,'0')}.${String(dt.getDate()).padStart(2,'0')}`; }
-function toDateInput(d){ if(!d)return''; const dt=new Date(d); if(isNaN(dt))return''; return `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}-${String(dt.getDate()).padStart(2,'0')}`; }
-function esc(s){ return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-function escAttr(s){ return esc(s); }
+function updateDeleteCount() {
+  const count = document.querySelectorAll('.drama-card.selected').length;
+  document.getElementById('delete-count').textContent = count;
+}
 
-document.getElementById('form-overlay').addEventListener('click',e=>{if(e.target.id==='form-overlay')closeForm()});
-document.getElementById('del-overlay').addEventListener('click',e=>{if(e.target.id==='del-overlay')closeDelete()});
-document.getElementById('pf-overlay').addEventListener('click',e=>{if(e.target.id==='pf-overlay')closePfForm()});
+document.getElementById('delete-mode-button').addEventListener('click', () => {
+  isDeleteMode = true;
+  document.getElementById('drama-list').classList.add('delete-mode');
+  document.getElementById('delete-bar').classList.add('visible');
+  document.getElementById('delete-mode-button').style.display = 'none';
+  document.getElementById('admin-button').style.display = 'none';
+  // P10改善: fixed→inlineになったのでfilter-buttonは非表示にしない
+});
+
+document.getElementById('delete-cancel-btn').addEventListener('click', () => {
+  isDeleteMode = false;
+  document.getElementById('drama-list').classList.remove('delete-mode');
+  document.getElementById('delete-bar').classList.remove('visible');
+  document.querySelectorAll('.drama-card.selected').forEach(c => {
+    c.classList.remove('selected');
+    c.querySelector('input[type="checkbox"]').checked = false;
+  });
+  if (_adminUnlocked) {
+    document.getElementById('admin-button').style.display = 'inline-block';
+    document.getElementById('delete-mode-button').style.display = 'inline-block';
+    document.getElementById('drama-list').classList.add('admin-mode');
+  }
+});
+
+document.getElementById('delete-exec-btn').addEventListener('click', async () => {
+  const selected = [...document.querySelectorAll('.drama-card.selected')];
+  if (selected.length === 0) return;
+  const titles = selected.map(c => c.dataset.titleJp);
+  if (!confirm(`「${titles.join('、')}」を削除しますか？`)) return;
+
+  const btn = document.getElementById('delete-exec-btn');
+  btn.disabled = true;
+  btn.textContent = '削除中...';
+
+  try {
+    const res = await fetch(GAS_URL, {
+      method: 'POST',
+      body: JSON.stringify({ type: 'delete', token: _adminToken, titles }),
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    if (data.success) {
+      selected.forEach(c => {
+        allCards = allCards.filter(ac => ac !== c);
+        c.remove();
+      });
+      document.getElementById('delete-cancel-btn').click();
+      updateStats();
+      document.getElementById('result-count').textContent = `${allCards.length}作品`;
+      alert(`${data.deleted}件削除しました`);
+    } else { throw new Error(); }
+  } catch(e) {
+    alert('削除に失敗しました。もう一度お試しください。');
+  }
+  btn.disabled = false;
+  btn.textContent = '削除する';
+});
+
+// 管理者モーダル
+const modalOverlay = document.getElementById('modal-overlay');
+const pwScreen     = document.getElementById('pw-screen');
+const addFormScreen= document.getElementById('add-form-screen');
+
+// ログイン画面（トークン入力）を開く
+function openLoginModal() {
+  pwScreen.style.display = 'block';
+  addFormScreen.style.display = 'none';
+  document.getElementById('pw-input').value = '';
+  document.getElementById('pw-error').textContent = '';
+  modalOverlay.classList.add('open');
+}
+// ＋追加：ログイン済みなら追加フォームへ直行、未ログインならログイン画面
+function openModal() {
+  if (!_adminUnlocked || !_adminToken) { openLoginModal(); return; }
+  pwScreen.style.display = 'none';
+  addFormScreen.style.display = 'block';
+  document.getElementById('form-msg').textContent = '';
+  modalOverlay.classList.add('open');
+}
+function closeModal() {
+  modalOverlay.classList.remove('open');
+}
+
+document.getElementById('admin-login-button').addEventListener('click', openLoginModal);
+document.getElementById('admin-logout-button').addEventListener('click', () => { lockAdminUI(); closeModal(); });
+document.getElementById('admin-button').addEventListener('click', openModal);
+document.getElementById('modal-close-pw').addEventListener('click', closeModal);
+document.getElementById('modal-close-form').addEventListener('click', closeModal);
+modalOverlay.addEventListener('click', e => { if (e.target === modalOverlay) closeModal(); });
+
+document.getElementById('pw-enter').addEventListener('click', checkPassword);
+document.getElementById('pw-input').addEventListener('keydown', e => { if (e.key === 'Enter') checkPassword(); });
+
+// 入力トークンをGASに照合。OKなら sessionStorage に保存してUIを解錠。
+async function checkPassword() {
+  const val = document.getElementById('pw-input').value.trim();
+  const errEl = document.getElementById('pw-error');
+  if (!val) { errEl.textContent = 'トークンを入力してください'; return; }
+  const btn = document.getElementById('pw-enter');
+  const orig = btn.textContent;
+  btn.disabled = true; btn.textContent = '確認中...';
+  errEl.textContent = '';
+  const ok = await verifyAdminToken(val);
+  if (ok) {
+    setAdminToken(val);
+    unlockAdminUI();
+    closeModal();
+  } else {
+    errEl.textContent = '合鍵が違います';
+  }
+  btn.disabled = false; btn.textContent = orig;
+}
+
+document.getElementById('form-submit').addEventListener('click', async () => {
+  const title = document.getElementById('f-title').value.trim();
+  if (!title) { 
+    document.getElementById('form-msg').textContent = 'タイトルは必須です';
+    document.getElementById('form-msg').className = 'form-msg error';
+    return;
+  }
+  // ★【改善】クライアントサイドで画像URLを事前バリデーション
+  const imageVal = document.getElementById('f-image').value.trim();
+  if (imageVal && !/^https?:\/\//i.test(imageVal)) {
+    document.getElementById('form-msg').textContent = '画像URLはhttps://から始めてください';
+    document.getElementById('form-msg').className = 'form-msg error';
+    return;
+  }
+  const btn = document.getElementById('form-submit');
+  btn.disabled = true;
+  btn.textContent = '送信中...';
+  const payload = {
+    type: 'add',
+    token: _adminToken,
+    title,
+    country:  document.getElementById('f-country').value,
+    summary:  document.getElementById('f-summary').value.trim(),
+    genre:      getGenreValues('f-genre-grid').join('、'),
+    streaming:  getGenreValues('f-streaming-grid').join('、'),
+    cast:     document.getElementById('f-cast').value.trim(),
+    theme:    document.getElementById('f-theme').value.trim(),
+    station:  document.getElementById('f-station').value.trim(),
+    year:     document.getElementById('f-year').value.trim(),
+    day:      document.getElementById('f-day').value.trim(),
+    episodeTime: document.getElementById('f-episode-time').value,
+    episodes:    document.getElementById('f-episodes').value,
+    trailer:     document.getElementById('f-trailer').value.trim(),
+    rewatch:     document.getElementById('f-rewatch').value,
+    scoreStory:  document.getElementById('f-score-story').value,
+    scoreCast:   document.getElementById('f-score-cast').value,
+    scoreVisual: document.getElementById('f-score-visual').value,
+    scoreMusic:  document.getElementById('f-score-music').value,
+    scoreSat:    document.getElementById('f-score-sat').value,
+    review:   document.getElementById('f-review').value.trim(),
+    image:    document.getElementById('f-image').value.trim(),
+  };
+  try {
+    const res = await fetch(GAS_URL, { method: 'POST', body: JSON.stringify(payload) });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    if (data.success) {
+      document.getElementById('form-msg').textContent = '✅ 追加しました！ページを再読み込みすると反映されます。';
+      document.getElementById('form-msg').className = 'form-msg success';
+      // フォームリセット
+      ['f-title','f-summary','f-cast','f-theme','f-station','f-year','f-day','f-image','f-review','f-episode-time','f-episodes']
+        .forEach(id => document.getElementById(id).value = '');
+      document.getElementById('f-rewatch').value = '';
+      ['f-score-story','f-score-cast','f-score-visual','f-score-music','f-score-sat'].forEach(id => { document.getElementById(id).value = '3'; });
+      buildGenreGrid('f-genre-grid');
+      buildStreamingGrid('f-streaming-grid');
+    } else {
+      throw new Error(data.error || '失敗');
+    }
+  } catch(e) {
+    document.getElementById('form-msg').textContent = '❌ 送信に失敗しました。もう一度お試しください。';
+    document.getElementById('form-msg').className = 'form-msg error';
+  }
+  btn.disabled = false;
+  btn.textContent = 'スプレッドシートに追加する';
+});
+const likedTitles = new Set(JSON.parse(localStorage.getItem('likedTitles') || '[]'));
+
+
+// みんなの評価 投票
+// 星を選ぶだけ（まだ送信しない）
+function selectVoteStar(btn) {
+  const section = btn.closest('.vote-section');
+  const score = parseInt(btn.dataset.score);
+  section.dataset.selectedScore = score;
+  [...section.querySelectorAll('.vote-star-btn')].forEach(b => {
+    b.classList.toggle('voted', parseInt(b.dataset.score) <= score);
+  });
+  section.querySelector('.vote-submit-btn').disabled = false;
+}
+
+// 「投票する」ボタンで確定送信
+async function submitVote(btn) {
+  const section = btn.closest('.vote-section');
+  const title = section.dataset.title;
+  const score = parseInt(section.dataset.selectedScore);
+  if (!score) return;
+
+  // ★【改善】localStorage で二重投票を抑止
+  if (hasVoted(title)) {
+    section.querySelector('.vote-result').textContent = '投票済みです';
+    btn.disabled = true;
+    btn.textContent = '投票済み';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = '送信中...';
+  section.querySelector('.vote-result').textContent = '';
+
+  try {
+    const res = await fetch(GAS_URL, {
+      method: 'POST',
+      body: JSON.stringify({ type: 'vote', title, score })
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`); // ★【改善】HTTPエラーを明示的に処理
+    const data = await res.json();
+    if (data.success) {
+      markVoted(title);
+      btn.textContent = '投票済み';
+      section.classList.add('done');
+      section.querySelectorAll('.vote-star-btn').forEach(b => b.disabled = true);
+      section.querySelector('.vote-result').textContent =
+        `平均 ${data.avg.toFixed(1)} (${data.total}票)`;
+      const card = section.closest('.drama-card');
+      updateUserRatingDisplay(card, data.avg, data.total);
+      // ★ GTMイベント：投票
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({ event: 'vote', drama_title: title, vote_score: score });
+    } else {
+      throw new Error(data.error || '投票失敗');
+    }
+  } catch(e) {
+    btn.disabled = false;
+    btn.textContent = '投票する';
+    section.querySelector('.vote-result').textContent = 'エラー：再試行してください';
+  }
+}
+
+function updateUserRatingDisplay(card, avg, total) {
+  const el = card.querySelector('.user-rating-inline');
+  if (!el) return;
+  el.querySelector('.user-stars-wrap').innerHTML = renderStars(avg);
+  el.querySelector('.user-rating-num').textContent = avg.toFixed(1);
+  el.querySelector('.user-rating-count').textContent = `(${total}票)`;
+  el.dataset.vavg = avg;
+}
+
+// ★【改善】投票のローカル記録（重複投票の抑止）
+// キー: 'votedDramas' → { "タイトル": timestamp }
+const VOTE_STORAGE_KEY = 'votedDramas';
+function getVotedDramas() {
+  try { return JSON.parse(localStorage.getItem(VOTE_STORAGE_KEY) || '{}'); }
+  catch (e) { return {}; }
+}
+function markVoted(title) {
+  const voted = getVotedDramas();
+  voted[title] = Date.now();
+  localStorage.setItem(VOTE_STORAGE_KEY, JSON.stringify(voted));
+}
+function hasVoted(title) {
+  return !!getVotedDramas()[title];
+}
+
+// ★【改善】投票済み状態をDOMに反映する関数（loadDramaData後にも呼ばれる）
+function restoreVotes() {
+  const voted = getVotedDramas();
+  document.querySelectorAll('.vote-section').forEach(section => {
+    const title = section.dataset.title;
+    if (voted[title]) {
+      section.classList.add('done');
+      section.querySelectorAll('.vote-star-btn').forEach(b => b.disabled = true);
+      const submitBtn = section.querySelector('.vote-submit-btn');
+      submitBtn.disabled = true;
+      submitBtn.textContent = '投票済み';
+    }
+  });
+}
+
+async function handleLike(btn) {
+  const title = btn.dataset.title;
+  const isLiked = btn.classList.contains('liked');
+  btn.classList.add('loading');
+  btn.disabled = true; // ★【改善】二重送信防止
+  try {
+    const res = await fetch(GAS_URL, {
+      method: 'POST',
+      body: JSON.stringify({ type: 'like', title, cancel: isLiked }),
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    if (data.success) {
+      btn.querySelector('.like-count').textContent = data.likes;
+      if (isLiked) {
+        btn.querySelector('.like-label').textContent = ' 気になる';
+        btn.classList.remove('liked');
+        likedTitles.delete(title);
+      } else {
+        btn.querySelector('.like-label').textContent = ' 気になる！設定済';
+        btn.classList.add('liked');
+        likedTitles.add(title);
+      }
+      // ★【改善】datasetのlikesも更新（未視聴数ソートに反映）
+      const card = btn.closest('.drama-card');
+      if (card) card.dataset.likes = data.likes;
+      localStorage.setItem('likedTitles', JSON.stringify([...likedTitles]));
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({ event: 'like', drama_title: title });
+    }
+  } catch(e) {
+    // ★【改善】エラー時も視覚フィードバックを出す
+    console.warn('気になる送信失敗:', e);
+  } finally {
+    btn.classList.remove('loading');
+    btn.disabled = false; // ★【改善】finally で確実に解除
+  }
+}
+
+function buildCountryChips() {
+  const flagMap = { '日本': '🇯🇵', '韓国': '🇰🇷', 'アメリカ': '🇺🇸', '中国': '🇨🇳', 'イギリス': '🇬🇧', 'その他': '🌏' };
+  const countries = [...new Set(allCards.map(c => c.dataset.country))].filter(Boolean);
+  // 日本・韓国を先頭に、残りはアルファベット順
+  const order = ['日本', '韓国'];
+  const sorted = [...order.filter(c => countries.includes(c)), ...countries.filter(c => !order.includes(c))];
+  const wrap = document.getElementById('country-chips');
+  wrap.innerHTML = sorted.map(country => {
+    const flag = flagMap[country] || '🌏';
+    return `<button class="chip" data-filter="${country}">${flag} ${country}</button>`;
+  }).join('');
+  // イベント再設定
+  document.querySelectorAll('.chip').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.chip').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentCountryFilter = btn.dataset.filter;
+      applyFiltersAndSort();
+    });
+  });
+  // スティッキーバーの国チップを同期
+  setTimeout(syncStickyCountryChips, 0);
+}
+
+
+// ジャンル・配信サービスグリッドを初期化
+function buildGenreGrid(containerId, selectedGenres = [], items = null) {
+  const wrap = document.getElementById(containerId);
+  if (!wrap) return;
+  const list = items || GENRES;
+  wrap.innerHTML = list.map(g => {
+    const checked = selectedGenres.includes(g) ? ' checked' : '';
+    const cls = selectedGenres.includes(g) ? ' checked' : '';
+    return `<label class="genre-check-label${cls}">
+      <input type="checkbox" value="${g}"${checked} onchange="toggleGenreLabel(this)"> ${g}
+    </label>`;
+  }).join('');
+}
+
+function buildStreamingGrid(containerId, selected = []) {
+  buildGenreGrid(containerId, selected, STREAMING_SERVICES);
+}
+
+function toggleGenreLabel(cb) {
+  cb.closest('.genre-check-label').classList.toggle('checked', cb.checked);
+}
+
+function getGenreValues(containerId) {
+  return [...document.querySelectorAll(`#${containerId} input:checked`)].map(cb => cb.value);
+}
+
+function toggleCard(header) {
+  const detail  = header.nextElementSibling;
+  const chevron = header.querySelector('.card-chevron');
+  const isOpen  = detail.classList.contains('open');
+
+  if (isOpen) {
+    // 閉じる：現在の高さ→0
+    detail.style.maxHeight = detail.scrollHeight + 'px';
+    requestAnimationFrame(() => {
+      detail.style.maxHeight = '0';
+      detail.classList.remove('open');
+      chevron.classList.remove('open');
+    });
+  } else {
+    // 開く：0→実際の高さ（制限なし）
+    detail.classList.add('open');
+    chevron.classList.add('open');
+    detail.style.maxHeight = detail.scrollHeight + 'px';
+    // アニメーション完了後にnoneにして動的コンテンツにも対応
+    detail.addEventListener('transitionend', function onEnd() {
+      if (detail.classList.contains('open')) {
+        detail.style.maxHeight = 'none';
+      }
+      detail.removeEventListener('transitionend', onEnd);
+    });
+    const card = header.closest('.drama-card');
+    // ★ GTMイベント：カード展開
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ event: 'card_expand', drama_title: card?.dataset.titleJp || '' });
+    drawRadarChart(card);
+    setTimeout(restoreVotes, 50);
+  }
+}
+
+let _chartJsPromise = null;
+function ensureChartJs() {
+  if (window.Chart) return Promise.resolve();
+  if (_chartJsPromise) return _chartJsPromise;
+  _chartJsPromise = new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js';
+    s.onload = resolve;
+    s.onerror = reject;
+    document.head.appendChild(s);
+  });
+  return _chartJsPromise;
+}
+async function drawRadarChart(card) {
+  const canvas = card.querySelector('.radar-chart');
+  if (!canvas) return;
+  try { await ensureChartJs(); } catch (e) { return; }
+  if (!card.isConnected) return;
+  if (canvas._chartInstance) { canvas._chartInstance.destroy(); }
+  const scores = [
+    parseInt(card.dataset.scoreStory)  || 0,
+    parseInt(card.dataset.scoreCast)   || 0,
+    parseInt(card.dataset.scoreVisual) || 0,
+    parseInt(card.dataset.scoreMusic)  || 0,
+    parseInt(card.dataset.scoreSat)    || 0,
+  ];
+  canvas._chartInstance = new Chart(canvas, {
+    type: 'radar',
+    data: {
+      labels: ['ストーリー','キャスト','映像美','音楽','満足度'],
+      datasets: [{
+        data: scores,
+        fill: true,
+        backgroundColor: 'rgba(201,168,76,0.18)',
+        borderColor: '#c9a84c',
+        borderWidth: 1.5,
+        pointBackgroundColor: '#c9a84c',
+        pointRadius: 3,
+      }]
+    },
+    options: {
+      responsive: false,
+      scales: {
+        r: {
+          min: 0, max: 5,
+          ticks: { stepSize: 1, display: false, backdropColor: 'transparent' },
+          grid: { color: 'rgba(255,255,255,0.08)' },
+          angleLines: { color: 'rgba(255,255,255,0.08)' },
+          pointLabels: { color: '#666', font: { size: 9, family: "-apple-system, 'Hiragino Sans', 'Yu Gothic', Meiryo, sans-serif" } }
+        }
+      },
+      plugins: { legend: { display: false } }
+    }
+  });
+}
+
+function drawAllRadarCharts() {
+  document.querySelectorAll('.card-detail.open').forEach(detail => {
+    drawRadarChart(detail.closest('.drama-card'));
+  });
+}
+
+const GENRES = [
+  'ロマンス', 'ヒューマン', 'サスペンス・ミステリー', '刑事・警察・法廷',
+  'コメディ', '医療', '青春・学園', '社会派',
+  'アクション・復讐', 'ファンタジー・SF', 'スポーツ', 'グルメ・お仕事'
+];
+
+const STREAMING_SERVICES = [
+  'Netflix', 'Amazon Prime Video', 'U-NEXT', 'Hulu', 'FOD', 'NHKオンデマンド'
+];
+
+const COL = { title:0, country:1, summary:2, genre:3, cast:4, theme:5, station:6, year:7, day:8, rating:9, scoreStory:10, scoreCast:11, scoreVisual:12, scoreMusic:13, scoreSat:14, review:15, image:16, likes:17, episodeTime:18, rewatch:19, v1:20, v2:21, v3:22, v4:23, v5:24, streaming:25, episodes:26, trailer:27 };
+
+let allCards = [];
+let currentCountryFilter = 'all';
+let currentSort = 'rating-desc';
+
+function esc(str) {
+  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// 半星対応 renderStars（0.25〜0.74 → 半星、0.75以上 → 満星）
+function renderStars(val) {
+  let h = '';
+  for (let i = 1; i <= 5; i++) {
+    const diff = val - (i - 1);
+    if (diff >= 0.75) {
+      h += `<span class="star-on">★</span>`;
+    } else if (diff >= 0.25) {
+      h += `<span class="star-half-wrap">★<span class="star-half-fill">★</span></span>`;
+    } else {
+      h += `<span class="star-off">★</span>`;
+    }
+  }
+  return h;
+}
+
+function getDecade(y) {
+  const n = parseInt(y);
+  if (n >= 2020) return '2020';
+  if (n >= 2010) return '2010';
+  if (n >= 2000) return '2000';
+  return 'その他';
+}
+
+function getStripeClass(c) {
+  if (!c) return 'other';
+  if (c.includes('日本')) return 'jp';
+  if (c.includes('韓国')) return 'kr';
+  return 'other';
+}
+
+function getBadgeClass(c) {
+  if (!c) return 'badge-other';
+  if (c.includes('日本')) return 'badge-jp';
+  if (c.includes('韓国')) return 'badge-kr';
+  return 'badge-other';
+}
+
+function getBadgeLabel(c) {
+  if (!c) return '—';
+  if (c.includes('日本')) return 'JP';
+  if (c.includes('韓国')) return 'KR';
+  if (c.includes('アメリカ')||c.includes('米')) return 'US';
+  return c.slice(0,2).toUpperCase();
+}
+
+function getEmoji(c) {
+  if (!c) return '🎬';
+  if (c.includes('韓国')) return '🎭';
+  if (c.includes('日本')) return '🌸';
+  return '🎬';
+}
+
+function createCard(row, idx) {
+  const title    = row[COL.title]   || '';
+  const country  = row[COL.country] || '';
+  const summary  = row[COL.summary] || '';
+  const genre    = row[COL.genre]   || '';
+  const cast     = row[COL.cast]    || '';
+  const station  = row[COL.station] || '';
+  const year     = row[COL.year]    || '';
+  const day      = row[COL.day]     || '';
+  const scoreStory  = parseInt(row[COL.scoreStory])  || 0;
+  const scoreCast   = parseInt(row[COL.scoreCast])   || 0;
+  const scoreVisual = parseInt(row[COL.scoreVisual]) || 0;
+  const scoreMusic  = parseInt(row[COL.scoreMusic])  || 0;
+  const scoreSat    = parseInt(row[COL.scoreSat])    || 0;
+  const hasScores   = scoreStory || scoreCast || scoreVisual || scoreMusic || scoreSat;
+  const ratingRaw = hasScores
+    ? Math.round((scoreStory + scoreCast + scoreVisual + scoreMusic + scoreSat) / 5 * 10) / 10
+    : parseFloat(row[COL.rating]) || 0;
+  const rating = Math.round(ratingRaw);       // 表示用（整数）
+  const ratingDecimal = ratingRaw;            // ソート用（小数）
+  const review      = row[COL.review]      || '';
+  const imgUrl      = row[COL.image]       || '';
+  const episodeTime = parseInt(row[COL.episodeTime]) || 0;
+  const episodes    = parseInt(row[COL.episodes])    || 0;
+  const trailer     = row[COL.trailer]     || '';
+  const rewatch     = row[COL.rewatch]     || '';
+  const streaming   = row[COL.streaming]   || '';
+  // みんなの評価（U〜Y列の個別票数から計算）
+  const v1 = parseInt(row[COL.v1])||0;
+  const v2 = parseInt(row[COL.v2])||0;
+  const v3 = parseInt(row[COL.v3])||0;
+  const v4 = parseInt(row[COL.v4])||0;
+  const v5 = parseInt(row[COL.v5])||0;
+  const vTotal = v1+v2+v3+v4+v5;
+  const vSum   = v1*1+v2*2+v3*3+v4*4+v5*5;
+  const vAvg   = vTotal > 0 ? Math.round(vSum/vTotal*10)/10 : 0;
+  const theme     = row[COL.theme]   || '';
+  const finalC   = ['日本','韓国','アメリカ'].includes(country) ? country : 'その他';
+
+  const card = document.createElement('div');
+  card.className = 'drama-card';
+  card.dataset.stripe        = getStripeClass(country);
+  card.dataset.rating        = rating;
+  card.dataset.ratingDecimal = ratingDecimal;
+  card.dataset.decade    = getDecade(year);
+  card.dataset.titleJp   = title;
+  card.dataset.country   = finalC;
+  card.dataset.summary   = row[COL.summary]  || '';
+  card.dataset.genre     = genre;
+  card.dataset.cast      = row[COL.cast]     || '';
+  card.dataset.theme     = row[COL.theme]    || '';
+  card.dataset.station   = row[COL.station]  || '';
+  card.dataset.year      = year;
+  card.dataset.day       = row[COL.day]      || '';
+  card.dataset.review    = review;
+  card.dataset.image     = imgUrl;
+  card.dataset.scoreStory   = scoreStory;
+  card.dataset.scoreCast    = scoreCast;
+  card.dataset.scoreVisual  = scoreVisual;
+  card.dataset.scoreMusic   = scoreMusic;
+  card.dataset.scoreSat     = scoreSat;
+  card.dataset.episodeTime  = episodeTime;
+  card.dataset.episodes     = episodes;
+  card.dataset.trailer      = trailer  || '';
+  card.dataset.rewatch      = rewatch;
+  card.dataset.streaming    = row[COL.streaming] || '';
+  card.dataset.vAvg   = vAvg;
+  card.dataset.vTotal = vTotal;
+  card.dataset.likes  = row[COL.likes] || 0; // ★【改善】likesをdatasetに保持（ソート用）
+  card.dataset.v1 = v1; card.dataset.v2 = v2; card.dataset.v3 = v3;
+  card.dataset.v4 = v4; card.dataset.v5 = v5;
+
+  const tags = genre.split(/[、,，]/).map(g=>g.trim()).filter(Boolean);
+  const emoji = getEmoji(country);
+
+  const eagerImg = idx < 2; // 最初の2枚だけ先読み（本命のLCP画像に帯域を集中）
+  // 一覧カードは w342 で軽く配信（拡大時はライトボックス側で w500 へ昇格）
+  const cardImgUrl = imgUrl.replace(/\/w\d+\//, '/w342/');
+  const posterHtml = imgUrl
+    ? `<img src="${esc(cardImgUrl)}" alt="${esc(title)}" width="100" height="100" ${eagerImg ? 'fetchpriority="high"' : 'loading="lazy"'} onclick="openLightbox(this.src,'${esc(title).replace(/'/g, '&#39;')}')" style="cursor:zoom-in" onerror="this.parentElement.innerHTML='<div class=\\'card-poster-placeholder\\'>${emoji}</div>'">`
+    : `<div class="card-poster-placeholder">${emoji}</div>`;
+
+  card.innerHTML = `
+    <div class="card-checkbox-wrap">
+      <input type="checkbox" onchange="toggleSelect(event, this.parentElement)" onclick="event.stopPropagation()">
+    </div>
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="rank-badge"><span class="rank-crown"></span><span class="rank-num"></span></div>
+      <div class="card-poster">${posterHtml}</div>
+      <div class="card-header-info">
+        <div class="card-title-row">
+          <div class="drama-title">${esc(title)}</div>
+          <span class="country-badge ${getBadgeClass(country)}">${getBadgeLabel(country)}</span>
+        </div>
+        ${tags.length ? `<div class="tags card-tags-title">${tags.map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div>` : ''}
+        <div class="card-bottom-row">
+          <div class="card-ratings-row">
+            <div class="rating-item"><span class="rating-owner-label">けんけんぱ</span><div class="stars">${renderStars(ratingRaw)}<span class="rating-num">${ratingRaw.toFixed(1)}</span></div></div>
+            <div class="rating-item user-rating-inline" data-vavg="${vAvg}" data-vtotal="${vTotal}"><span class="user-rating-label">みんな</span><span class="user-stars-wrap">${vAvg > 0 ? renderStars(vAvg) : '─'}</span><span class="user-rating-num">${vAvg > 0 ? vAvg.toFixed(1) : ''}</span><span class="user-rating-count">${vAvg > 0 ? `(${vTotal}票)` : '未投票'}</span></div>
+          </div>
+          ${tags.length ? `<div class="tags">${tags.map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div>` : ''}
+        </div>
+      </div>
+      <span class="card-chevron">▼</span>
+    </div>
+    <div class="card-detail">
+      <div class="card-detail-inner">
+        <div class="card-meta-block">
+          ${cast ? `<div class="card-meta"><span class="meta-label">出演者：</span>${esc(cast)}</div>` : ''}
+          ${theme ? `<div class="card-meta"><span class="meta-label">原作：</span>${esc(theme)}</div>` : ''}
+          ${(year||day||station||episodeTime||episodes) ? `<div class="card-meta">${[year,day].filter(Boolean).join(' / ')}${station ? '　/　'+esc(station) : ''}${episodeTime ? '　/　1話約'+episodeTime+'分' : ''}${episodes ? '　/　全'+episodes+'話' : ''}</div>` : ''}
+          ${streaming ? `<div class="card-meta streaming-badges">${streaming.split(/[、,，]/).map(s=>s.trim()).filter(Boolean).map(s=>`<span class="streaming-badge streaming-${s.replace(/\s+/g,'_')}">${s}</span>`).join('')}</div>` : ''}
+          ${rewatch ? `<div style="margin-top:4px"><span class="extra-badge ${rewatch === 'またみたい' ? 'rewatch-yes' : 'rewatch-no'}">🔁 ${rewatch}</span></div>` : ''}
+        </div>
+        <div class="card-body-layout">
+          <div class="card-body-left">
+            ${summary ? `<div class="card-summary">${esc(summary)}</div>` : ''}
+          </div>
+          ${hasScores ? `
+          <div class="card-body-right">
+            <div class="radar-canvas-wrap">
+              <canvas class="radar-chart" width="160" height="160" aria-label="${esc(title)}のレーダーチャート"></canvas>
+            </div>
+            <div class="radar-scores">
+              ${[['ストーリー',scoreStory],['キャスト',scoreCast],['映像美',scoreVisual],['音楽',scoreMusic],['満足度',scoreSat]].map(([lbl,val])=>`
+              <div class="radar-score-row">
+                <span class="radar-score-label">${lbl}</span>
+                <div class="radar-score-bar-wrap"><div class="radar-score-bar" style="width:${val*20}%"></div></div>
+                <span class="radar-score-val">${val}/5</span>
+              </div>`).join('')}
+            </div>
+          </div>` : ''}
+        </div>
+        ${review ? `<div class="card-review">${esc(review)}</div>` : ''}
+        ${trailer ? `<div style="margin-top:8px"><button class="trailer-btn" onclick="openTrailer('${esc(trailer).replace(/'/g,"&#39;")}','${esc(title).replace(/'/g,"&#39;")}')">▶ 予告編</button></div>` : ''}
+        <div class="card-bottom-action">
+          <button class="like-btn" title="気になる（押すと設定／もう一度押すと解除）" data-title="${esc(title)}" onclick="handleLike(this)">
+            <span class="like-count">0</span><span class="like-label"> 気になる</span>
+          </button>
+          </button>
+          <div class="vote-section" data-title="${esc(title)}">
+            <span class="vote-label">あなたの評価：</span>
+            ${[1,2,3,4,5].map(s=>`<button class="vote-star-btn" data-score="${s}" onclick="selectVoteStar(this)">★</button>`).join('')}
+            <button class="vote-submit-btn" onclick="submitVote(this)" disabled>投票する</button>
+            <span class="vote-result"></span>
+          </div>
+          <button class="edit-btn" onclick="openEditModal(this)">✏️ 編集</button>
+        </div>
+      </div>
+    </div>`;
+  return card;
+}
+
+function updateStats() {
+  const total = allCards.length;
+  const avg = total > 0 ? (allCards.reduce((s,c)=>s+parseFloat(c.dataset.rating),0)/total).toFixed(1) : '—';
+  document.getElementById('total-count').textContent = total;
+  document.getElementById('avg-rating').textContent = avg;
+}
+
+function applyFiltersAndSort() {
+  const selC = [...document.querySelectorAll('#country-filter input:checked')].map(cb=>cb.value).filter(v=>v!=='all');
+  const selR = [...document.querySelectorAll('#rating-filter input:checked')].map(cb=>parseFloat(cb.value)).filter(v=>!isNaN(v));
+  const selD = [...document.querySelectorAll('#decade-filter input:checked')].map(cb=>cb.value).filter(v=>v!=='all');
+  const selG = [...document.querySelectorAll('#genre-filter input:checked')].map(cb=>cb.value).filter(v=>v!=='all');
+  // ★【改善】配信サービスフィルター
+  const selS = [...document.querySelectorAll('#streaming-filter input:checked')].map(cb=>cb.value).filter(v=>v!=='all');
+
+  const q = (document.getElementById('search-input')?.value || '').trim().toLowerCase();
+
+  let visible = allCards.filter(card => {
+    const cOk = selC.length===0 || selC.includes(card.dataset.country);
+    const rOk = selR.length===0 || selR.includes(parseFloat(card.dataset.rating));
+    const dOk = selD.length===0 || selD.includes(card.dataset.decade);
+    const chipOk = currentCountryFilter==='all' || card.dataset.country===currentCountryFilter;
+    const qOk = !q || [card.dataset.titleJp, card.dataset.cast, card.dataset.genre, card.dataset.summary, card.dataset.review]
+      .some(v => v && v.toLowerCase().includes(q));
+    const gOk = selG.length===0 || selG.some(g => (card.dataset.genre||'').includes(g));
+    const sOk = selS.length===0 || selS.some(s => (card.dataset.streaming||'').includes(s));
+    const mOk = matchesMood(card, currentMood); // 気分フィルター
+    return cOk && rOk && dOk && chipOk && qOk && gOk && sOk && mOk;
+  });
+
+  switch (currentSort) {
+    case 'year-desc':   visible.sort((a,b)=>parseInt(b.dataset.year)-parseInt(a.dataset.year)); break;
+    case 'year-asc':    visible.sort((a,b)=>parseInt(a.dataset.year)-parseInt(b.dataset.year)); break;
+    case 'rating-desc': visible.sort((a,b)=>parseFloat(b.dataset.ratingDecimal||0)-parseFloat(a.dataset.ratingDecimal||0)); break;
+    case 'likes-desc':  visible.sort((a,b)=>parseInt(b.dataset.likes||0)-parseInt(a.dataset.likes||0)); break;
+    case 'title-asc':   visible.sort((a,b)=>a.dataset.titleJp.localeCompare(b.dataset.titleJp,'ja')); break;
+    case 'vavg-desc':   visible.sort((a,b)=>parseFloat(b.dataset.vAvg||0)-parseFloat(a.dataset.vAvg||0)); break;
+  }
+
+  const listEl = document.getElementById('drama-list');
+
+  // 初回：DOMにまだないカードを追加
+  allCards.forEach(card => {
+    if (!card.parentElement) listEl.appendChild(card);
+    card.style.display = 'none';
+    card.style.order = '';
+  });
+
+  if (visible.length === 0) {
+    let noRes = listEl.querySelector('.no-results');
+    if (!noRes) { noRes = document.createElement('div'); noRes.className = 'no-results'; noRes.textContent = '条件に合うドラマが見つかりませんでした。'; listEl.appendChild(noRes); }
+    noRes.style.display = 'block';
+  } else {
+    const noRes = listEl.querySelector('.no-results');
+    if (noRes) noRes.style.display = 'none';
+    visible.forEach((card, i) => { card.style.display = ''; card.style.order = i; });
+  }
+  // ランキングバッジ表示（評価順・気になる順のみ）
+  const showRank = (currentSort === 'rating-desc' || currentSort === 'likes-desc');
+  visible.forEach((card, i) => {
+    const rank = i + 1;
+    const badge  = card.querySelector('.rank-badge');
+    const crown  = card.querySelector('.rank-crown');
+    const numEl  = card.querySelector('.rank-num');
+    // 色クラスをリセット
+    card.classList.remove('rank-gold', 'rank-silver', 'rank-bronze', 'show-rank');
+    badge.className = 'rank-badge';
+    if (showRank && rank <= 10) {
+      card.classList.add('show-rank');
+      if (rank === 1) { badge.classList.add('rank-1'); crown.textContent = '👑'; card.classList.add('rank-gold'); }
+      else if (rank === 2) { badge.classList.add('rank-2'); crown.textContent = '👑'; card.classList.add('rank-silver'); }
+      else if (rank === 3) { badge.classList.add('rank-3'); crown.textContent = '👑'; card.classList.add('rank-bronze'); }
+      else { badge.classList.add('rank-other'); crown.textContent = ''; }
+      numEl.textContent = rank;
+    } else {
+      crown.textContent = '';
+      numEl.textContent = '';
+    }
+  });
+
+  document.getElementById('result-count').textContent = currentMood
+    ? `${visible.length}作品（気分フィルター中）`
+    : `${visible.length}作品`;
+
+  // P03改善: 適用中フィルタータグを更新
+  renderActiveFilterTags(selC, selR, selD, selG, selS);
+
+  // 展開済みカードのレーダーを再描画
+  setTimeout(drawAllRadarCharts, 0);
+  setTimeout(restoreVotes, 50);
+}
+
+// P03改善: アクティブフィルタータグ描画
+function renderActiveFilterTags(selC, selR, selD, selG, selS) {
+  const wrap = document.getElementById('active-filter-tags');
+  if (!wrap) return;
+  wrap.innerHTML = '';
+  const filterBtn = document.getElementById('filter-button');
+
+  const allTags = [
+    ...selC.map(v => ({ label: v, group: 'country' })),
+    ...selR.map(v => ({ label: `★${v}`, group: 'rating' })),
+    ...selD.map(v => ({ label: `${v}年代`, group: 'decade' })),
+    ...selG.map(v => ({ label: v, group: 'genre' })),
+    ...selS.map(v => ({ label: v, group: 'streaming' })),
+  ];
+
+  allTags.forEach(({ label, group }) => {
+    const tag = document.createElement('span');
+    tag.className = 'active-filter-tag';
+    tag.innerHTML = `${esc(label)}<button class="active-filter-tag-close" aria-label="${esc(label)}を解除" onclick="clearFilterTag('${group}','${esc(label)}')">✕</button>`;
+    wrap.appendChild(tag);
+  });
+
+  // フィルターボタンにバッジ表示
+  const total = allTags.length;
+  if (filterBtn) {
+    filterBtn.innerHTML = total > 0
+      ? `🔽 フィルター<span class="filter-count-badge">${total}</span>`
+      : '🔽 フィルター';
+    filterBtn.classList.toggle('has-active', total > 0);
+  }
+}
+
+// P03改善: タグ✕クリックで該当フィルターを解除
+function clearFilterTag(group, label) {
+  const groupMap = {
+    country: '#country-filter', rating: '#rating-filter',
+    decade: '#decade-filter', genre: '#genre-filter', streaming: '#streaming-filter'
+  };
+  const groupEl = document.querySelector(groupMap[group]);
+  if (!groupEl) return;
+  const rawLabel = label.replace(/^★/, '').replace(/年代$/, '');
+  groupEl.querySelectorAll('input:not([value="all"])').forEach(cb => {
+    if (cb.value === rawLabel || `★${cb.value}` === label || `${cb.value}年代` === label) {
+      cb.checked = false;
+    }
+  });
+  const checked = groupEl.querySelectorAll('input:not([value="all"]):checked').length;
+  if (checked === 0) { const allCb = groupEl.querySelector('input[value="all"]'); if(allCb) allCb.checked = true; }
+  applyFiltersAndSort();
+}
+
+function setupCheckboxGroup(groupEl) {
+  const allCb = groupEl.querySelector('input[value="all"]');
+  groupEl.addEventListener('change', e => {
+    if (e.target.value === 'all') {
+      groupEl.querySelectorAll('input:not([value="all"])').forEach(cb => cb.checked = false);
+    } else { allCb.checked = false; }
+    if (groupEl.querySelectorAll('input:checked').length === 0) allCb.checked = true;
+    applyFiltersAndSort();
+  });
+}
+
+// 「すべて」チップのみここで設定、国チップはbuildCountryChips()で動的生成
+document.querySelector('.chip[data-filter="all"]').addEventListener('click', function() {
+  document.querySelectorAll('.chip').forEach(b => b.classList.remove('active'));
+  this.classList.add('active');
+  currentCountryFilter = 'all';
+  applyFiltersAndSort();
+});
+
+// ソートインラインボタン
+document.querySelectorAll('.sort-inline-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    currentSort = btn.dataset.sort;
+    document.querySelectorAll('.sort-inline-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    applyFiltersAndSort();
+  });
+});
+
+document.getElementById('filter-button').addEventListener('click', () => {
+  document.getElementById('filter-overlay').classList.add('open');
+});
+document.getElementById('filter-close').addEventListener('click', () => {
+  document.getElementById('filter-overlay').classList.remove('open');
+});
+
+
+// ジャンルフィルターパネルを動的生成
+(function() {
+  const wrap = document.getElementById('genre-filter');
+  GENRES.forEach(g => {
+    const label = document.createElement('label');
+    label.innerHTML = `<input type="checkbox" value="${g}"> ${g}`;
+    wrap.appendChild(label);
+  });
+  setupCheckboxGroup(wrap);
+})();
+
+setupCheckboxGroup(document.getElementById('country-filter'));
+setupCheckboxGroup(document.getElementById('rating-filter'));
+setupCheckboxGroup(document.getElementById('decade-filter'));
+setupCheckboxGroup(document.getElementById('streaming-filter')); // ★【改善】配信フィルター追加
+
+function showLoadError() {
+  const listEl = document.getElementById('drama-list');
+  listEl.innerHTML = `
+    <div class="load-error">
+      <div class="load-error-icon">⚠️</div>
+      <div class="load-error-msg">データの読み込みに失敗しました。<br>ネットワークを確認してもう一度お試しください。</div>
+      <button class="load-error-retry" onclick="location.reload()">再読み込み</button>
+    </div>`;
+}
+
+async function loadDramaData() {
+  let data = null;
+  let fromSnapshot = false;
+
+  // 1) 静的スナップショット data.json を最優先で試す（高速表示）
+  try {
+    const r = await fetch('data.json', { cache: 'no-cache' });
+    if (r.ok) { data = await r.json(); fromSnapshot = true; }
+  } catch (e) { /* data.json が無ければ無視して GAS へ */ }
+
+  // 2) スナップショットが無ければ従来どおり GAS から取得（フォールバック）
+  if (!data) {
+    try {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 20000);
+      const res = await fetch(GAS_URL, { signal: controller.signal });
+      clearTimeout(timer);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      data = await res.json();
+    } catch (e) { showLoadError(); return; }
+  }
+
+  // 3) 描画（チャンク分割で TBT を低減）
+  const ok = await buildAndRenderDramas(data);
+  if (!ok) return;
+
+  // 4) スナップショット表示だった場合、裏で GAS から最新のいいね/投票を反映
+  if (fromSnapshot) { refreshCountsFromGAS(); }
+}
+
+async function buildAndRenderDramas(data) {
+  const listEl = document.getElementById('drama-list');
+  const dramas = data.dramas || [];
+  const likes  = data.likes  || {};
+
+  allCards = []; // リセット（再読み込み時に重複しないよう）
+  if (dramas.length === 0) {
+    listEl.innerHTML = '<div class="no-results">レビューデータが見つかりませんでした。</div>';
+    return false;
+  }
+  // スケルトンはここでは消さない。実カードを作り終えてから一括差し替え（CLS防止）
+
+  // カードをチャンク分割で生成（メインスレッドを小刻みに解放して TBT を下げる）
+  const CHUNK = 6;
+  for (let i = 0; i < dramas.length; i++) {
+    const d = dramas[i];
+    const row = [
+      d.title, d.country, d.summary, d.genre,
+      d.cast, d.theme, d.station, d.year, d.day,
+      d.rating, d.scoreStory, d.scoreCast, d.scoreVisual, d.scoreMusic, d.scoreSat,
+      d.review, d.image, d.likes, d.episodeTime, d.rewatch,
+      d.v1, d.v2, d.v3, d.v4, d.v5, d.streaming, d.episodes, d.trailer,
+    ];
+    allCards.push(createCard(row, i));
+    if ((i + 1) % CHUNK === 0 && i + 1 < dramas.length) {
+      await new Promise(r => setTimeout(r, 0)); // メインスレッドを解放
+    }
+  }
+
+  listEl.innerHTML = ''; // スケルトンを消し、直後に実カードを追加（空白の瞬間を作らない）
+  updateStats();
+  buildCountryChips();
+  applyFiltersAndSort();
+
+  // いいね数・投票済み状態を反映
+  document.querySelectorAll('.like-btn').forEach(btn => {
+    const title = btn.dataset.title;
+    const count = likes[title] || 0;
+    btn.querySelector('.like-count').textContent = count;
+    if (likedTitles.has(title)) {
+      btn.classList.add('liked');
+      btn.querySelector('.like-label').textContent = ' 気になる！設定済';
+    }
+  });
+
+  // データ更新日時を表示
+  if (data.lastUpdated) {
+    let display = data.lastUpdated;
+    if (String(display).includes('T')) {
+      const d = new Date(display);
+      display = `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+    }
+    document.getElementById('last-updated-data').textContent = display;
+  } else {
+    document.getElementById('last-updated-data').textContent = '—';
+  }
+
+  // UI 初期化は一度だけ（再読み込み時のイベント二重登録を防止）
+  if (!window._uiInitDone) {
+    window._uiInitDone = true;
+    const searchInput    = document.getElementById('search-input');
+    const searchClearBtn = document.getElementById('search-clear-btn');
+    if (searchInput) {
+      searchInput.addEventListener('input', () => {
+        applyFiltersAndSort();
+        if (searchClearBtn) {
+          searchClearBtn.style.display = searchInput.value ? 'inline-block' : 'none';
+        }
+      });
+    }
+    if (searchClearBtn) {
+      searchClearBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        searchClearBtn.style.display = 'none';
+        searchInput.focus();
+        applyFiltersAndSort();
+      });
+    }
+    buildGenreGrid('f-genre-grid');
+    buildGenreGrid('e-genre-grid');
+    buildStreamingGrid('f-streaming-grid');
+    buildStreamingGrid('e-streaming-grid');
+  }
+
+  return true;
+}
+
+// スナップショット表示後、裏で GAS から最新のいいね/投票数を取得して反映
+async function refreshCountsFromGAS() {
+  try {
+    const res = await fetch(GAS_URL);
+    if (!res.ok) return;
+    const data = await res.json();
+    const likes  = data.likes  || {};
+    const dramas = data.dramas || [];
+
+    // いいね数を更新
+    document.querySelectorAll('.like-btn').forEach(btn => {
+      const title = btn.dataset.title;
+      if (title in likes) {
+        btn.querySelector('.like-count').textContent = likes[title];
+        const card = btn.closest('.drama-card');
+        if (card) card.dataset.likes = likes[title];
+      }
+    });
+
+    // 投票（みんなの評価）を更新
+    const byTitle = {};
+    dramas.forEach(d => { byTitle[d.title] = d; });
+    allCards.forEach(card => {
+      const d = byTitle[card.dataset.titleJp];
+      if (!d) return;
+      const v1 = parseInt(d.v1)||0, v2 = parseInt(d.v2)||0, v3 = parseInt(d.v3)||0, v4 = parseInt(d.v4)||0, v5 = parseInt(d.v5)||0;
+      const vTotal = v1+v2+v3+v4+v5;
+      const vAvg = vTotal > 0 ? Math.round((v1+v2*2+v3*3+v4*4+v5*5)/vTotal*10)/10 : 0;
+      card.dataset.vAvg = vAvg;
+      card.dataset.vTotal = vTotal;
+      if (vTotal > 0) updateUserRatingDisplay(card, vAvg, vTotal);
+    });
+  } catch (e) { /* 裏更新の失敗は無視（表示は既に完了している） */ }
+}
+
+// ===== ライトボックス =====
+const lightbox      = document.getElementById('lightbox');
+const lightboxImg   = document.getElementById('lightbox-img');
+const lightboxTitle = document.getElementById('lightbox-title');
+const lightboxClose = document.getElementById('lightbox-close');
+
+function openLightbox(src, title) {
+  // TMDBの画像はw500版に差し替え、それ以外はそのまま
+  const hiRes = src.includes('image.tmdb.org')
+    ? src.replace(/\/w\d+\//, '/w500/')
+    : src;
+  lightboxImg.src = hiRes;
+  lightboxImg.alt = title;
+  lightboxTitle.textContent = title;
+  lightbox.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  lightbox.classList.remove('open');
+  lightboxImg.src = '';
+  document.body.style.overflow = '';
+}
+
+lightboxClose.addEventListener('click', closeLightbox);
+
+// 背景クリックで閉じる
+lightbox.addEventListener('click', (e) => {
+  if (e.target === lightbox) closeLightbox();
+});
+
+// Escキーで閉じる
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && lightbox.classList.contains('open')) closeLightbox();
+});
+
+// ===== 予告編モーダル =====
+const trailerOverlay   = document.getElementById('trailer-overlay');
+const trailerClose     = document.getElementById('trailer-close');
+const trailerVideoWrap = document.getElementById('trailer-video-wrap');
+const trailerTitle     = document.getElementById('trailer-modal-title');
+const trailerYtLink    = document.getElementById('trailer-yt-link');
+
+function extractYouTubeId(url) {
+  // 各種YouTube URL形式に対応
+  const patterns = [
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
+    /youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/
+  ];
+  for (const p of patterns) {
+    const m = url.match(p);
+    if (m) return m[1];
+  }
+  return null;
+}
+
+function openTrailer(url, title) {
+  const videoId = extractYouTubeId(url);
+  if (!videoId) { alert('YouTube URLの形式が正しくありません'); return; }
+
+  // ★ GTMイベント：予告編再生
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({ event: 'trailer_play', drama_title: title });
+
+  trailerTitle.textContent = title;
+  trailerYtLink.href = url;
+  // autoplay=1 でモーダルを開いたら自動再生
+  trailerVideoWrap.innerHTML = `<iframe
+    src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0"
+    allow="autoplay; encrypted-media; fullscreen"
+    allowfullscreen>
+  </iframe>`;
+  trailerOverlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeTrailer() {
+  trailerOverlay.classList.remove('open');
+  trailerVideoWrap.innerHTML = ''; // 動画を止める
+  document.body.style.overflow = '';
+}
+
+trailerClose.addEventListener('click', closeTrailer);
+trailerOverlay.addEventListener('click', e => { if (e.target === trailerOverlay) closeTrailer(); });
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && trailerOverlay.classList.contains('open')) closeTrailer();
+});
+
+// ===== 更新ボタン =====
+document.getElementById('refresh-btn').addEventListener('click', () => {
+  const btn = document.getElementById('refresh-btn');
+  btn.classList.add('spinning');
+  btn.disabled = true;
+  loadDramaData().finally(() => {
+    btn.classList.remove('spinning');
+    btn.disabled = false;
+  });
+});
+
+// ===== TOPに戻るボタン =====
+const backToTopBtn = document.getElementById('back-to-top');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 300) {
+    backToTopBtn.classList.add('visible');
+  } else {
+    backToTopBtn.classList.remove('visible');
+  }
+}, { passive: true });
+backToTopBtn.addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// ===== スティッキーコントロールバー =====
+const stickyControls  = document.getElementById('sticky-controls');
+const mainControls    = document.querySelector('.search-and-controls');
+
+// ヘッダーが見えなくなったら表示
+const stickyObserver = new IntersectionObserver(([entry]) => {
+  if (!entry.isIntersecting) {
+    stickyControls.classList.add('visible');
+    stickyControls.removeAttribute('aria-hidden');
+  } else {
+    stickyControls.classList.remove('visible');
+    stickyControls.setAttribute('aria-hidden', 'true');
+  }
+}, { threshold: 0 });
+
+if (mainControls) stickyObserver.observe(mainControls);
+
+// スティッキーバーの国チップ同期（buildCountryChipsで呼ばれる）
+function syncStickyCountryChips() {
+  const src = document.getElementById('country-chips');
+  const dst = document.getElementById('sticky-country-chips');
+  if (!src || !dst) return;
+  dst.innerHTML = '';
+  src.querySelectorAll('.chip').forEach(chip => {
+    const clone = chip.cloneNode(true);
+    clone.classList.add('sticky-chip');
+    clone.addEventListener('click', () => {
+      // 元のチップをクリックして同期
+      chip.click();
+    });
+    dst.appendChild(clone);
+  });
+}
+
+// スティッキーバーの「すべて」チップ
+document.getElementById('sticky-all-chip').addEventListener('click', () => {
+  document.querySelector('.chip[data-filter="all"]')?.click();
+});
+
+// スティッキーバーの気分・フィルターボタン
+document.getElementById('sticky-mood-btn').addEventListener('click', () => {
+  document.getElementById('mood-toggle-btn')?.click();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+document.getElementById('sticky-filter-btn').addEventListener('click', () => {
+  document.getElementById('filter-button')?.click();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// スティッキーバーのソートボタン同期
+document.querySelectorAll('.sticky-sort-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    // 元のソートボタンと同期
+    const sort = btn.dataset.sort;
+    document.querySelectorAll('.sort-inline-btn').forEach(orig => {
+      if (orig.dataset.sort === sort) orig.click();
+    });
+    // スティッキーバーのアクティブ状態を更新
+    document.querySelectorAll('.sticky-sort-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+
+// ソートボタンのアクティブ状態をスティッキーバーに反映
+document.querySelectorAll('.sort-inline-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const sort = btn.dataset.sort;
+    document.querySelectorAll('.sticky-sort-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.sort === sort);
+    });
+  });
+});
+
+// 件数をスティッキーバーにも反映
+const origResultCount = document.getElementById('result-count');
+const stickyResultCount = document.getElementById('sticky-result-count');
+const resultObserver = new MutationObserver(() => {
+  if (stickyResultCount) stickyResultCount.textContent = origResultCount.textContent;
+});
+if (origResultCount) resultObserver.observe(origResultCount, { childList: true, characterData: true, subtree: true });
+
+// ===== プライバシーポリシーモーダル =====
+const privacyOverlay  = document.getElementById('privacy-overlay');
+const privacyBtn      = document.getElementById('privacy-btn');
+const privacyClose    = document.getElementById('privacy-close');
+const privacyCloseBtn = document.getElementById('privacy-close-btn');
+
+function openPrivacy() {
+  privacyOverlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closePrivacy() {
+  privacyOverlay.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+privacyBtn.addEventListener('click', openPrivacy);
+privacyClose.addEventListener('click', closePrivacy);
+privacyCloseBtn.addEventListener('click', closePrivacy);
+privacyOverlay.addEventListener('click', e => { if (e.target === privacyOverlay) closePrivacy(); });
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && privacyOverlay.classList.contains('open')) closePrivacy();
+});
+
+// フッターの「使い方」ボタン
+document.getElementById('usage-footer-btn').addEventListener('click', openUsageModal);
+
+// ===== 使い方モーダル =====
+const usageOverlay  = document.getElementById('usage-overlay');
+const usageBtn      = document.getElementById('usage-btn');
+const usageCloseBtn = document.getElementById('usage-close-btn');
+const USAGE_SEEN_KEY = 'usageGuideSeen';
+
+function openUsageModal() {
+  usageOverlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeUsageModal() {
+  usageOverlay.classList.remove('open');
+  document.body.style.overflow = '';
+  localStorage.setItem(USAGE_SEEN_KEY, '1');
+}
+
+// 「使い方」ボタンで開く
+usageBtn.addEventListener('click', openUsageModal);
+
+// 「さっそく見る」ボタンで閉じる
+usageCloseBtn.addEventListener('click', closeUsageModal);
+
+// 背景クリックで閉じる
+usageOverlay.addEventListener('click', e => {
+  if (e.target === usageOverlay) closeUsageModal();
+});
+
+// Escキーで閉じる
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && usageOverlay.classList.contains('open')) closeUsageModal();
+});
+
+// 初回訪問時に自動表示（localStorageに記録がない場合のみ）
+if (!localStorage.getItem(USAGE_SEEN_KEY)) {
+  // データ読み込み後に表示（少し遅延させて自然に見せる）
+  setTimeout(openUsageModal, 800);
+}
+
+// ===== 気分フィルター =====
+let currentMood = null;
+
+const moodToggleBtn  = document.getElementById('mood-toggle-btn');
+const moodDrawer     = document.getElementById('mood-drawer');
+const moodClearBtn   = document.getElementById('mood-clear-btn');
+const moodActiveTag  = document.getElementById('mood-active-tag');
+const moodActiveLabel= document.getElementById('mood-active-label');
+const moodClearTagBtn= document.getElementById('mood-clear-tag-btn');
+const moodTiles      = document.querySelectorAll('.mood-tile');
+
+// 引き出し開閉
+moodToggleBtn.addEventListener('click', () => {
+  const isOpen = moodDrawer.classList.contains('open');
+  if (isOpen) {
+    closeMoodDrawer();
+  } else {
+    moodDrawer.classList.add('open');
+    moodDrawer.setAttribute('aria-hidden', 'false');
+    moodToggleBtn.setAttribute('aria-expanded', 'true');
+    moodToggleBtn.classList.add('active');
+  }
+});
+
+function closeMoodDrawer() {
+  moodDrawer.classList.remove('open');
+  moodDrawer.setAttribute('aria-hidden', 'true');
+  moodToggleBtn.setAttribute('aria-expanded', 'false');
+  if (!currentMood) moodToggleBtn.classList.remove('active');
+}
+
+// 気分タイルを選択
+moodTiles.forEach(tile => {
+  tile.addEventListener('click', () => {
+    const mood = tile.dataset.mood;
+    if (currentMood === mood) {
+      clearMoodFilter();
+      return;
+    }
+    currentMood = mood;
+    moodTiles.forEach(t => t.classList.remove('active'));
+    tile.classList.add('active');
+    moodToggleBtn.classList.add('active');
+
+    // コントロールバーの気分タグを表示
+    const icon = tile.querySelector('.mood-tile-icon').textContent;
+    const name = tile.querySelector('.mood-tile-name').textContent;
+    moodActiveLabel.textContent = icon + ' ' + name;
+    moodActiveTag.style.display = 'inline-flex';
+
+    // 引き出しを閉じてカード一覧へ
+    setTimeout(() => closeMoodDrawer(), 280);
+    applyFiltersAndSort();
+  });
+});
+
+// コントロールバーの✕ボタン
+moodClearTagBtn.addEventListener('click', () => {
+  clearMoodFilter();
+  applyFiltersAndSort();
+});
+
+// ドロワー内クリアボタン（表示されている場合用）
+if (moodClearBtn) {
+  moodClearBtn.addEventListener('click', () => {
+    clearMoodFilter();
+    applyFiltersAndSort();
+  });
+}
+
+function clearMoodFilter() {
+  currentMood = null;
+  moodTiles.forEach(t => t.classList.remove('active'));
+  moodToggleBtn.classList.remove('active');
+  moodActiveTag.style.display = 'none';
+  moodActiveLabel.textContent = '';
+}
+
+// 気分フィルターの判定ロジック
+function matchesMood(card, mood) {
+  if (!mood) return true;
+  const tile = document.querySelector(`.mood-tile[data-mood="${mood}"]`);
+  if (!tile) return true;
+
+  const genres      = (tile.dataset.genres      || '').split(',').map(s=>s.trim()).filter(Boolean);
+  const rewatchV    = tile.dataset.rewatch       || '';
+  const maxTime     = parseInt(tile.dataset.maxtime)     || 0;
+  const maxEpisodes = parseInt(tile.dataset.maxepisodes) || 0;
+  const cardGenre    = card.dataset.genre    || '';
+  const cardRewatch  = card.dataset.rewatch  || '';
+  const cardTime     = parseInt(card.dataset.episodeTime) || 0;
+  const cardEpisodes = parseInt(card.dataset.episodes)    || 0;
+
+  // 「また見たい」は rewatch フィールドで判定
+  if (rewatchV) return cardRewatch === rewatchV;
+
+  // 「サクッと見たい」は話数で判定（話数未設定のカードは除外しない）
+  if (maxEpisodes > 0) return cardEpisodes === 0 || cardEpisodes <= maxEpisodes;
+
+  // 時間フィルター（将来用）
+  if (maxTime > 0) return cardTime === 0 || cardTime <= maxTime;
+
+  // それ以外はジャンルの部分一致
+  if (genres.length === 0) return true;
+  return genres.some(g => cardGenre.includes(g));
+}
+
+// ===== TMDB まとめて自動入力（候補選択 → 項目選択の2ステップ式） =====
+let _tmdbPendingData   = null;
+let _tmdbPendingPrefix = null;
+let _tmdbCandidates    = [];
+
+async function tmdbAutoFill(prefix) {
+  const query = document.getElementById(`${prefix}-title`)?.value.trim();
+  const btn   = document.getElementById(`${prefix}-tmdb-autofill-btn`);
+  if (!query) { alert('タイトルを先に入力してください'); return; }
+
+  btn.disabled = true;
+  btn.textContent = '🔄 検索中...';
+
+  try {
+    const [tvRes, movieRes] = await Promise.all([
+      fetch(`https://api.themoviedb.org/3/search/tv?query=${encodeURIComponent(query)}&language=ja-JP`, { headers: { Authorization: `Bearer ${TMDB_TOKEN}` } }),
+      fetch(`https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(query)}&language=ja-JP`, { headers: { Authorization: `Bearer ${TMDB_TOKEN}` } })
+    ]);
+    const tvData    = (await tvRes.json()).results    || [];
+    const movieData = (await movieRes.json()).results || [];
+
+    // 候補をまとめて最大8件
+    _tmdbCandidates = [
+      ...tvData.map(r    => ({ ...r, mediaType:'tv' })),
+      ...movieData.map(r => ({ ...r, mediaType:'movie' }))
+    ].filter(r => r.poster_path).slice(0, 8);
+
+    if (_tmdbCandidates.length === 0) {
+      alert('TMDBで該当作品が見つかりませんでした。\nタイトルを英語や原題で試してみてください。');
+      return;
+    }
+
+    _tmdbPendingPrefix = prefix;
+    showTmdbCandidates(_tmdbCandidates);
+
+  } catch (err) {
+    alert('TMDBからの取得に失敗しました。\n' + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '✨ TMDBからまとめて自動入力';
+  }
+}
+
+// STEP1: 候補一覧を表示
+function showTmdbCandidates(candidates) {
+  const overlay    = document.getElementById('tmdb-confirm-overlay');
+  const candEl     = document.getElementById('tmdb-step-candidates');
+  const itemsEl    = document.getElementById('tmdb-step-items');
+  const applyBtn   = document.getElementById('tmdb-confirm-apply');
+  const titleEl    = document.getElementById('tmdb-dialog-title');
+  const subEl      = document.getElementById('tmdb-dialog-sub');
+
+  titleEl.textContent = '🔍 作品を選択してください';
+  subEl.textContent   = `${candidates.length}件見つかりました。正しい作品を選んでください。`;
+  candEl.innerHTML    = '';
+  candEl.style.display = 'flex';
+  itemsEl.style.display = 'none';
+  applyBtn.style.display = 'none';
+
+  const countryMap = { JP:'🇯🇵 日本', KR:'🇰🇷 韓国', US:'🇺🇸 アメリカ', GB:'🇬🇧 イギリス', CN:'🇨🇳 中国', TW:'🇹🇼 台湾' };
+
+  candidates.forEach((r, i) => {
+    const name    = r.name || r.title || '';
+    const date    = (r.first_air_date || r.release_date || '').slice(0, 4);
+    const country = (r.origin_country || [])[0] || '';
+    const cLabel  = countryMap[country] || country;
+    const type    = r.mediaType === 'tv' ? 'ドラマ/TV' : '映画';
+    const thumb   = `https://image.tmdb.org/t/p/w92${r.poster_path}`;
+
+    const div = document.createElement('div');
+    div.className = 'tmdb-candidate';
+    div.innerHTML = `
+      <img class="tmdb-candidate-poster" src="${thumb}" alt="${name}" loading="lazy">
+      <div class="tmdb-candidate-info">
+        <div class="tmdb-candidate-title">${name}</div>
+        <div class="tmdb-candidate-meta">${[cLabel, date, type].filter(Boolean).join('　/　')}</div>
+      </div>
+      <span class="tmdb-candidate-arrow">›</span>`;
+    div.addEventListener('click', () => fetchAndShowItems(r, i));
+    candEl.appendChild(div);
+  });
+
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+// STEP2: 選んだ作品の詳細を取得して項目選択へ
+async function fetchAndShowItems(result, idx) {
+  const candEl   = document.getElementById('tmdb-step-candidates');
+  const titleEl  = document.getElementById('tmdb-dialog-title');
+  const subEl    = document.getElementById('tmdb-dialog-sub');
+  titleEl.textContent = '🔄 データ取得中...';
+
+  const prefix = _tmdbPendingPrefix;
+  const isTV   = result.mediaType === 'tv';
+  const type   = isTV ? 'tv' : 'movie';
+
+  try {
+    // 詳細＋予告編を並列取得
+    const [detailRes, videoRes] = await Promise.all([
+      fetch(
+        `https://api.themoviedb.org/3/${type}/${result.id}?language=ja-JP&append_to_response=credits`,
+        { headers: { Authorization: `Bearer ${TMDB_TOKEN}` } }
+      ),
+      fetch(
+        `https://api.themoviedb.org/3/${type}/${result.id}/videos?language=ja-JP`,
+        { headers: { Authorization: `Bearer ${TMDB_TOKEN}` } }
+      )
+    ]);
+    const detail = await detailRes.json();
+    const videoData = await videoRes.json();
+
+    // 予告編URL取得（日本語優先→英語にフォールバック）
+    const videos = videoData.results || [];
+    const trailer = videos.find(v => v.type === 'Trailer' && v.site === 'YouTube')
+      || videos.find(v => v.site === 'YouTube');
+    const trailerUrl = trailer ? `https://www.youtube.com/watch?v=${trailer.key}` : '';
+
+    const countryMap   = { JP:'日本', KR:'韓国', US:'アメリカ', GB:'イギリス', CN:'中国', TW:'台湾' };
+    const tmdbGenreMap = { 18:'ヒューマン', 10749:'ロマンス', 35:'コメディ', 80:'サスペンス・ミステリー', 9648:'サスペンス・ミステリー', 10759:'アクション・復讐', 10765:'ファンタジー・SF', 99:'社会派' };
+    const country  = countryMap[(detail.origin_country||[])[0]] || (detail.origin_country||[])[0] || '';
+    const genres   = [...new Set((detail.genres||[]).map(g=>tmdbGenreMap[g.id]).filter(Boolean))];
+    const cast     = (detail.credits?.cast||[]).slice(0,5).map(c=>`${c.name}（${c.character||''}）`).join('、');
+    const airDate  = detail.first_air_date || detail.release_date || '';
+    const runtime  = isTV ? ((detail.episode_run_time||[])[0]||'') : (detail.runtime||'');
+
+    _tmdbPendingData = {
+      country:    { label:'制作国',           id:`${prefix}-country`,      val:country },
+      summary:    { label:'あらすじ',          id:`${prefix}-summary`,      val:detail.overview||'' },
+      station:    { label:'放送局',            id:`${prefix}-station`,      val:isTV?((detail.networks||[])[0]?.name||''):((detail.production_companies||[])[0]?.name||'') },
+      year:       { label:'放送年',            id:`${prefix}-year`,         val:airDate?airDate.slice(0,4)+'年':'' },
+      episodeTime:{ label:'1話の時間（分）',    id:`${prefix}-episode-time`, val:String(runtime) },
+      episodes:   { label:'話数',              id:`${prefix}-episodes`,     val:isTV?String(detail.number_of_episodes||''):'' },
+      genre:      { label:'ジャンル',           id:null,                     val:genres.join('・') },
+      cast:       { label:'キャスト（役名付き）', id:`${prefix}-cast`,        val:cast },
+      image:      { label:'ポスター画像',       id:`${prefix}-image`,        val:result.poster_path?'https://image.tmdb.org/t/p/w500'+result.poster_path:'' },
+      trailer:    { label:'予告編URL',         id:`${prefix}-trailer`,      val:trailerUrl },
+    };
+    _tmdbPendingData = Object.fromEntries(Object.entries(_tmdbPendingData).filter(([,v])=>v.val));
+
+    // STEP2へ切り替え
+    const itemsWrap = document.getElementById('tmdb-step-items');
+    const itemsEl2  = document.getElementById('tmdb-confirm-items');
+    const applyBtn  = document.getElementById('tmdb-confirm-apply');
+    candEl.style.display   = 'none';
+    itemsWrap.style.display = 'flex';
+    applyBtn.style.display  = 'inline-block';
+
+    const name = result.name || result.title || '';
+    titleEl.textContent = `✨ ${name} の情報`;
+    subEl.textContent   = 'チェックした項目のみ反映されます。';
+
+    itemsEl2.innerHTML = '';
+    Object.entries(_tmdbPendingData).forEach(([key, item]) => {
+      let currentVal = '';
+      if (item.id) { const el = document.getElementById(item.id); currentVal = el ? (el.value||'').trim() : ''; }
+      const defaultChecked = !currentVal;
+      itemsEl2.innerHTML += `<label class="tmdb-confirm-item">
+        <input type="checkbox" data-key="${key}" ${defaultChecked?'checked':''}>
+        <div class="tmdb-confirm-item-body">
+          <div class="tmdb-confirm-item-label">${item.label}</div>
+          ${currentVal?`<div class="tmdb-confirm-item-current">現在：${currentVal.slice(0,40)}${currentVal.length>40?'…':''}</div>`:''}
+          <div class="tmdb-confirm-item-new">→ ${item.val.slice(0,60)}${item.val.length>60?'…':''}</div>
+        </div>
+      </label>`;
+    });
+
+  } catch (err) {
+    titleEl.textContent = '❌ 取得に失敗しました';
+    subEl.textContent   = err.message;
+  }
+}
+
+document.getElementById('tmdb-confirm-apply').addEventListener('click', () => {
+  const data   = _tmdbPendingData;
+  const prefix = _tmdbPendingPrefix;
+  if (!data || !prefix) return;
+  document.querySelectorAll('#tmdb-confirm-items input[type="checkbox"]:checked').forEach(cb => {
+    const key  = cb.dataset.key;
+    const item = data[key];
+    if (!item) return;
+    if (key === 'genre') {
+      const grid = document.getElementById(prefix==='f'?'f-genre-grid':'e-genre-grid');
+      if (grid) { item.val.split('・').forEach(g => { grid.querySelectorAll('input').forEach(c => { if(c.value===g){c.checked=true;toggleGenreLabel(c);} }); }); }
+    } else if (item.id) {
+      const el = document.getElementById(item.id);
+      if (el) el.value = item.val;
+      if (key==='image') { const lbl=document.getElementById(`${prefix}-tmdb-label`); if(lbl) lbl.style.display='flex'; }
+    }
+  });
+  closeTmdbConfirm();
+});
+
+document.getElementById('tmdb-confirm-cancel').addEventListener('click', closeTmdbConfirm);
+
+function closeTmdbConfirm() {
+  document.getElementById('tmdb-confirm-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+  _tmdbPendingData = null; _tmdbPendingPrefix = null; _tmdbCandidates = [];
+}
+
+document.getElementById('f-tmdb-autofill-btn').addEventListener('click', () => tmdbAutoFill('f'));
+document.getElementById('e-tmdb-autofill-btn').addEventListener('click', () => tmdbAutoFill('e'));
+
+
+// ===== TMDB画像検索 =====
+const TMDB_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1YTc1YjVhZGRmMGQ4YjEyOTY5ZGY4ZTEwZGIxYzE2NSIsIm5iZiI6MTc4Mjg4NzYwOC4yODcwMDAyLCJzdWIiOiI2YTQ0YjRiODUwZGY5NDNhYjZjNDdkZjQiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.cQ1Ci9VLj7f5GSqt_MIgxW-Hfw0GY-ek0opMNO5vMrU';
+const TMDB_IMG  = 'https://image.tmdb.org/t/p/w185';
+
+// TMDB検索共通関数
+async function searchTmdbPosters(query, resultsEl, imageInputEl, labelEl, btn) {
+  if (!query) {
+    resultsEl.innerHTML = '<span class="tmdb-no-result">タイトルを先に入力してください</span>';
+    resultsEl.classList.add('visible');
+    return;
+  }
+  btn.disabled = true;
+  btn.textContent = '🔍 検索中...';
+  resultsEl.innerHTML = '';
+  resultsEl.classList.remove('visible');
+
+  try {
+    // まず日本語でTV検索
+    const [tvRes, movieRes] = await Promise.all([
+      fetch(`https://api.themoviedb.org/3/search/tv?query=${encodeURIComponent(query)}&language=ja-JP&page=1`, {
+        headers: { Authorization: `Bearer ${TMDB_TOKEN}`, 'Content-Type': 'application/json' }
+      }),
+      fetch(`https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(query)}&language=ja-JP&page=1`, {
+        headers: { Authorization: `Bearer ${TMDB_TOKEN}`, 'Content-Type': 'application/json' }
+      })
+    ]);
+    const tvData    = await tvRes.json();
+    const movieData = await movieRes.json();
+
+    // TV＋映画の結果をマージしてポスターがあるものだけ取得
+    const results = [
+      ...(tvData.results    || []),
+      ...(movieData.results || [])
+    ].filter(r => r.poster_path);
+
+    if (results.length === 0) {
+      resultsEl.innerHTML = '<span class="tmdb-no-result">ポスターが見つかりませんでした。タイトルを英語や原題で試してみてください。</span>';
+      resultsEl.classList.add('visible');
+      return;
+    }
+
+    // 最大12件表示
+    resultsEl.innerHTML = results.slice(0, 12).map((r, i) => {
+      const name  = r.name || r.title || '';
+      const year  = (r.first_air_date || r.release_date || '').slice(0, 4);
+      const thumb = TMDB_IMG + r.poster_path;
+      const full  = 'https://image.tmdb.org/t/p/w500' + r.poster_path;
+      return `<img
+        class="tmdb-poster"
+        src="${thumb}"
+        data-full="${full}"
+        title="${esc(name)}${year ? ' (' + year + ')' : ''}"
+        loading="lazy"
+        alt="${esc(name)}"
+      >`;
+    }).join('');
+    resultsEl.classList.add('visible');
+
+    // ポスタークリックで画像URL確定
+    resultsEl.querySelectorAll('.tmdb-poster').forEach(img => {
+      img.addEventListener('click', () => {
+        resultsEl.querySelectorAll('.tmdb-poster').forEach(i => i.classList.remove('selected'));
+        img.classList.add('selected');
+        imageInputEl.value = img.dataset.full;
+        labelEl.style.display = 'flex';
+        // 少し待ってから閉じる
+        setTimeout(() => {
+          resultsEl.classList.remove('visible');
+        }, 600);
+      });
+    });
+
+  } catch (err) {
+    resultsEl.innerHTML = '<span class="tmdb-no-result">通信エラーが発生しました。再試行してください。</span>';
+    resultsEl.classList.add('visible');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '🔍 TMDBでポスターを検索';
+  }
+}
+
+// 追加フォーム用
+document.getElementById('f-tmdb-btn').addEventListener('click', () => {
+  const query = document.getElementById('f-title').value.trim();
+  searchTmdbPosters(
+    query,
+    document.getElementById('f-tmdb-results'),
+    document.getElementById('f-image'),
+    document.getElementById('f-tmdb-label'),
+    document.getElementById('f-tmdb-btn')
+  );
+});
+
+// 編集フォーム用
+document.getElementById('e-tmdb-btn').addEventListener('click', () => {
+  const query = document.getElementById('e-title').value.trim();
+  searchTmdbPosters(
+    query,
+    document.getElementById('e-tmdb-results'),
+    document.getElementById('e-image'),
+    document.getElementById('e-tmdb-label'),
+    document.getElementById('e-tmdb-btn')
+  );
+});
+
+loadDramaData();
 </script>
 </body>
 </html>
