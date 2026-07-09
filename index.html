@@ -3,363 +3,256 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ふうかの こどもの本ノート</title>
-<meta name="description" content="子供に読ませたい本を記録・管理するノート。ふうかの評価とレビュー付き。">
+<title>おうち えほん館</title>
+<meta name="description" content="子供に読ませたい本と知育おもちゃのライブラリ。読んでよかった、をぜんぶ記録する。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet">
 <style>
-:root{
-    --bg:#fdf6ec;
-    --bg-2:#fffaf2;
-    --card:#ffffff;
-    --card-2:#fbf1e2;
-    --border:#efe1cd;
-    --border-2:#e4d0b4;
-    --gold:#e0a233;
-    --gold-2:#f2c25a;
-    --gold-deep:#b57814;
-    --text:#4a3b2c;
-    --text-2:#5c4c3a;
-    --muted:#96856f;
-    --muted-2:#bcaa92;
-    --danger:#e0605e;
-    --good:#4faf6d;
-    --shadow:0 10px 26px rgba(190,150,90,.16);
-    --shadow-sm:0 4px 12px rgba(190,150,90,.12);
+  :root{
+    --bg:#fdf6ec; --bg-2:#fffaf2; --card:#ffffff; --card-2:#fbf1e2;
+    --border:#efe1cd; --border-2:#e4d0b4;
+    --gold:#e0a233; --gold-2:#f2c25a; --gold-deep:#b57814;
+    --text:#4a3b2c; --text-2:#5c4c3a; --muted:#96856f; --muted-2:#bcaa92;
+    --danger:#e0605e; --good:#4faf6d;
+    --shadow:0 10px 26px rgba(190,150,90,.16); --shadow-sm:0 4px 12px rgba(190,150,90,.12);
     --radius:20px;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{-webkit-text-size-adjust:100%}
   body{
-    font-family:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN",
-      "Hiragino Sans","Noto Sans JP",system-ui,sans-serif;
+    font-family:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN","Hiragino Sans","Noto Sans JP",system-ui,sans-serif;
     background:
       radial-gradient(900px 500px at 50% -180px, rgba(242,194,90,.22), transparent 62%),
       radial-gradient(700px 400px at 90% 10%, rgba(255,183,197,.18), transparent 60%),
       var(--bg);
-    color:var(--text);
-    line-height:1.7;
-    min-height:100vh;
-    -webkit-font-smoothing:antialiased;
-    font-weight:500;
+    color:var(--text); line-height:1.7; min-height:100vh; font-weight:500; -webkit-font-smoothing:antialiased;
   }
-  a{color:inherit}
-  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  a{color:inherit} button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
   input,select,textarea{font-family:inherit;font-size:16px;color:var(--text)}
   ::placeholder{color:var(--muted-2)}
-
   .wrap{max-width:1100px;margin:0 auto;padding:0 16px}
 
-  /* ---------- Header ---------- */
-  header.site{padding:36px 0 18px;text-align:center;position:relative}
-  .eyebrow{
-    font-size:11px;letter-spacing:.3em;text-transform:uppercase;
-    color:var(--gold-deep);opacity:.85;margin-bottom:12px;font-weight:700;
-  }
-  h1.logo{
-    font-family:"Zen Maru Gothic","M PLUS Rounded 1c",sans-serif;
-    font-size:clamp(28px,7.5vw,46px);font-weight:900;letter-spacing:.03em;line-height:1.2;
-  }
-  h1.logo em{
-    font-style:normal;
-    background:linear-gradient(120deg,#d98e1e,#f2c25a,#e0a233);
-    -webkit-background-clip:text;background-clip:text;color:transparent;
-  }
-  .tagline{color:var(--muted);font-size:14px;margin-top:10px;font-weight:500}
+  /* avatar colors */
+  .a-pink{background:#ffe1ec} .a-gold{background:#fbeaca} .a-mint{background:#dff3e6}
+  .a-blue{background:#e2edff} .a-lilac{background:#ece2ff} .a-peach{background:#ffe6da}
 
+  /* ===== Profile overlay (Netflix風) ===== */
+  .profile-screen{
+    position:fixed;inset:0;z-index:200;display:none;flex-direction:column;align-items:center;justify-content:center;
+    padding:40px 16px;overflow-y:auto;
+    background:
+      radial-gradient(900px 500px at 50% -150px, rgba(242,194,90,.25), transparent 60%),
+      radial-gradient(700px 400px at 85% 15%, rgba(255,183,197,.20), transparent 60%),
+      var(--bg);
+  }
+  .profile-screen.show{display:flex}
+  .ps-eyebrow{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold-deep);opacity:.85;margin-bottom:10px;font-weight:700;text-align:center}
+  .ps-title{font-family:"Zen Maru Gothic",sans-serif;font-size:clamp(24px,6vw,36px);font-weight:900;text-align:center;line-height:1.3}
+  .ps-title em{font-style:normal;background:linear-gradient(120deg,#d98e1e,#f2c25a,#e0a233);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .ps-sub{color:var(--muted);font-size:14px;margin-top:10px;text-align:center;font-weight:700}
+  .profiles{display:flex;flex-wrap:wrap;gap:20px 26px;justify-content:center;margin-top:40px;max-width:760px}
+  .profile{display:flex;flex-direction:column;align-items:center;gap:12px;cursor:pointer;width:112px}
+  .avatar{width:112px;height:112px;border-radius:26px;display:flex;align-items:center;justify-content:center;font-size:56px;border:3px solid transparent;box-shadow:var(--shadow);transition:.15s}
+  .profile:hover .avatar{transform:translateY(-4px);border-color:var(--gold)}
+  .pname{font-family:"Zen Maru Gothic",sans-serif;font-weight:700;font-size:16px;color:var(--text)}
+  .profile.add .avatar{background:transparent;border:3px dashed var(--border-2);font-size:44px;color:var(--muted-2);box-shadow:none}
+  .profile.add .pname{color:var(--muted)}
+  .ps-hint{margin-top:36px;color:var(--muted);font-size:12.5px;text-align:center;font-weight:600;max-width:440px}
+  .ps-manage{margin-top:16px;font-size:12.5px;color:var(--gold-deep);text-decoration:underline;font-weight:700}
+  .profile .del-mini{margin-top:4px;font-size:11px;color:var(--danger);text-decoration:underline;display:none}
+  .profile-screen.managing .profile:not(.add) .del-mini{display:block}
+
+  /* ===== Header ===== */
+  header.site{padding:34px 0 16px;text-align:center;position:relative}
+  .eyebrow{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold-deep);opacity:.85;margin-bottom:12px;font-weight:700}
+  h1.logo{font-family:"Zen Maru Gothic",sans-serif;font-size:clamp(28px,7.5vw,46px);font-weight:900;letter-spacing:.03em;line-height:1.2}
+  h1.logo em{font-style:normal;background:linear-gradient(120deg,#d98e1e,#f2c25a,#e0a233);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .tagline{color:var(--text-2);font-size:14.5px;margin-top:10px;font-weight:700}
+  .tagline2{color:var(--muted);font-size:12.5px;margin-top:6px;font-weight:500;max-width:560px;margin-left:auto;margin-right:auto}
   .stats{display:flex;justify-content:center;gap:12px;margin-top:20px;flex-wrap:wrap}
-  .stat{
-    background:var(--card);border:1.5px solid var(--border);
-    border-radius:18px;padding:10px 18px;min-width:98px;box-shadow:var(--shadow-sm);
-  }
-  .stat b{
-    font-family:"Zen Maru Gothic",sans-serif;
-    display:block;font-size:22px;color:var(--gold-deep);line-height:1.2;
-  }
+  .stat{background:var(--card);border:1.5px solid var(--border);border-radius:18px;padding:10px 16px;min-width:88px;box-shadow:var(--shadow-sm)}
+  .stat b{font-family:"Zen Maru Gothic",sans-serif;display:block;font-size:21px;color:var(--gold-deep);line-height:1.2}
   .stat span{font-size:11px;color:var(--muted);font-weight:700}
+  .who-bar{display:none;justify-content:center;align-items:center;gap:8px;margin-top:16px}
+  .who-bar.show{display:flex}
+  .who-chip{display:inline-flex;align-items:center;gap:8px;background:var(--card);border:1.5px solid var(--gold-2);border-radius:999px;padding:5px 8px 5px 6px;font-weight:700;font-size:13px;color:var(--gold-deep)}
+  .who-chip .av{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px}
+  .who-bar button{font-size:12px;color:var(--muted);text-decoration:underline;font-weight:700}
 
-  /* ---------- Toolbar ---------- */
-  .toolbar{
-    position:sticky;top:0;z-index:40;
-    background:linear-gradient(rgba(253,246,236,.98),rgba(253,246,236,.86));
-    backdrop-filter:blur(8px);
-    padding:14px 0 12px;margin-top:8px;border-bottom:1.5px solid var(--border);
-  }
+  /* ===== Toolbar ===== */
+  .toolbar{position:sticky;top:0;z-index:40;background:linear-gradient(rgba(253,246,236,.98),rgba(253,246,236,.86));backdrop-filter:blur(8px);padding:14px 0 12px;margin-top:8px;border-bottom:1.5px solid var(--border)}
   .searchbar{position:relative;margin-bottom:10px}
-  .searchbar input{
-    width:100%;padding:13px 14px 13px 44px;border-radius:14px;
-    background:var(--card);border:1.5px solid var(--border);box-shadow:var(--shadow-sm);
-  }
+  .searchbar input{width:100%;padding:13px 14px 13px 44px;border-radius:14px;background:var(--card);border:1.5px solid var(--border);box-shadow:var(--shadow-sm)}
   .searchbar input:focus{outline:none;border-color:var(--gold)}
   .searchbar .ico{position:absolute;left:15px;top:50%;transform:translateY(-50%);opacity:.7}
-
   .filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-  .filters select{
-    padding:10px 12px;border-radius:12px;background:var(--card);
-    border:1.5px solid var(--border);flex:1 1 auto;min-width:120px;font-weight:500;
-  }
+  .filters select{padding:10px 12px;border-radius:12px;background:var(--card);border:1.5px solid var(--border);flex:1 1 auto;min-width:118px;font-weight:500}
   .filters select:focus{outline:none;border-color:var(--gold)}
-  .btn-add{
-    flex:0 0 auto;padding:10px 18px;border-radius:12px;font-weight:800;
-    background:linear-gradient(120deg,#e8a838,#f2c25a);color:#5a3d09;
-    box-shadow:0 5px 14px rgba(224,162,51,.35);white-space:nowrap;
-  }
+  .btn-add{flex:0 0 auto;padding:10px 18px;border-radius:12px;font-weight:800;background:linear-gradient(120deg,#e8a838,#f2c25a);color:#5a3d09;box-shadow:0 5px 14px rgba(224,162,51,.35);white-space:nowrap}
   .btn-add:active{transform:translateY(1px)}
 
-  /* ---------- Grid ---------- */
+  /* ===== Grid & Card ===== */
   .grid{display:grid;gap:16px;padding:22px 0 60px;grid-template-columns:1fr}
   @media(min-width:560px){.grid{grid-template-columns:1fr 1fr}}
   @media(min-width:900px){.grid{grid-template-columns:1fr 1fr 1fr}}
-
-  .card{
-    background:var(--card);
-    border:1.5px solid var(--border);border-radius:var(--radius);
-    overflow:hidden;box-shadow:var(--shadow);
-    display:flex;flex-direction:column;transition:border-color .2s,transform .15s,box-shadow .2s;
-  }
+  .card{background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;transition:border-color .2s,box-shadow .2s}
   .card:hover{border-color:var(--gold-2);box-shadow:0 14px 30px rgba(190,150,90,.22)}
   .card-top{display:flex;gap:14px;padding:16px}
-  .cover{
-    flex:0 0 86px;width:86px;height:122px;border-radius:12px;overflow:hidden;
-    background:var(--card-2);border:1.5px solid var(--border);position:relative;cursor:zoom-in;
-  }
+  .cover{flex:0 0 86px;width:86px;height:122px;border-radius:12px;overflow:hidden;background:var(--card-2);border:1.5px solid var(--border);position:relative;cursor:zoom-in;display:flex;align-items:center;justify-content:center;color:var(--muted-2);font-size:28px}
   .cover img{width:100%;height:100%;object-fit:cover;display:block}
-  .cover .noimg{display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted-2);font-size:28px}
-  .badge-read{
-    position:absolute;top:6px;left:6px;background:#5fbf7a;
-    color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,.15);
-  }
+  .fav-star{position:absolute;top:6px;right:6px;color:var(--gold-2);font-size:18px;text-shadow:0 1px 2px rgba(0,0,0,.15)}
+  .badge-read{position:absolute;top:6px;left:6px;background:#5fbf7a;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:8px}
   .card-info{flex:1 1 auto;min-width:0}
-  .card-title{
-    font-family:"Zen Maru Gothic",sans-serif;
-    font-size:16.5px;font-weight:700;line-height:1.35;margin-bottom:4px;color:var(--text);
-  }
+  .series{font-size:11px;color:var(--gold-deep);font-weight:800;margin-bottom:2px}
+  .card-title{font-family:"Zen Maru Gothic",sans-serif;font-size:16.5px;font-weight:700;line-height:1.35;margin-bottom:4px}
   .card-author{font-size:12.5px;color:var(--muted);margin-bottom:8px;font-weight:500}
   .metarow{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px}
-  .chip{
-    font-size:11px;padding:3px 10px;border-radius:999px;font-weight:700;
-    background:var(--card-2);border:1.5px solid var(--border);color:var(--text-2);
-  }
+  .chip{font-size:11px;padding:3px 10px;border-radius:999px;font-weight:700;background:var(--card-2);border:1.5px solid var(--border);color:var(--text-2)}
   .chip.gold{background:#fbeecd;border-color:var(--gold-2);color:var(--gold-deep)}
   .chip.react-好き{background:#ffe6ef;border-color:#f4a9c4;color:#c85a86}
   .chip.react-普通{background:#e5efff;border-color:#a9c4f4;color:#5271b8}
   .chip.react-微妙{background:#eeeae4;border-color:#cbbfae;color:#8a7a66}
-
+  .chip.buy{background:#e9f6ec;border-color:#a9d9b8;color:#3f8a58}
+  .chip.rent{background:#eaf0fb;border-color:#aec4ec;color:#4a6bb0}
+  .chip.other{background:#f3ecfb;border-color:#cdb8ec;color:#7a5bb0}
   .stars{display:inline-flex;gap:1px;font-size:16px;line-height:1;color:var(--gold)}
   .stars .empty{color:#e6d7c1}
   .rating-num{font-size:11.5px;color:var(--muted);margin-left:6px;font-weight:700}
-
   .card-body{padding:0 16px 16px;display:none;border-top:1.5px solid var(--border);margin-top:2px}
   .card.open .card-body{display:block;padding-top:14px}
-  .sec{margin-top:13px}
-  .sec h4{
-    font-size:11px;letter-spacing:.08em;color:var(--gold-deep);text-transform:uppercase;
-    margin-bottom:5px;font-weight:800;
-  }
+  .sec{margin-top:12px}
+  .sec h4{font-size:11px;letter-spacing:.08em;color:var(--gold-deep);text-transform:uppercase;margin-bottom:5px;font-weight:800}
   .sec p{font-size:14px;color:var(--text-2);white-space:pre-wrap;line-height:1.75}
+  .detail-grid{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin-top:12px;font-size:13px}
+  .detail-grid dt{color:var(--muted);font-weight:700}
+  .detail-grid dd{color:var(--text-2);font-weight:500}
+  .tags-row{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
+  .tag{font-size:11px;padding:2px 9px;border-radius:999px;border:1.5px dashed var(--border-2);color:var(--muted);font-weight:700}
   .card-actions{display:flex;gap:8px;margin-top:15px;flex-wrap:wrap}
-  .lnk-buy{
-    flex:1 1 auto;text-align:center;padding:10px;border-radius:12px;font-weight:800;font-size:13px;
-    background:linear-gradient(120deg,#e8a838,#f2c25a);color:#5a3d09;text-decoration:none;
-  }
+  .lnk-buy{flex:1 1 auto;text-align:center;padding:10px;border-radius:12px;font-weight:800;font-size:13px;background:linear-gradient(120deg,#e8a838,#f2c25a);color:#5a3d09;text-decoration:none}
   .admin-btns{display:flex;gap:8px}
-  .admin-btns button{
-    padding:10px 13px;border-radius:12px;font-size:12.5px;font-weight:800;
-    border:1.5px solid var(--border-2);background:var(--card-2);color:var(--text-2);
-  }
+  .admin-btns button{padding:10px 13px;border-radius:12px;font-size:12.5px;font-weight:800;border:1.5px solid var(--border-2);background:var(--card-2);color:var(--text-2)}
   .admin-btns .del{border-color:#f0c2c1;color:var(--danger);background:#fdeeee}
-
-  .card-foot{
-    padding:11px 16px;display:flex;justify-content:space-between;align-items:center;
-    border-top:1.5px solid var(--border);cursor:pointer;font-size:12px;color:var(--muted);font-weight:600;
-  }
+  .card-foot{padding:11px 16px;display:flex;justify-content:space-between;align-items:center;border-top:1.5px solid var(--border);cursor:pointer;font-size:12px;color:var(--muted);font-weight:600}
+  .card-foot .regby{display:inline-flex;align-items:center;gap:5px;color:var(--gold-deep);font-weight:800}
+  .card-foot .regby .av{width:20px;height:20px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;font-size:12px}
   .card-foot .toggle{color:var(--gold-deep);font-weight:800}
-
   .empty-state{text-align:center;color:var(--muted);padding:60px 20px;font-weight:600}
   .empty-state .big{font-size:46px;margin-bottom:10px}
 
-  /* ---------- Modal ---------- */
-  .overlay{
-    position:fixed;inset:0;background:rgba(74,59,44,.42);backdrop-filter:blur(3px);
-    display:none;align-items:flex-start;justify-content:center;z-index:100;
-    padding:24px 12px;overflow-y:auto;
-  }
+  /* ===== Modal ===== */
+  .overlay{position:fixed;inset:0;background:rgba(74,59,44,.42);backdrop-filter:blur(3px);display:none;align-items:flex-start;justify-content:center;z-index:100;padding:24px 12px;overflow-y:auto}
   .overlay.show{display:flex}
-  .modal{
-    width:100%;max-width:560px;background:var(--bg-2);
-    border:1.5px solid var(--border-2);border-radius:24px;box-shadow:0 24px 60px rgba(120,90,50,.28);margin:auto;
-  }
-  .modal-head{
-    display:flex;justify-content:space-between;align-items:center;
-    padding:18px 20px;border-bottom:1.5px solid var(--border);position:sticky;top:0;
-    background:var(--bg-2);border-radius:24px 24px 0 0;
-  }
+  .modal{width:100%;max-width:560px;background:var(--bg-2);border:1.5px solid var(--border-2);border-radius:24px;box-shadow:0 24px 60px rgba(120,90,50,.28);margin:auto}
+  .modal-head{display:flex;justify-content:space-between;align-items:center;padding:18px 20px;border-bottom:1.5px solid var(--border);position:sticky;top:0;background:var(--bg-2);border-radius:24px 24px 0 0}
   .modal-head h3{font-family:"Zen Maru Gothic",sans-serif;font-size:17px;font-weight:700}
   .modal-head .x{font-size:22px;color:var(--muted);line-height:1}
   .modal-body{padding:18px}
   .field{margin-bottom:15px}
   .field label{display:block;font-size:12.5px;color:var(--text-2);margin-bottom:6px;font-weight:800}
   .field label .req{color:var(--danger)}
-  .field input,.field select,.field textarea{
-    width:100%;padding:12px;border-radius:12px;background:var(--card);
-    border:1.5px solid var(--border);
-  }
+  .field input,.field select,.field textarea{width:100%;padding:12px;border-radius:12px;background:var(--card);border:1.5px solid var(--border)}
   .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--gold)}
-  .field textarea{resize:vertical;min-height:80px;line-height:1.7}
-  .row2{display:flex;gap:10px}
-  .row2>.field{flex:1}
-
-  .isbn-fetch{display:flex;gap:8px}
-  .isbn-fetch input{flex:1}
-  .isbn-fetch button{
-    flex:0 0 auto;padding:0 16px;border-radius:12px;font-weight:800;font-size:12.5px;
-    background:linear-gradient(120deg,#e8a838,#f2c25a);color:#5a3d09;white-space:nowrap;
-  }
+  .field textarea{resize:vertical;min-height:76px;line-height:1.7}
+  .row2{display:flex;gap:10px} .row2>.field{flex:1}
+  .isbn-fetch{display:flex;gap:8px} .isbn-fetch input{flex:1}
+  .isbn-fetch button{flex:0 0 auto;padding:0 16px;border-radius:12px;font-weight:800;font-size:12.5px;background:linear-gradient(120deg,#e8a838,#f2c25a);color:#5a3d09;white-space:nowrap}
   .fetch-hint{font-size:11.5px;color:var(--muted);margin-top:6px;font-weight:500}
-
   .checks{display:flex;flex-wrap:wrap;gap:8px}
-  .checks label{
-    font-size:13px;padding:8px 14px;border-radius:999px;border:1.5px solid var(--border);
-    background:var(--card);color:var(--text-2);cursor:pointer;user-select:none;font-weight:700;
-  }
+  .checks label{font-size:13px;padding:8px 14px;border-radius:999px;border:1.5px solid var(--border);background:var(--card);color:var(--text-2);cursor:pointer;user-select:none;font-weight:700}
   .checks input{display:none}
-  .checks label:has(input:checked){
-    background:linear-gradient(120deg,#e8a838,#f2c25a);border-color:var(--gold);color:#5a3d09;
-  }
-
+  .checks label:has(input:checked){background:linear-gradient(120deg,#e8a838,#f2c25a);border-color:var(--gold);color:#5a3d09}
   .star-input{display:flex;align-items:center;gap:2px}
   .star-input .s{position:relative;width:32px;height:32px;font-size:30px;line-height:32px;color:#e6d7c1}
   .star-input .s .fill{position:absolute;left:0;top:0;overflow:hidden;color:var(--gold);white-space:nowrap;width:0}
   .star-input .s .half,.star-input .s .full{position:absolute;top:0;height:100%;cursor:pointer;z-index:2}
-  .star-input .s .half{left:0;width:50%}
-  .star-input .s .full{right:0;width:50%}
+  .star-input .s .half{left:0;width:50%} .star-input .s .full{right:0;width:50%}
   .star-input .val{margin-left:10px;font-size:15px;color:var(--gold-deep);font-weight:800;font-family:"Zen Maru Gothic",sans-serif}
   .star-clear{margin-left:8px;font-size:11.5px;color:var(--muted);text-decoration:underline;font-weight:600}
-
   .reaction-pick{display:flex;gap:8px}
-  .reaction-pick label{
-    flex:1;text-align:center;padding:11px 6px;border-radius:14px;border:1.5px solid var(--border);
-    background:var(--card);cursor:pointer;font-size:13px;color:var(--muted);font-weight:700;
-  }
+  .reaction-pick label{flex:1;text-align:center;padding:11px 6px;border-radius:14px;border:1.5px solid var(--border);background:var(--card);cursor:pointer;font-size:13px;color:var(--muted);font-weight:700}
   .reaction-pick input{display:none}
   .reaction-pick label:has(input:checked){border-color:var(--gold);color:var(--gold-deep);background:#fbeecd}
   .reaction-pick .emo{display:block;font-size:24px;margin-bottom:2px}
-
   .switch{display:flex;align-items:center;gap:10px;cursor:pointer;font-weight:700;color:var(--text-2)}
   .switch input{display:none}
-  .switch .track{
-    width:48px;height:28px;border-radius:999px;background:#eadfce;
-    border:1.5px solid var(--border);position:relative;transition:.2s;flex:0 0 auto;
-  }
-  .switch .track::after{
-    content:"";position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;
-    background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:.2s;
-  }
+  .switch .track{width:48px;height:28px;border-radius:999px;background:#eadfce;border:1.5px solid var(--border);position:relative;transition:.2s;flex:0 0 auto}
+  .switch .track::after{content:"";position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:.2s}
   .switch input:checked + .track{background:#9ad9ac;border-color:var(--good)}
   .switch input:checked + .track::after{left:24px}
-
-  .modal-foot{
-    display:flex;gap:10px;padding:16px 18px;border-top:1.5px solid var(--border);
-    position:sticky;bottom:0;background:var(--bg-2);border-radius:0 0 24px 24px;
-  }
-  .btn-primary{
-    flex:1;padding:14px;border-radius:14px;font-weight:800;font-size:15px;
-    background:linear-gradient(120deg,#e8a838,#f2c25a);color:#5a3d09;
-  }
+  .modal-foot{display:flex;gap:10px;padding:16px 18px;border-top:1.5px solid var(--border);position:sticky;bottom:0;background:var(--bg-2);border-radius:0 0 24px 24px}
+  .btn-primary{flex:1;padding:14px;border-radius:14px;font-weight:800;font-size:15px;background:linear-gradient(120deg,#e8a838,#f2c25a);color:#5a3d09}
   .btn-ghost{padding:14px 18px;border-radius:14px;border:1.5px solid var(--border-2);color:var(--muted);font-weight:700}
-
-  .cover-preview{
-    width:72px;height:104px;border-radius:10px;object-fit:cover;border:1.5px solid var(--border);
-    background:var(--card);margin-top:8px;display:none;
-  }
+  .cover-preview{width:72px;height:104px;border-radius:10px;object-fit:cover;border:1.5px solid var(--border);background:var(--card);margin-top:8px;display:none}
   .cover-preview.show{display:block}
+  .regby-note{background:#fbeecd;border:1.5px solid var(--gold-2);border-radius:12px;padding:10px 12px;font-size:12.5px;color:var(--gold-deep);font-weight:700;display:flex;align-items:center;gap:8px}
+  .regby-note .av{width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px}
 
-  .lightbox{
-    position:fixed;inset:0;background:rgba(74,59,44,.85);display:none;
-    align-items:center;justify-content:center;z-index:200;padding:24px;cursor:zoom-out;
-  }
+  /* profile add modal specifics */
+  .emoji-pick{display:flex;flex-wrap:wrap;gap:8px}
+  .emoji-pick span{width:44px;height:44px;border-radius:12px;background:var(--card);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer}
+  .emoji-pick span.on{border-color:var(--gold);background:#fbeecd}
+  .color-pick{display:flex;gap:10px;flex-wrap:wrap}
+  .color-pick span{width:34px;height:34px;border-radius:50%;border:3px solid transparent;cursor:pointer}
+  .color-pick span.on{border-color:var(--gold-deep)}
+
+  .lightbox{position:fixed;inset:0;background:rgba(74,59,44,.85);display:none;align-items:center;justify-content:center;z-index:300;padding:24px;cursor:zoom-out}
   .lightbox.show{display:flex}
-  .lightbox img{max-width:100%;max-height:90vh;border-radius:14px;box-shadow:0 20px 50px rgba(0,0,0,.4)}
-
-  .toast{
-    position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(30px);
-    background:var(--text);border:none;color:#fff;
-    padding:13px 22px;border-radius:14px;box-shadow:0 10px 26px rgba(74,59,44,.35);z-index:300;
-    opacity:0;transition:.25s;font-size:13.5px;max-width:90vw;text-align:center;font-weight:700;
-  }
+  .lightbox img{max-width:100%;max-height:90vh;border-radius:14px}
+  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(30px);background:var(--text);color:#fff;padding:13px 22px;border-radius:14px;box-shadow:0 10px 26px rgba(74,59,44,.35);z-index:400;opacity:0;transition:.25s;font-size:13.5px;max-width:90vw;text-align:center;font-weight:700}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-  .toast.err{background:#c9544f}
-  .toast.ok{background:#4faf6d}
-
-  .admin-banner{
-    background:linear-gradient(120deg,#fbeecd,#fff6e4);
-    border:1.5px solid var(--gold-2);border-radius:14px;
-    padding:11px 16px;margin:16px auto 0;max-width:420px;font-size:13px;color:var(--gold-deep);
-    display:none;align-items:center;justify-content:space-between;gap:10px;font-weight:700;
-  }
-  .admin-banner.show{display:flex}
-  .admin-banner button{color:var(--muted);text-decoration:underline;font-size:12px;font-weight:700}
-
+  .toast.err{background:#c9544f} .toast.ok{background:#4faf6d}
   .loading{text-align:center;padding:60px;color:var(--muted);font-weight:600}
-  .spin{
-    width:34px;height:34px;border:3px solid var(--border);border-top-color:var(--gold);
-    border-radius:50%;animation:sp 1s linear infinite;margin:0 auto 14px;
-  }
+  .spin{width:34px;height:34px;border:3px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:sp 1s linear infinite;margin:0 auto 14px}
   @keyframes sp{to{transform:rotate(360deg)}}
-
-  footer.site{
-    text-align:center;padding:30px 16px 50px;color:var(--muted);font-size:12px;
-    border-top:1.5px solid var(--border);font-weight:500;
-  }
+  footer.site{text-align:center;padding:30px 16px 50px;color:var(--muted);font-size:12px;border-top:1.5px solid var(--border);font-weight:500}
   footer.site .heart{color:#e88aa0}
-
 </style>
 </head>
 <body>
 
+<!-- ===== プロフィール選択画面 ===== -->
+<div class="profile-screen" id="profile-screen">
+  <div class="ps-eyebrow">Kids Book Library</div>
+  <div class="ps-title">だれが つかう？<br><em>おうち えほん館</em></div>
+  <div class="ps-sub">プロフィールを選んでね</div>
+  <div class="profiles" id="profiles"></div>
+  <div class="ps-hint">選ぶと、その人として本を登録・編集できます。<br>本を追加すると「登録者」が自動でその人になります。</div>
+  <div class="ps-manage" id="ps-manage" onclick="toggleManage()">プロフィールを編集</div>
+</div>
+
+<!-- ===== メイン ===== -->
 <header class="site">
   <div class="wrap">
-    <div class="eyebrow">Kids Book Note</div>
-    <h1 class="logo">ふうかの<br><em>こどもの本ノート</em></h1>
-    <p class="tagline">子供に読ませたい本を記録する、私だけのノート</p>
+    <div class="eyebrow">Kids Book Library</div>
+    <h1 class="logo">おうち <em>えほん館</em></h1>
+    <p class="tagline">読んでよかった、をぜんぶ記録する。</p>
+    <p class="tagline2">子供に読ませたい本と知育おもちゃのライブラリ。あやかの評価と子供のリアルな反応をあわせて残しています。</p>
     <div class="stats">
       <div class="stat"><b id="stat-count">–</b><span>登録数</span></div>
       <div class="stat"><b id="stat-avg">–</b><span>平均評価</span></div>
       <div class="stat"><b id="stat-read">–</b><span>読み聞かせ済</span></div>
+      <div class="stat"><b id="stat-fav">–</b><span>お気に入り</span></div>
     </div>
-    <div class="admin-banner" id="admin-banner">
-      <span>🔓 管理者モードで表示中</span>
-      <button onclick="exitAdmin()">解除する</button>
+    <div class="who-bar" id="who-bar">
+      <span class="who-chip"><span class="av" id="who-av"></span><span id="who-name"></span></span>
+      <button onclick="switchProfile()">切り替え</button>
     </div>
   </div>
 </header>
 
 <div class="toolbar">
   <div class="wrap">
-    <div class="searchbar">
-      <span class="ico">🔍</span>
-      <input type="search" id="search" placeholder="タイトル・著者名で検索…">
-    </div>
+    <div class="searchbar"><span class="ico">🔍</span><input type="search" id="search" placeholder="タイトル・著者名で検索…"></div>
     <div class="filters">
       <select id="f-genre"><option value="">ジャンル：すべて</option></select>
       <select id="f-age"><option value="">対象年齢：すべて</option></select>
-      <select id="f-react">
-        <option value="">子供の反応：すべて</option>
-        <option value="好き">好き</option>
-        <option value="普通">普通</option>
-        <option value="微妙">微妙</option>
-      </select>
-      <select id="f-read">
-        <option value="">読み聞かせ：すべて</option>
-        <option value="done">済み</option>
-        <option value="yet">まだ</option>
-      </select>
+      <select id="f-acq"><option value="">入手方法：すべて</option></select>
+      <select id="f-react"><option value="">子供の反応：すべて</option><option value="好き">好き</option><option value="普通">普通</option><option value="微妙">微妙</option></select>
       <select id="sort">
-        <option value="new">新しい順</option>
-        <option value="old">古い順</option>
-        <option value="rating">評価が高い順</option>
-        <option value="title">タイトル順</option>
+        <option value="new">新しい順</option><option value="old">古い順</option>
+        <option value="rating">評価が高い順</option><option value="fav">お気に入り優先</option><option value="title">タイトル順</option>
       </select>
       <button class="btn-add" id="btn-add" style="display:none" onclick="openForm()">＋ 追加</button>
     </div>
@@ -372,57 +265,36 @@
 </main>
 
 <footer class="site">
-  <div>© 2026 ふうかの こどもの本ノート</div>
+  <div>© 2026 おうち えほん館</div>
   <div style="margin-top:6px">Made with <span class="heart">♥</span> ・ 表紙・書誌: openBD & Google Books</div>
 </footer>
 
-<!-- ============ 追加 / 編集モーダル ============ -->
+<!-- ===== 本 追加/編集モーダル ===== -->
 <div class="overlay" id="form-overlay">
   <div class="modal">
-    <div class="modal-head">
-      <h3 id="form-title">本を追加</h3>
-      <button class="x" onclick="closeForm()">✕</button>
-    </div>
+    <div class="modal-head"><h3 id="form-title">本を追加</h3><button class="x" onclick="closeForm()">✕</button></div>
     <div class="modal-body">
       <input type="hidden" id="in-id">
 
+      <div class="field regby-note" id="regby-note"><span class="av" id="regby-av"></span><span>登録者：<b id="regby-name"></b>（自動で記録されます）</span></div>
+
       <div class="field">
-        <label>ISBNから自動入力（OpenBD）</label>
-        <div class="isbn-fetch">
-          <input type="text" id="in-isbn" placeholder="9784…（ハイフン可）" inputmode="numeric">
-          <button type="button" onclick="fetchFromOpenBD()">✨ 取得</button>
-        </div>
+        <label>ISBNから自動入力（OpenBD / Google Books）</label>
+        <div class="isbn-fetch"><input type="text" id="in-isbn" placeholder="9784…（ハイフン可）" inputmode="numeric"><button type="button" onclick="fetchFromOpenBD()">✨ 取得</button></div>
         <div class="fetch-hint">ISBNを入れて「取得」で、タイトル・著者・表紙・あらすじを自動入力します</div>
         <img id="cover-preview" class="cover-preview" alt="表紙プレビュー">
       </div>
 
-      <div class="field">
-        <label>タイトル <span class="req">*</span></label>
-        <input type="text" id="in-title" placeholder="ぐりとぐら">
-      </div>
-
+      <div class="field"><label>タイトル <span class="req">*</span></label><input type="text" id="in-title" placeholder="ノンタン ぶらんこのせて"></div>
       <div class="row2">
-        <div class="field">
-          <label>著者名</label>
-          <input type="text" id="in-author" placeholder="なかがわ りえこ">
-        </div>
-        <div class="field">
-          <label>対象年齢</label>
-          <select id="in-age">
-            <option value="">選択</option>
-            <option>0〜2歳</option>
-            <option>3〜4歳</option>
-            <option>5〜6歳</option>
-            <option>小学校低学年</option>
-            <option>小学校中学年</option>
-            <option>小学校高学年</option>
-            <option>全年齢</option>
-          </select>
+        <div class="field"><label>著者名</label><input type="text" id="in-author" placeholder="キヨノ サチコ"></div>
+        <div class="field"><label>対象年齢</label>
+          <select id="in-age"><option value="">選択</option><option>0〜2歳</option><option>3〜4歳</option><option>5〜6歳</option><option>小学校低学年</option><option>小学校中学年</option><option>小学校高学年</option><option>全年齢</option></select>
         </div>
       </div>
+      <div class="field"><label>シリーズ名</label><input type="text" id="in-series" placeholder="ノンタン シリーズ"></div>
 
-      <div class="field">
-        <label>ジャンル（複数選択可）</label>
+      <div class="field"><label>ジャンル（複数選択可）</label>
         <div class="checks" id="in-genre">
           <label><input type="checkbox" value="絵本"><span>絵本</span></label>
           <label><input type="checkbox" value="図鑑"><span>図鑑</span></label>
@@ -435,31 +307,34 @@
         </div>
       </div>
 
-      <div class="field">
-        <label>あらすじ・内容紹介</label>
-        <textarea id="in-synopsis" placeholder="どんな内容の本か…"></textarea>
+      <div class="field"><label>入手方法</label>
+        <div class="checks" id="in-acq">
+          <label><input type="radio" name="acq" value="購入"><span>🛒 購入</span></label>
+          <label><input type="radio" name="acq" value="図書館"><span>📚 図書館</span></label>
+          <label><input type="radio" name="acq" value="借りた"><span>🤝 借りた</span></label>
+          <label><input type="radio" name="acq" value="電子書籍"><span>📱 電子書籍</span></label>
+          <label><input type="radio" name="acq" value="もらった"><span>🎁 もらった</span></label>
+        </div>
+      </div>
+      <div class="row2">
+        <div class="field"><label>価格（円）</label><input type="text" id="in-price" inputmode="numeric" placeholder="790"></div>
+        <div class="field"><label>入手・読んだ日</label><input type="date" id="in-date"></div>
       </div>
 
-      <div class="field">
-        <label>ふうかの評価（半星対応）</label>
+      <div class="field"><label>あらすじ・内容紹介</label><textarea id="in-synopsis" placeholder="どんな内容の本か…"></textarea></div>
+      <div class="field"><label>あやかの評価（半星対応）</label>
         <div class="star-input" id="in-rating">
           <span class="s" data-i="1"><span class="fill">★</span><span class="half"></span><span class="full"></span></span>
           <span class="s" data-i="2"><span class="fill">★</span><span class="half"></span><span class="full"></span></span>
           <span class="s" data-i="3"><span class="fill">★</span><span class="half"></span><span class="full"></span></span>
           <span class="s" data-i="4"><span class="fill">★</span><span class="half"></span><span class="full"></span></span>
           <span class="s" data-i="5"><span class="fill">★</span><span class="half"></span><span class="full"></span></span>
-          <span class="val" id="rating-val">0.0</span>
-          <span class="star-clear" onclick="setRating(0)">クリア</span>
+          <span class="val" id="rating-val">0.0</span><span class="star-clear" onclick="setRating(0)">クリア</span>
         </div>
       </div>
+      <div class="field"><label>感想・コメント</label><textarea id="in-comment" placeholder="読んでみての感想…"></textarea></div>
 
-      <div class="field">
-        <label>感想・コメント</label>
-        <textarea id="in-comment" placeholder="読んでみての感想…"></textarea>
-      </div>
-
-      <div class="field">
-        <label>子供の反応</label>
+      <div class="field"><label>子供の反応</label>
         <div class="reaction-pick" id="in-react">
           <label><input type="radio" name="react" value="好き"><span class="emo">😍</span>好き</label>
           <label><input type="radio" name="react" value="普通"><span class="emo">🙂</span>普通</label>
@@ -467,42 +342,39 @@
         </div>
       </div>
 
-      <div class="field">
-        <label>表紙画像URL</label>
-        <input type="text" id="in-cover" placeholder="https://…" oninput="updateCoverPreview()">
-      </div>
+      <div class="field"><label>タグ（自由キーワード・カンマ区切り）</label><input type="text" id="in-tags" placeholder="寝る前, 動物, 食べ物"></div>
+      <div class="field"><label>表紙画像URL</label><input type="text" id="in-cover" placeholder="https://…" oninput="updateCoverPreview()"></div>
+      <div class="field"><label>購入先リンク</label><input type="text" id="in-buy" placeholder="Amazon・楽天など、購入ページのURL"></div>
 
-      <div class="field">
-        <label>購入先リンク</label>
-        <input type="text" id="in-buy" placeholder="Amazon・楽天など、購入ページのURL">
+      <div class="row2">
+        <div class="field"><label class="switch"><input type="checkbox" id="in-fav"><span class="track"></span><span>お気に入り★にする</span></label></div>
       </div>
-
-      <div class="field">
-        <label class="switch">
-          <input type="checkbox" id="in-read">
-          <span class="track"></span>
-          <span>読み聞かせ済みにする</span>
-        </label>
-      </div>
+      <div class="field"><label class="switch"><input type="checkbox" id="in-reread"><span class="track"></span><span>また読みたい／また借りたい</span></label></div>
+      <div class="field"><label class="switch"><input type="checkbox" id="in-read"><span class="track"></span><span>読み聞かせ済みにする</span></label></div>
     </div>
-    <div class="modal-foot">
-      <button class="btn-ghost" onclick="closeForm()">キャンセル</button>
-      <button class="btn-primary" id="save-btn" onclick="saveBook()">保存する</button>
-    </div>
+    <div class="modal-foot"><button class="btn-ghost" onclick="closeForm()">キャンセル</button><button class="btn-primary" id="save-btn" onclick="saveBook()">保存する</button></div>
   </div>
 </div>
 
-<!-- ============ 削除確認 ============ -->
+<!-- ===== プロフィール追加モーダル ===== -->
+<div class="overlay" id="pf-overlay">
+  <div class="modal" style="max-width:420px">
+    <div class="modal-head"><h3>プロフィールを追加</h3><button class="x" onclick="closePfForm()">✕</button></div>
+    <div class="modal-body">
+      <div class="field"><label>なまえ <span class="req">*</span></label><input type="text" id="pf-name" placeholder="ゆうと"></div>
+      <div class="field"><label>アイコンを選ぶ</label><div class="emoji-pick" id="pf-emoji"></div></div>
+      <div class="field"><label>背景の色</label><div class="color-pick" id="pf-color"></div></div>
+    </div>
+    <div class="modal-foot"><button class="btn-ghost" onclick="closePfForm()">キャンセル</button><button class="btn-primary" id="pf-save" onclick="savePfProfile()">このプロフィールを作る</button></div>
+  </div>
+</div>
+
+<!-- ===== 削除確認 ===== -->
 <div class="overlay" id="del-overlay">
   <div class="modal" style="max-width:380px">
     <div class="modal-head"><h3>削除しますか？</h3><button class="x" onclick="closeDelete()">✕</button></div>
-    <div class="modal-body">
-      <p style="color:var(--muted);font-size:14px">「<b id="del-title" style="color:var(--text)"></b>」を削除します。この操作は元に戻せません。</p>
-    </div>
-    <div class="modal-foot">
-      <button class="btn-ghost" onclick="closeDelete()">やめる</button>
-      <button class="btn-primary" style="background:var(--danger);color:#fff" id="del-btn" onclick="confirmDelete()">削除する</button>
-    </div>
+    <div class="modal-body"><p style="color:var(--muted);font-size:14px">「<b id="del-title" style="color:var(--text)"></b>」を削除します。元に戻せません。</p></div>
+    <div class="modal-foot"><button class="btn-ghost" onclick="closeDelete()">やめる</button><button class="btn-primary" style="background:var(--danger);color:#fff" id="del-btn" onclick="confirmDelete()">削除する</button></div>
   </div>
 </div>
 
@@ -510,428 +382,410 @@
 <div class="toast" id="toast"></div>
 
 <script>
-/* ============================================================
-   設定 — デプロイ後の GAS ウェブアプリURLをここに貼り付け
-   ============================================================ */
+/* ================= 設定 ================= */
 const GAS_URL = "https://script.google.com/macros/s/AKfycbx-C7zTJQz8XuadOwls0E07ycZifdf14lHWzIgMyq2ybZUgahospbzqJGTK7X0Zs8cv/exec";
+const GOOGLE_BOOKS_KEY = ""; // ← 自分のGoogle Books APIキーを "" の中に貼り付け
 
-/* Google Books APIキー（"" のままでも動作。キーを入れると429が起きにくくなります）
-   下の "" の中に、自分のAPIキー（AIza… で始まる文字列）を貼り付けてください */
-const GOOGLE_BOOKS_KEY = "AIzaSyBFSp9KqJt9WcHoGTnpd80ES4mq5p8yqgo";
+const COLORS = ['pink','gold','mint','blue','lilac','peach'];
+const COLOR_CLASS = {pink:'a-pink',gold:'a-gold',mint:'a-mint',blue:'a-blue',lilac:'a-lilac',peach:'a-peach'};
+const EMOJIS = ['🐰','🦄','🐱','🐻','🐼','🐨','🦊','🐹','🐧','🐣','🌸','👧','🐶','🐷','🐸','⭐'];
+const ACQ_ICON = {'購入':'🛒','図書館':'📚','借りた':'🤝','電子書籍':'📱','もらった':'🎁'};
+const ACQ_CLASS = {'購入':'buy','図書館':'rent','借りた':'rent','電子書籍':'other','もらった':'other'};
 
-/* ---------- 状態 ---------- */
-let BOOKS = [];
-let adminPassword = null;
-let editingId = null;
-let deletingId = null;
+/* ================= 状態 ================= */
+let BOOKS = [], USERS = [];
+let adminPassword = null, currentProfile = null;
+let editingId = null, deletingId = null;
+let pfEmoji = '🐰', pfColor = 'pink';
 
-/* ---------- 起動 ---------- */
+/* ================= 起動 ================= */
 window.addEventListener('DOMContentLoaded', () => {
-  // ?admin=xxx でパスワードを取得（書き込み時にサーバー側で照合）
   const p = new URLSearchParams(location.search).get('admin');
-  if (p) {
-    adminPassword = p;
-    document.getElementById('btn-add').style.display = '';
-    document.getElementById('admin-banner').classList.add('show');
-  }
+  if (p) adminPassword = p;
   bindStarInput();
-  ['search','f-genre','f-age','f-react','f-read','sort'].forEach(id=>{
+  ['search','f-genre','f-age','f-acq','f-react','sort'].forEach(id=>{
     document.getElementById(id).addEventListener('input', render);
   });
-  loadBooks();
+  buildPfPickers();
+  loadData();
 });
 
-function exitAdmin(){ location.href = location.pathname; }
-
-/* ---------- API ---------- */
+/* ================= API ================= */
 function jsonp(url){
   return new Promise((resolve,reject)=>{
-    const cb = 'cb_'+Math.random().toString(36).slice(2);
-    const sep = url.includes('?') ? '&' : '?';
-    const s = document.createElement('script');
-    const timer = setTimeout(()=>{cleanup();reject(new Error('timeout'))}, 15000);
-    window[cb] = (data)=>{ cleanup(); resolve(data); };
-    function cleanup(){ clearTimeout(timer); delete window[cb]; s.remove(); }
-    s.onerror = ()=>{ cleanup(); reject(new Error('network')); };
-    s.src = url + sep + 'callback=' + cb;
-    document.body.appendChild(s);
+    const cb='cb_'+Math.random().toString(36).slice(2);
+    const sep=url.includes('?')?'&':'?';
+    const s=document.createElement('script');
+    const t=setTimeout(()=>{cleanup();reject(new Error('timeout'))},15000);
+    window[cb]=d=>{cleanup();resolve(d)};
+    function cleanup(){clearTimeout(t);delete window[cb];s.remove()}
+    s.onerror=()=>{cleanup();reject(new Error('network'))};
+    s.src=url+sep+'callback='+cb; document.body.appendChild(s);
   });
 }
-
-async function loadBooks(){
-  if (!checkConfigured()) return;
-  const loading = document.getElementById('loading');
-  try{
-    const res = await jsonp(GAS_URL);
-    if (res.status !== 'ok') throw new Error(res.message || 'error');
-    BOOKS = res.data || [];
-    buildFilterOptions();
-    render();
-    loading.style.display = 'none';
-  }catch(e){
-    loading.style.display = 'block';
-    loading.innerHTML =
-      '読み込みに失敗しました。<br><small style="color:var(--muted-2)">GAS_URL の設定 / デプロイ設定（アクセス:全員）をご確認ください。</small>';
-  }
-}
-
-// 書き込みは text/plain POST（プリフライト回避）→ 成否に関わらず再読込
 async function apiWrite(payload){
-  payload.password = adminPassword;
-  let result = { status:'unknown' };
+  payload.password=adminPassword;
   try{
-    const res = await fetch(GAS_URL, {
-      method:'POST',
-      headers:{'Content-Type':'text/plain;charset=utf-8'},
-      body: JSON.stringify(payload)
-    });
-    result = await res.json();
+    const res=await fetch(GAS_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
+    return await res.json();
+  }catch(e){ return {status:'unknown'} }
+}
+
+async function loadData(){
+  const loading=document.getElementById('loading');
+  if(!GAS_URL||GAS_URL.indexOf('http')!==0){
+    loading.innerHTML='⚙️ セットアップが必要です<br><small>GAS_URL を設定してください。</small>'; return;
+  }
+  try{
+    const res=await jsonp(GAS_URL);
+    if(res.status!=='ok') throw new Error(res.message||'error');
+    BOOKS=res.data||[]; USERS=res.users||[];
+    buildFilterOptions(); render(); loading.style.display='none';
+    // 編集権限（?admin=）があればプロフィール選択を表示
+    if(adminPassword) showProfileScreen();
   }catch(e){
-    // CORSでレスポンスが読めない場合でも書き込み自体は成功していることが多い
-    result = { status:'unknown' };
+    loading.style.display='block';
+    loading.innerHTML='読み込みに失敗しました。<br><small>GAS_URL / デプロイ設定（アクセス:全員）をご確認ください。</small>';
   }
-  return result;
 }
 
-function checkConfigured(){
-  if (!GAS_URL || GAS_URL.indexOf('http') !== 0){
-    document.getElementById('loading').innerHTML =
-      '⚙️ セットアップが必要です<br><small style="color:var(--muted-2)">index.html 内の GAS_URL に、デプロイしたウェブアプリのURLを設定してください。</small>';
-    return false;
-  }
-  return true;
+/* ================= プロフィール選択 ================= */
+function showProfileScreen(){
+  renderProfiles();
+  document.getElementById('profile-screen').classList.add('show');
+  document.body.style.overflow='hidden';
+}
+function renderProfiles(){
+  const box=document.getElementById('profiles');
+  let html=USERS.map(u=>`
+    <div class="profile" onclick="selectProfile('${esc(u.id)}')">
+      <div class="avatar ${COLOR_CLASS[u.color]||'a-pink'}">${esc(u.emoji||'🐰')}</div>
+      <div class="pname">${esc(u.name)}</div>
+      <span class="del-mini" onclick="event.stopPropagation();deleteProfile('${esc(u.id)}','${esc(u.name)}')">削除</span>
+    </div>`).join('');
+  html+=`<div class="profile add" onclick="openPfForm()"><div class="avatar">＋</div><div class="pname">追加する</div></div>`;
+  box.innerHTML=html;
+}
+function selectProfile(id){
+  currentProfile=USERS.find(u=>u.id===id)||null;
+  document.getElementById('profile-screen').classList.remove('show','managing');
+  document.body.style.overflow='';
+  document.getElementById('btn-add').style.display='';
+  const wb=document.getElementById('who-bar'); wb.classList.add('show');
+  document.getElementById('who-av').className='av '+(COLOR_CLASS[currentProfile.color]||'a-pink');
+  document.getElementById('who-av').textContent=currentProfile.emoji||'🐰';
+  document.getElementById('who-name').textContent=currentProfile.name;
+  render();
+}
+function switchProfile(){ showProfileScreen(); }
+function toggleManage(){
+  const s=document.getElementById('profile-screen'); s.classList.toggle('managing');
+  document.getElementById('ps-manage').textContent=s.classList.contains('managing')?'編集を終わる':'プロフィールを編集';
+}
+async function deleteProfile(id,name){
+  if(!confirm('プロフィール「'+name+'」を削除しますか？')) return;
+  const res=await apiWrite({action:'deleteUser',id});
+  if(res.status==='error'){ toast(res.message||'削除に失敗しました','err'); return; }
+  toast('削除しました','ok');
+  const r=await jsonp(GAS_URL); USERS=r.users||[]; renderProfiles();
 }
 
-/* ---------- フィルタ選択肢 ---------- */
+/* プロフィール追加モーダル */
+function buildPfPickers(){
+  document.getElementById('pf-emoji').innerHTML=EMOJIS.map(e=>`<span onclick="pickPfEmoji(this,'${e}')">${e}</span>`).join('');
+  document.getElementById('pf-color').innerHTML=COLORS.map(c=>`<span class="${COLOR_CLASS[c]}" onclick="pickPfColor(this,'${c}')"></span>`).join('');
+}
+function openPfForm(){
+  pfEmoji='🐰'; pfColor='pink';
+  document.getElementById('pf-name').value='';
+  document.querySelectorAll('#pf-emoji span').forEach((s,i)=>s.classList.toggle('on',i===0));
+  document.querySelectorAll('#pf-color span').forEach((s,i)=>s.classList.toggle('on',i===0));
+  document.getElementById('pf-overlay').classList.add('show');
+}
+function closePfForm(){ document.getElementById('pf-overlay').classList.remove('show'); }
+function pickPfEmoji(el,e){ pfEmoji=e; document.querySelectorAll('#pf-emoji span').forEach(s=>s.classList.remove('on')); el.classList.add('on'); }
+function pickPfColor(el,c){ pfColor=c; document.querySelectorAll('#pf-color span').forEach(s=>s.classList.remove('on')); el.classList.add('on'); }
+async function savePfProfile(){
+  const name=document.getElementById('pf-name').value.trim();
+  if(!name){ toast('なまえを入力してください','err'); return; }
+  const btn=document.getElementById('pf-save'); btn.disabled=true; btn.textContent='作成中…';
+  const res=await apiWrite({action:'addUser',user:{name,emoji:pfEmoji,color:pfColor}});
+  btn.disabled=false; btn.textContent='このプロフィールを作る';
+  if(res.status==='error'){ toast(res.message||'作成に失敗しました','err'); return; }
+  closePfForm(); toast('プロフィールを作りました','ok');
+  const r=await jsonp(GAS_URL); USERS=r.users||[]; renderProfiles();
+}
+
+/* ================= フィルタ選択肢 ================= */
 function buildFilterOptions(){
-  const genres = new Set(), ages = new Set();
+  const genres=new Set(),ages=new Set(),acqs=new Set();
   BOOKS.forEach(b=>{
     (b.genre||'').split(',').map(s=>s.trim()).filter(Boolean).forEach(g=>genres.add(g));
-    if (b.targetAge) ages.add(b.targetAge);
+    if(b.targetAge) ages.add(b.targetAge);
+    if(b.acquisition) acqs.add(b.acquisition);
   });
   fillSelect('f-genre','ジャンル：すべて',[...genres]);
   fillSelect('f-age','対象年齢：すべて',[...ages]);
+  fillSelect('f-acq','入手方法：すべて',[...acqs]);
 }
-function fillSelect(id, allLabel, items){
-  const sel = document.getElementById(id);
-  const cur = sel.value;
-  sel.innerHTML = '<option value="">'+allLabel+'</option>' +
-    items.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');
-  sel.value = cur;
+function fillSelect(id,all,items){
+  const sel=document.getElementById(id),cur=sel.value;
+  sel.innerHTML='<option value="">'+all+'</option>'+items.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');
+  sel.value=cur;
 }
 
-/* ---------- 描画 ---------- */
+/* ================= 描画 ================= */
 function render(){
-  const q = document.getElementById('search').value.trim().toLowerCase();
-  const fg = document.getElementById('f-genre').value;
-  const fa = document.getElementById('f-age').value;
-  const fr = document.getElementById('f-react').value;
-  const frd = document.getElementById('f-read').value;
-  const sort = document.getElementById('sort').value;
-
-  let list = BOOKS.filter(b=>{
-    if (q && !((b.title||'').toLowerCase().includes(q) || (b.author||'').toLowerCase().includes(q))) return false;
-    if (fg && !(b.genre||'').split(',').map(s=>s.trim()).includes(fg)) return false;
-    if (fa && b.targetAge !== fa) return false;
-    if (fr && b.childReaction !== fr) return false;
-    if (frd === 'done' && !b.readAloud) return false;
-    if (frd === 'yet' && b.readAloud) return false;
+  const q=document.getElementById('search').value.trim().toLowerCase();
+  const fg=document.getElementById('f-genre').value,fa=document.getElementById('f-age').value;
+  const fac=document.getElementById('f-acq').value,fr=document.getElementById('f-react').value;
+  const sort=document.getElementById('sort').value;
+  let list=BOOKS.filter(b=>{
+    if(q&&!((b.title||'').toLowerCase().includes(q)||(b.author||'').toLowerCase().includes(q))) return false;
+    if(fg&&!(b.genre||'').split(',').map(s=>s.trim()).includes(fg)) return false;
+    if(fa&&b.targetAge!==fa) return false;
+    if(fac&&b.acquisition!==fac) return false;
+    if(fr&&b.childReaction!==fr) return false;
     return true;
   });
-
   list.sort((a,b)=>{
-    if (sort==='rating') return (b.rating||0)-(a.rating||0);
-    if (sort==='title') return (a.title||'').localeCompare(b.title||'','ja');
-    const ta=new Date(a.createdAt||0).getTime(), tb=new Date(b.createdAt||0).getTime();
-    return sort==='old' ? ta-tb : tb-ta;
+    if(sort==='rating') return (b.rating||0)-(a.rating||0);
+    if(sort==='fav') return (b.favorite?1:0)-(a.favorite?1:0);
+    if(sort==='title') return (a.title||'').localeCompare(b.title||'','ja');
+    const ta=new Date(a.createdAt||0).getTime(),tb=new Date(b.createdAt||0).getTime();
+    return sort==='old'?ta-tb:tb-ta;
   });
-
   updateStats();
-
-  const grid = document.getElementById('grid');
-  if (!list.length){
-    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1">
-      <div class="big">📚</div>${BOOKS.length ? '条件に合う本がありません' : 'まだ本が登録されていません'}</div>`;
-    return;
-  }
-  grid.innerHTML = list.map(cardHTML).join('');
+  const grid=document.getElementById('grid');
+  if(!list.length){ grid.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><div class="big">📚</div>${BOOKS.length?'条件に合う本がありません':'まだ本が登録されていません'}</div>`; return; }
+  grid.innerHTML=list.map(cardHTML).join('');
 }
 
 function cardHTML(b){
-  const genres = (b.genre||'').split(',').map(s=>s.trim()).filter(Boolean);
-  const admin = !!adminPassword;
+  const genres=(b.genre||'').split(',').map(s=>s.trim()).filter(Boolean);
+  const tags=(b.tags||'').split(',').map(s=>s.trim()).filter(Boolean);
+  const admin=!!currentProfile;
+  const acqIcon=ACQ_ICON[b.acquisition]||'', acqClass=ACQ_CLASS[b.acquisition]||'other';
+  const reg=USERS.find(u=>u.name===b.registeredBy);
+  const price=b.price?(String(b.price).replace(/[^\d]/g,'')?Number(String(b.price).replace(/[^\d]/g,'')).toLocaleString()+'円':b.price):'';
   return `
   <div class="card" id="card-${esc(b.id)}">
     <div class="card-top">
       <div class="cover" ${b.coverImage?`onclick="lightbox('${escAttr(b.coverImage)}')"`:''}>
-        ${b.readAloud?'<span class="badge-read">読み聞かせ済</span>':''}
-        ${b.coverImage
-          ? `<img src="${escAttr(b.coverImage)}" alt="" loading="lazy" onerror="this.parentNode.innerHTML='<div class=&quot;noimg&quot;>📖</div>'">`
-          : '<div class="noimg">📖</div>'}
+        ${b.favorite?'<span class="fav-star">★</span>':''}
+        ${b.readAloud?'<span class="badge-read">読了</span>':''}
+        ${b.coverImage?`<img src="${escAttr(b.coverImage)}" alt="" loading="lazy" onerror="this.style.display='none';this.parentNode.insertAdjacentText('beforeend','📖')">`:'📖'}
       </div>
       <div class="card-info">
+        ${b.series?`<div class="series">${esc(b.series)}</div>`:''}
         <div class="card-title">${esc(b.title||'（無題）')}</div>
         <div class="card-author">${esc(b.author||'著者不明')}</div>
         <div class="metarow">
           ${b.targetAge?`<span class="chip gold">${esc(b.targetAge)}</span>`:''}
           ${genres.slice(0,2).map(g=>`<span class="chip">${esc(g)}</span>`).join('')}
+          ${b.acquisition?`<span class="chip ${acqClass}">${acqIcon} ${esc(b.acquisition)}</span>`:''}
           ${b.childReaction?`<span class="chip react-${esc(b.childReaction)}">${reactEmoji(b.childReaction)} ${esc(b.childReaction)}</span>`:''}
         </div>
         <div>${starsHTML(b.rating)}${b.rating?`<span class="rating-num">${Number(b.rating).toFixed(1)}</span>`:''}</div>
       </div>
     </div>
-
     <div class="card-body">
       ${b.synopsis?`<div class="sec"><h4>あらすじ・内容</h4><p>${esc(b.synopsis)}</p></div>`:''}
-      ${b.comment?`<div class="sec"><h4>ふうかの感想</h4><p>${esc(b.comment)}</p></div>`:''}
-      ${genres.length>2?`<div class="sec"><h4>ジャンル</h4><p>${genres.map(esc).join(' / ')}</p></div>`:''}
+      ${b.comment?`<div class="sec"><h4>あやかの感想</h4><p>${esc(b.comment)}</p></div>`:''}
+      <dl class="detail-grid">
+        ${b.acquisition?`<dt>入手方法</dt><dd>${esc(b.acquisition)}${price?`（${price}）`:''}</dd>`:''}
+        ${b.acquiredDate?`<dt>入手・読んだ日</dt><dd>${esc(fmtDate(b.acquiredDate))}</dd>`:''}
+        ${b.reread?`<dt>また読みたい</dt><dd>◎ もう一度</dd>`:''}
+        ${genres.length>2?`<dt>ジャンル</dt><dd>${genres.map(esc).join(' / ')}</dd>`:''}
+      </dl>
+      ${tags.length?`<div class="tags-row">${tags.map(t=>`<span class="tag">#${esc(t)}</span>`).join('')}</div>`:''}
       <div class="card-actions">
         ${b.purchaseLink?`<a class="lnk-buy" href="${escAttr(b.purchaseLink)}" target="_blank" rel="noopener">🛒 購入先を見る</a>`:''}
-        ${admin?`<div class="admin-btns">
-          <button onclick="openForm('${esc(b.id)}')">✏️ 編集</button>
-          <button class="del" onclick="openDelete('${esc(b.id)}')">🗑 削除</button>
-        </div>`:''}
+        ${admin?`<div class="admin-btns"><button onclick="openForm('${esc(b.id)}')">✏️ 編集</button><button class="del" onclick="openDelete('${esc(b.id)}')">🗑 削除</button></div>`:''}
       </div>
     </div>
-
     <div class="card-foot" onclick="toggleCard('${esc(b.id)}')">
-      <span>${fmtDate(b.createdAt)}</span>
-      <span class="toggle" data-open="開く ▾" data-close="閉じる ▴">開く ▾</span>
+      <span>${b.registeredBy?`<span class="regby"><span class="av ${reg?COLOR_CLASS[reg.color]:''}">${reg?esc(reg.emoji):'👤'}</span>${esc(b.registeredBy)}</span>`:fmtDate(b.createdAt)}</span>
+      <span class="toggle" data-o="開く ▾" data-c="閉じる ▴">開く ▾</span>
     </div>
   </div>`;
 }
-
 function toggleCard(id){
-  const card = document.getElementById('card-'+id);
-  const t = card.querySelector('.toggle');
-  card.classList.toggle('open');
-  t.textContent = card.classList.contains('open') ? t.dataset.close : t.dataset.open;
+  const c=document.getElementById('card-'+id),t=c.querySelector('.toggle');
+  c.classList.toggle('open');
+  t.textContent=c.classList.contains('open')?t.dataset.c:t.dataset.o;
 }
-
 function starsHTML(r){
-  r = Number(r)||0;
-  let out='<span class="stars">';
-  for (let i=1;i<=5;i++){
-    if (r>=i) out+='★';
-    else if (r>=i-0.5) out+='<span style="position:relative"><span class="empty">★</span><span style="position:absolute;left:0;top:0;width:50%;overflow:hidden;color:var(--gold)">★</span></span>';
-    else out+='<span class="empty">★</span>';
+  r=Number(r)||0; let o='<span class="stars">';
+  for(let i=1;i<=5;i++){
+    if(r>=i)o+='★';
+    else if(r>=i-0.5)o+='<span style="position:relative"><span class="empty">★</span><span style="position:absolute;left:0;top:0;width:50%;overflow:hidden;color:var(--gold)">★</span></span>';
+    else o+='<span class="empty">★</span>';
   }
-  return out+'</span>';
+  return o+'</span>';
 }
-
-function reactEmoji(r){ return r==='好き'?'😍':r==='普通'?'🙂':r==='微妙'?'😕':''; }
-
+function reactEmoji(r){return r==='好き'?'😍':r==='普通'?'🙂':r==='微妙'?'😕':''}
 function updateStats(){
-  document.getElementById('stat-count').textContent = BOOKS.length;
-  const rated = BOOKS.filter(b=>b.rating>0);
-  const avg = rated.length ? (rated.reduce((s,b)=>s+Number(b.rating),0)/rated.length) : 0;
-  document.getElementById('stat-avg').textContent = avg ? avg.toFixed(1) : '–';
-  document.getElementById('stat-read').textContent = BOOKS.filter(b=>b.readAloud).length;
+  document.getElementById('stat-count').textContent=BOOKS.length;
+  const rated=BOOKS.filter(b=>b.rating>0);
+  const avg=rated.length?(rated.reduce((s,b)=>s+Number(b.rating),0)/rated.length):0;
+  document.getElementById('stat-avg').textContent=avg?avg.toFixed(1):'–';
+  document.getElementById('stat-read').textContent=BOOKS.filter(b=>b.readAloud).length;
+  document.getElementById('stat-fav').textContent=BOOKS.filter(b=>b.favorite).length;
 }
 
-/* ---------- 星入力 ---------- */
-let currentRating = 0;
+/* ================= 星入力 ================= */
+let currentRating=0;
 function bindStarInput(){
   document.querySelectorAll('#in-rating .s').forEach(s=>{
-    const i = Number(s.dataset.i);
+    const i=Number(s.dataset.i);
     s.querySelector('.half').addEventListener('click',()=>setRating(i-0.5));
     s.querySelector('.full').addEventListener('click',()=>setRating(i));
   });
 }
 function setRating(v){
-  currentRating = v;
-  document.getElementById('rating-val').textContent = Number(v).toFixed(1);
+  currentRating=v; document.getElementById('rating-val').textContent=Number(v).toFixed(1);
   document.querySelectorAll('#in-rating .s').forEach(s=>{
-    const i = Number(s.dataset.i);
-    const fill = s.querySelector('.fill');
-    if (v>=i) fill.style.width='100%';
-    else if (v>=i-0.5) fill.style.width='50%';
-    else fill.style.width='0';
+    const i=Number(s.dataset.i),f=s.querySelector('.fill');
+    f.style.width=v>=i?'100%':(v>=i-0.5?'50%':'0');
   });
 }
 
-/* ---------- フォーム ---------- */
+/* ================= 本フォーム ================= */
 function openForm(id){
-  editingId = id || null;
-  document.getElementById('form-title').textContent = id ? '本を編集' : '本を追加';
-  const b = id ? BOOKS.find(x=>x.id===id) : {};
-  document.getElementById('in-id').value = b.id||'';
-  document.getElementById('in-isbn').value = b.isbn||'';
-  document.getElementById('in-title').value = b.title||'';
-  document.getElementById('in-author').value = b.author||'';
-  document.getElementById('in-age').value = b.targetAge||'';
-  document.getElementById('in-synopsis').value = b.synopsis||'';
-  document.getElementById('in-comment').value = b.comment||'';
-  document.getElementById('in-cover').value = b.coverImage||'';
-  document.getElementById('in-buy').value = b.purchaseLink||'';
-  document.getElementById('in-read').checked = !!b.readAloud;
-
-  const genres = (b.genre||'').split(',').map(s=>s.trim());
-  document.querySelectorAll('#in-genre input').forEach(c=> c.checked = genres.includes(c.value));
-  document.querySelectorAll('#in-react input').forEach(c=> c.checked = (c.value === b.childReaction));
+  editingId=id||null;
+  document.getElementById('form-title').textContent=id?'本を編集':'本を追加';
+  const b=id?BOOKS.find(x=>x.id===id):{};
+  document.getElementById('in-id').value=b.id||'';
+  document.getElementById('in-isbn').value=b.isbn||'';
+  document.getElementById('in-title').value=b.title||'';
+  document.getElementById('in-author').value=b.author||'';
+  document.getElementById('in-age').value=b.targetAge||'';
+  document.getElementById('in-series').value=b.series||'';
+  document.getElementById('in-price').value=b.price||'';
+  document.getElementById('in-date').value=toDateInput(b.acquiredDate);
+  document.getElementById('in-synopsis').value=b.synopsis||'';
+  document.getElementById('in-comment').value=b.comment||'';
+  document.getElementById('in-tags').value=b.tags||'';
+  document.getElementById('in-cover').value=b.coverImage||'';
+  document.getElementById('in-buy').value=b.purchaseLink||'';
+  document.getElementById('in-fav').checked=!!b.favorite;
+  document.getElementById('in-reread').checked=!!b.reread;
+  document.getElementById('in-read').checked=!!b.readAloud;
+  const genres=(b.genre||'').split(',').map(s=>s.trim());
+  document.querySelectorAll('#in-genre input').forEach(c=>c.checked=genres.includes(c.value));
+  document.querySelectorAll('#in-acq input').forEach(c=>c.checked=(c.value===b.acquisition));
+  document.querySelectorAll('#in-react input').forEach(c=>c.checked=(c.value===b.childReaction));
   setRating(Number(b.rating)||0);
   updateCoverPreview();
-
+  // 登録者表示（編集時は既存の登録者、新規は現在のプロフィール）
+  const regName=id?(b.registeredBy||(currentProfile?currentProfile.name:'')):(currentProfile?currentProfile.name:'');
+  const regUser=USERS.find(u=>u.name===regName);
+  document.getElementById('regby-name').textContent=regName||'（未設定）';
+  document.getElementById('regby-av').className='av '+(regUser?COLOR_CLASS[regUser.color]:'a-pink');
+  document.getElementById('regby-av').textContent=regUser?regUser.emoji:'👤';
+  formRegBy=regName;
   document.getElementById('form-overlay').classList.add('show');
   document.body.style.overflow='hidden';
 }
-function closeForm(){
-  document.getElementById('form-overlay').classList.remove('show');
-  document.body.style.overflow='';
-}
+let formRegBy='';
+function closeForm(){ document.getElementById('form-overlay').classList.remove('show'); document.body.style.overflow=''; }
 
 async function saveBook(){
-  const title = document.getElementById('in-title').value.trim();
-  if (!title){ toast('タイトルを入力してください','err'); return; }
-
-  const genres = [...document.querySelectorAll('#in-genre input:checked')].map(c=>c.value);
-  const react = (document.querySelector('#in-react input:checked')||{}).value || '';
-
-  const book = {
-    id: document.getElementById('in-id').value || undefined,
-    title,
-    author: document.getElementById('in-author').value.trim(),
-    targetAge: document.getElementById('in-age').value,
-    genre: genres.join(','),
-    synopsis: document.getElementById('in-synopsis').value.trim(),
-    rating: currentRating,
-    comment: document.getElementById('in-comment').value.trim(),
-    coverImage: document.getElementById('in-cover').value.trim(),
-    purchaseLink: document.getElementById('in-buy').value.trim(),
-    readAloud: document.getElementById('in-read').checked,
-    childReaction: react,
-    isbn: document.getElementById('in-isbn').value.trim()
+  const title=document.getElementById('in-title').value.trim();
+  if(!title){ toast('タイトルを入力してください','err'); return; }
+  const genres=[...document.querySelectorAll('#in-genre input:checked')].map(c=>c.value);
+  const react=(document.querySelector('#in-react input:checked')||{}).value||'';
+  const acq=(document.querySelector('#in-acq input:checked')||{}).value||'';
+  const book={
+    id:document.getElementById('in-id').value||undefined,
+    title, author:document.getElementById('in-author').value.trim(),
+    targetAge:document.getElementById('in-age').value, genre:genres.join(','),
+    synopsis:document.getElementById('in-synopsis').value.trim(),
+    rating:currentRating, comment:document.getElementById('in-comment').value.trim(),
+    coverImage:document.getElementById('in-cover').value.trim(),
+    purchaseLink:document.getElementById('in-buy').value.trim(),
+    readAloud:document.getElementById('in-read').checked, childReaction:react,
+    isbn:document.getElementById('in-isbn').value.trim(),
+    acquisition:acq, price:document.getElementById('in-price').value.trim(),
+    acquiredDate:document.getElementById('in-date').value,
+    series:document.getElementById('in-series').value.trim(),
+    tags:document.getElementById('in-tags').value.trim(),
+    favorite:document.getElementById('in-fav').checked,
+    reread:document.getElementById('in-reread').checked,
+    registeredBy:formRegBy||(currentProfile?currentProfile.name:'')
   };
-
-  const btn = document.getElementById('save-btn');
-  btn.disabled = true; btn.textContent = '保存中…';
-  const res = await apiWrite({ action: editingId ? 'update' : 'add', book });
-  btn.disabled = false; btn.textContent = '保存する';
-
-  if (res.status === 'error'){ toast(res.message || '保存に失敗しました','err'); return; }
-  closeForm();
-  toast(editingId ? '更新しました' : '追加しました','ok');
-  await loadBooks();
+  const btn=document.getElementById('save-btn'); btn.disabled=true; btn.textContent='保存中…';
+  const res=await apiWrite({action:editingId?'update':'add',book});
+  btn.disabled=false; btn.textContent='保存する';
+  if(res.status==='error'){ toast(res.message||'保存に失敗しました','err'); return; }
+  closeForm(); toast(editingId?'更新しました':'追加しました','ok');
+  const r=await jsonp(GAS_URL); BOOKS=r.data||[]; USERS=r.users||USERS; buildFilterOptions(); render();
 }
 
-/* ---------- 削除 ---------- */
-function openDelete(id){
-  deletingId = id;
-  const b = BOOKS.find(x=>x.id===id);
-  document.getElementById('del-title').textContent = b ? b.title : '';
-  document.getElementById('del-overlay').classList.add('show');
-  document.body.style.overflow='hidden';
-}
-function closeDelete(){
-  document.getElementById('del-overlay').classList.remove('show');
-  document.body.style.overflow='';
-}
+/* ================= 削除 ================= */
+function openDelete(id){ deletingId=id; const b=BOOKS.find(x=>x.id===id); document.getElementById('del-title').textContent=b?b.title:''; document.getElementById('del-overlay').classList.add('show'); document.body.style.overflow='hidden'; }
+function closeDelete(){ document.getElementById('del-overlay').classList.remove('show'); document.body.style.overflow=''; }
 async function confirmDelete(){
-  const btn = document.getElementById('del-btn');
-  btn.disabled=true; btn.textContent='削除中…';
-  const res = await apiWrite({ action:'delete', id: deletingId });
+  const btn=document.getElementById('del-btn'); btn.disabled=true; btn.textContent='削除中…';
+  const res=await apiWrite({action:'delete',id:deletingId});
   btn.disabled=false; btn.textContent='削除する';
-  if (res.status==='error'){ toast(res.message||'削除に失敗しました','err'); return; }
-  closeDelete();
-  toast('削除しました','ok');
-  await loadBooks();
+  if(res.status==='error'){ toast(res.message||'削除に失敗しました','err'); return; }
+  closeDelete(); toast('削除しました','ok');
+  const r=await jsonp(GAS_URL); BOOKS=r.data||[]; buildFilterOptions(); render();
 }
 
-/* ---------- ISBN 自動入力（OpenBD → Google Books で補完） ---------- */
+/* ================= ISBN 自動入力 ================= */
 function stripTags(s){ return String(s||'').replace(/<[^>]*>/g,'').replace(/\s+\n/g,'\n').trim(); }
-
 async function fetchFromOpenBD(){
-  const raw = document.getElementById('in-isbn').value.trim();
-  const isbn = raw.replace(/[^0-9Xx]/g,'');
-  if (isbn.length < 10){ toast('ISBNを正しく入力してください','err'); return; }
+  const isbn=document.getElementById('in-isbn').value.trim().replace(/[^0-9Xx]/g,'');
+  if(isbn.length<10){ toast('ISBNを正しく入力してください','err'); return; }
   toast('書誌情報を取得中…');
-
-  const titleEl  = document.getElementById('in-title');
-  const authorEl = document.getElementById('in-author');
-  const coverEl  = document.getElementById('in-cover');
-  const synEl    = document.getElementById('in-synopsis');
-
-  const got = { title:'', author:'', cover:'', desc:'' };
-
-  // 1) OpenBD（日本の書誌に強い）
+  const T=document.getElementById('in-title'),A=document.getElementById('in-author'),C=document.getElementById('in-cover'),S=document.getElementById('in-synopsis');
+  const got={title:'',author:'',cover:'',desc:''};
   try{
-    const res = await fetch('https://api.openbd.jp/v1/get?isbn='+isbn);
-    const data = await res.json();
-    if (data && data[0]){
-      const s = data[0].summary || {};
-      got.title  = s.title || '';
-      got.author = s.author || '';
-      got.cover  = s.cover || '';
-      try{
-        const tc = ((data[0].onix||{}).CollateralDetail||{}).TextContent || [];
-        const pick = tc.find(t=>t.TextType==='03' && t.Text) || tc.find(t=>t.Text);
-        if (pick) got.desc = stripTags(pick.Text);
-      }catch(_){}
+    const d=await(await fetch('https://api.openbd.jp/v1/get?isbn='+isbn)).json();
+    if(d&&d[0]){ const s=d[0].summary||{}; got.title=s.title||''; got.author=s.author||''; got.cover=s.cover||'';
+      try{ const tc=((d[0].onix||{}).CollateralDetail||{}).TextContent||[]; const pk=tc.find(t=>t.TextType==='03'&&t.Text)||tc.find(t=>t.Text); if(pk)got.desc=stripTags(pk.Text); }catch(_){}
     }
   }catch(_){}
-
-  // 2) 足りない項目を Google Books で補完（登録・キー不要）
-  if (!got.cover || !got.desc || !got.title){
+  if(!got.cover||!got.desc||!got.title){
     try{
-      const keyParam = GOOGLE_BOOKS_KEY ? ('&key='+GOOGLE_BOOKS_KEY) : '';
-      const gres = await fetch('https://www.googleapis.com/books/v1/volumes?country=JP&q=isbn:'+isbn+keyParam);
-      const gdata = await gres.json();
-      const v = gdata && gdata.items && gdata.items[0] ? (gdata.items[0].volumeInfo||{}) : null;
-      if (v){
-        if (!got.title && v.title) got.title = v.title;
-        if (!got.author && v.authors) got.author = v.authors.join('、');
-        if (!got.cover && v.imageLinks){
-          got.cover = (v.imageLinks.thumbnail || v.imageLinks.smallThumbnail || '')
-            .replace('http://','https://');
-        }
-        if (!got.desc && v.description) got.desc = stripTags(v.description);
+      const key=GOOGLE_BOOKS_KEY?('&key='+GOOGLE_BOOKS_KEY):'';
+      const g=await(await fetch('https://www.googleapis.com/books/v1/volumes?country=JP&q=isbn:'+isbn+key)).json();
+      const v=g&&g.items&&g.items[0]?(g.items[0].volumeInfo||{}):null;
+      if(v){ if(!got.title&&v.title)got.title=v.title; if(!got.author&&v.authors)got.author=v.authors.join('、');
+        if(!got.cover&&v.imageLinks)got.cover=(v.imageLinks.thumbnail||v.imageLinks.smallThumbnail||'').replace('http://','https://');
+        if(!got.desc&&v.description)got.desc=stripTags(v.description);
       }
     }catch(_){}
   }
-
-  // フォームへ反映（既に入力済みの欄は上書きしない）
-  const filled = [];
-  if (got.title  && !titleEl.value){  titleEl.value  = got.title;  filled.push('タイトル'); }
-  if (got.author && !authorEl.value){ authorEl.value = got.author; filled.push('著者'); }
-  if (got.cover  && !coverEl.value){  coverEl.value  = got.cover; updateCoverPreview(); filled.push('表紙'); }
-  if (got.desc   && !synEl.value){    synEl.value    = got.desc;   filled.push('あらすじ'); }
-
-  if (filled.length) toast(filled.join('・')+'を入力しました','ok');
-  else if (got.title || got.cover || got.desc) toast('入力済みのため変更なし（欄を空にして再取得できます）','ok');
+  const f=[];
+  if(got.title&&!T.value){T.value=got.title;f.push('タイトル')}
+  if(got.author&&!A.value){A.value=got.author;f.push('著者')}
+  if(got.cover&&!C.value){C.value=got.cover;updateCoverPreview();f.push('表紙')}
+  if(got.desc&&!S.value){S.value=got.desc;f.push('あらすじ')}
+  if(f.length)toast(f.join('・')+'を入力しました','ok');
+  else if(got.title||got.cover)toast('入力済みのため変更なし','ok');
   else toast('この本の情報は見つかりませんでした','err');
 }
 function updateCoverPreview(){
-  const url = document.getElementById('in-cover').value.trim();
-  const img = document.getElementById('cover-preview');
-  if (url){ img.src=url; img.classList.add('show'); img.onerror=()=>img.classList.remove('show'); }
-  else img.classList.remove('show');
+  const url=document.getElementById('in-cover').value.trim(),img=document.getElementById('cover-preview');
+  if(url){img.src=url;img.classList.add('show');img.onerror=()=>img.classList.remove('show')} else img.classList.remove('show');
 }
 
-/* ---------- 汎用 ---------- */
-function lightbox(src){
-  document.getElementById('lightbox-img').src = src;
-  document.getElementById('lightbox').classList.add('show');
-}
+/* ================= 汎用 ================= */
+function lightbox(src){ document.getElementById('lightbox-img').src=src; document.getElementById('lightbox').classList.add('show'); }
 let toastTimer;
-function toast(msg,type){
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'toast show' + (type?(' '+type):'');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(()=>t.classList.remove('show'), 2600);
-}
-function fmtDate(d){
-  if (!d) return '';
-  const dt = new Date(d);
-  if (isNaN(dt)) return '';
-  return `${dt.getFullYear()}.${String(dt.getMonth()+1).padStart(2,'0')}.${String(dt.getDate()).padStart(2,'0')}`;
-}
+function toast(msg,type){ const t=document.getElementById('toast'); t.textContent=msg; t.className='toast show'+(type?' '+type:''); clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove('show'),2600); }
+function fmtDate(d){ if(!d)return''; const dt=new Date(d); if(isNaN(dt))return String(d); return `${dt.getFullYear()}.${String(dt.getMonth()+1).padStart(2,'0')}.${String(dt.getDate()).padStart(2,'0')}`; }
+function toDateInput(d){ if(!d)return''; const dt=new Date(d); if(isNaN(dt))return''; return `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}-${String(dt.getDate()).padStart(2,'0')}`; }
 function esc(s){ return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
 function escAttr(s){ return esc(s); }
 
-// モーダル外側クリックで閉じる
-document.getElementById('form-overlay').addEventListener('click',e=>{ if(e.target.id==='form-overlay') closeForm(); });
-document.getElementById('del-overlay').addEventListener('click',e=>{ if(e.target.id==='del-overlay') closeDelete(); });
+document.getElementById('form-overlay').addEventListener('click',e=>{if(e.target.id==='form-overlay')closeForm()});
+document.getElementById('del-overlay').addEventListener('click',e=>{if(e.target.id==='del-overlay')closeDelete()});
+document.getElementById('pf-overlay').addEventListener('click',e=>{if(e.target.id==='pf-overlay')closePfForm()});
 </script>
 </body>
 </html>
