@@ -144,6 +144,8 @@
   /* ===== Modal ===== */
   .overlay{position:fixed;inset:0;background:rgba(74,59,44,.42);backdrop-filter:blur(3px);display:none;align-items:flex-start;justify-content:center;z-index:100;padding:24px 12px;overflow-y:auto}
   .overlay.show{display:flex}
+  /* プロフィール追加フォームはプロフィール選択画面(z-index:200)より前面に */
+  #pf-overlay{z-index:260}
   .modal{width:100%;max-width:560px;background:var(--bg-2);border:1.5px solid var(--border-2);border-radius:24px;box-shadow:0 24px 60px rgba(120,90,50,.28);margin:auto}
   .modal-head{display:flex;justify-content:space-between;align-items:center;padding:18px 20px;border-bottom:1.5px solid var(--border);position:sticky;top:0;background:var(--bg-2);border-radius:24px 24px 0 0}
   .modal-head h3{font-family:"Zen Maru Gothic",sans-serif;font-size:17px;font-weight:700}
